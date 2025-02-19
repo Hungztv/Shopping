@@ -116,14 +116,14 @@
 						</div>
 						<div class="mainmenu pull-left">
 							<ul class="nav navbar-nav collapse navbar-collapse">
-								<li><a href="index.html" class="active">Home</a></li>
+								<li><a asp-controller="home" class="active">Home</a></li>
 								<li class="dropdown">
-									<a href="#">Shop<i class="fa fa-angle-down"></i></a>
+									<a asp-controller="Product">Shop<i class="fa fa-angle-down"></i></a>
 									<ul role="menu" class="sub-menu">
-										<li>Products</li>
-										<li>Product Details</li>
-										<li>Checkout</li>
-										<li>Cart</li>
+										<li><a asp-controller="Category">Category</a></li>
+										<li><a asp-controller="Product" asp-action="Details">Product Details</a></li>
+										<li><a asp-controller="Checkout"> Checkout</a></li>
+										<li><a asp-controller="Cart">Cart</a></li>
 										<li>Login</li>
 									</ul>
 								</li>

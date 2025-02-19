@@ -2,7 +2,7 @@
 
 namespace Shopping.Controllers
 {
-    public class CategoryController : Controller
+    public class Checkout : Controller
     {
         public IActionResult Index()
         {
