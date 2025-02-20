@@ -1,5 +1,6 @@
 using System.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Shopping.Models;
 using Shopping.Models.Repository;
 
@@ -18,7 +19,7 @@ public class HomeController : Controller
 
     public IActionResult Index()
     {
-        var products = _Datacontext.Products.ToList();
+        var products = _Datacontext.Products.Include("Category").Include("Brand").ToList();
         return View(products);
     }
 
