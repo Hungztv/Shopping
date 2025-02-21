@@ -9,8 +9,8 @@ namespace Shopping.Models.Repository
             _context.Database.Migrate();
             if (!_context.Products.Any())
             {
-                CategoryModel Macbook = new CategoryModel { Id = Guid.NewGuid().ToString(), Name = "Macbook", Slug = "Macbook", Description = "Macbook is the new", Status = "Active" };
-                CategoryModel pc = new CategoryModel { Id = Guid.NewGuid().ToString(), Name = "PC", Slug = "PC", Description = "PC is the new", Status = "Active" };
+                CategoryModel Macbook = new CategoryModel { Id =1 , Name = "Macbook", Slug = "Macbook", Description = "Macbook is the new", Status = "Active" };
+                CategoryModel pc = new CategoryModel { Id = 2, Name = "PC", Slug = "PC", Description = "PC is the new", Status = "Active" };
                 BrandModel apple = new BrandModel { Name = "Apple", Slug = "Apple", Description = "Apple is the new", Status = "Active" };
                 BrandModel samsung = new BrandModel { Name = "Samsung", Slug = "Samsung", Description = "Samsung is the new", Status = "Active" };
                 _context.Products.AddRange(
