@@ -52,8 +52,11 @@ namespace Shopping.Migrations
 
             modelBuilder.Entity("Shopping.Models.CategoryModel", b =>
                 {
-                    b.Property<string>("Id")
-                        .HasColumnType("nvarchar(450)");
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<string>("Description")
                         .IsRequired()
@@ -90,10 +93,6 @@ namespace Shopping.Migrations
                     b.Property<int>("CategoryId")
                         .HasColumnType("int");
 
-                    b.Property<string>("CategoryId1")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(450)");
-
                     b.Property<string>("Description")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -118,7 +117,7 @@ namespace Shopping.Migrations
 
                     b.HasIndex("BrandId");
 
-                    b.HasIndex("CategoryId1");
+                    b.HasIndex("CategoryId");
 
                     b.ToTable("Products");
                 });
@@ -133,7 +132,7 @@ namespace Shopping.Migrations
 
                     b.HasOne("Shopping.Models.CategoryModel", "Category")
                         .WithMany()
-                        .HasForeignKey("CategoryId1")
+                        .HasForeignKey("CategoryId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 

@@ -30,7 +30,8 @@ namespace Shopping.Migrations
                 name: "Categories",
                 columns: table => new
                 {
-                    Id = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
                     Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Description = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Slug = table.Column<string>(type: "nvarchar(max)", nullable: false),
@@ -53,7 +54,6 @@ namespace Shopping.Migrations
                     Price = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     BrandId = table.Column<int>(type: "int", nullable: false),
                     CategoryId = table.Column<int>(type: "int", nullable: false),
-                    CategoryId1 = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     Image = table.Column<string>(type: "nvarchar(max)", nullable: false)
                 },
                 constraints: table =>
@@ -66,8 +66,8 @@ namespace Shopping.Migrations
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_Products_Categories_CategoryId1",
-                        column: x => x.CategoryId1,
+                        name: "FK_Products_Categories_CategoryId",
+                        column: x => x.CategoryId,
                         principalTable: "Categories",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
@@ -79,9 +79,9 @@ namespace Shopping.Migrations
                 column: "BrandId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Products_CategoryId1",
+                name: "IX_Products_CategoryId",
                 table: "Products",
-                column: "CategoryId1");
+                column: "CategoryId");
         }
 
         /// <inheritdoc />
