@@ -1,4 +1,4 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿ using Microsoft.AspNetCore.Mvc;
 using Shopping.Models.Repository;
 
 namespace Shopping.Controllers
@@ -14,9 +14,9 @@ namespace Shopping.Controllers
         {
             return View();
         }
-        public async Task<IActionResult> Details(int Id = 0)
+        public async Task<IActionResult> Details(int Id)
         {
-            if (Id == 0) return RedirectToAction("Index");
+            if (Id == null) return RedirectToAction("Index");
             var productsById = _datacontext.Products.Where(p => p.Id == Id).FirstOrDefault();
             return View(productsById);
         }
