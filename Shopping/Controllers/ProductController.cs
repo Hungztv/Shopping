@@ -16,7 +16,7 @@ namespace Shopping.Controllers
         }
         public async Task<IActionResult> Details(int Id = 0)
         {
-            if (Id == 0) return RedirectToAction("Index");
+            if (Id == null) return RedirectToAction("Index");
             var productsById = _datacontext.Products.Where(p => p.Id == Id).FirstOrDefault();
             return View(productsById);
         }
