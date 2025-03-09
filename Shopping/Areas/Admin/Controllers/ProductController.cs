@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Shopping.Models.Repository;
 
 namespace Shopping.Areas.Admin.Controllers
@@ -6,15 +7,21 @@ namespace Shopping.Areas.Admin.Controllers
     [Area("Admin")]
     public class ProductController : Controller
     {
-        private readonly DataContext _datacontext;
+        private readonly DataContext _dataContext;
         public ProductController(DataContext context)
         {
-            _datacontext = context;
+            _dataContext = context;
         }
-        public IActionResult Index()
+        public async Task<IActionResult> Index()
         {
 
-            return View();
+
+            return View(await _dataContext.Products
+                .OrderByDescending(p => p.Id) // Đúng cú pháp
+                .Include(p => p.Brand)
+                .Include(p => p.Category)
+                .ToListAsync()); // Đúng chữ 'A' viết hoa);
         }
+
     }
 }
