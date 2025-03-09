@@ -48,7 +48,7 @@ namespace Shopping.Controllers
             {
                 cartItem.Quantity ++;
             }
-
+            TempData["success"] = "add product quantity successfully!";
             HttpContext.Session.SetJson("Cart", cart);
             return Redirect(Request.Headers["Referer"].ToString());
         }

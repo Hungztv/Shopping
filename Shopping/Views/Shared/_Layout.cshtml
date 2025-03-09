@@ -147,6 +147,8 @@
 	</header><!--/header-->
 
     <main>
+		@Html.Partial("_NotificationPartial")
+
         @RenderBody()
     </main>
 
@@ -316,6 +318,8 @@
     <script src="~/js/price-range.js"></script>
     <script src="~/js/jquery.prettyPhoto.js"></script>
     <script src="~/js/main.js"></script>
+	
+
 
     @RenderSection("Scripts", required: false)
 </body>
