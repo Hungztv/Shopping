@@ -74,6 +74,13 @@
 				<div class="col-sm-3">
 					@Html.Partial("_sideBarPartial")
 				</div>
+				<style>
+					.product-image-wrapper {
+						height: 450px;
+					}
+
+				</style>
+
 
 				<div class="col-sm-9 padding-right">
 					<div class="features_items">
@@ -88,12 +95,12 @@
 										<div class="single-products">
 											<a asp-action="Details" asp-controller="Product" asp-route-Id="@item.Id">
 												<div class="productinfo text-center">
-													<img src="~/images/@item.Image" alt="@item.Name" width="100%" />
+													<img src="~/media/product/@item.Image" alt="@item.Name" width="100%" />
 													<h2>@item.Price</h2>
 													<p>@item.Name</p>
 													<p>Danh Mục: @item.Category.Name</p>
 													<p>Thương Hiệu: @item.Brand.Name</p>
-													<a href="#" class="btn btn-default add-to-cart"><i class="fa fa-shopping-cart"></i>Add to cart</a>
+													<a class="btn btn-default add-to-cart" asp-action="Add" asp-controller="Cart" asp-route-id="@item.Id"><i class="fa fa-shopping-cart"></i>Add to cart</a>
 												</div>
 											</a>
 											<div class="product-overlay">
