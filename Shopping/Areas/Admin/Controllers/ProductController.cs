@@ -1,6 +1,8 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using Microsoft.EntityFrameworkCore;
+using Shopping.Models;
 using Shopping.Models.Repository;
 
 namespace Shopping.Areas.Admin.Controllers
@@ -23,11 +25,19 @@ namespace Shopping.Areas.Admin.Controllers
                 .Include(p => p.Category)
                 .ToListAsync()); // Đúng chữ 'A' viết hoa);
         }
+        [HttpGet]
         public IActionResult Create()
         {
             ViewBag.Categories = new SelectList(_dataContext.Categories,"Id","Name");
-            ViewBag.Brands = new SelectList(_dataContext.Categories, "Id", "Name");
+            ViewBag.Brands = new SelectList(_dataContext.Brands, "Id", "Name");
             return View();
+        }
+        [HttpPost]
+        public async Task<IActionResult> Create(ProductModel product)
+        {
+            ViewBag.Categories = new SelectList(_dataContext.Categories, "Id", "Name",product.CategoryId);
+            ViewBag.Brands = new SelectList(_dataContext.Brands, "Id", "Name",product.BrandId);
+            return View(product);
         }
     }
 }

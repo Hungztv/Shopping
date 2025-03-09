@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Shopping.Models
 {
@@ -18,5 +19,8 @@ namespace Shopping.Models
         public CategoryModel Category { get; set; }
         public BrandModel Brand { get; set; }   
         public String Image { get; set; }
+        [NotMapped]
+        [FileExtension]
+        public IFormFile ImageUpload { get; set; }
     }
 }
