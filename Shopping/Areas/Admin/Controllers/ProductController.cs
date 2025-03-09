@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using Shopping.Models.Repository;
 
@@ -22,6 +23,11 @@ namespace Shopping.Areas.Admin.Controllers
                 .Include(p => p.Category)
                 .ToListAsync()); // Đúng chữ 'A' viết hoa);
         }
-
+        public IActionResult Create()
+        {
+            ViewBag.Categories = new SelectList(_dataContext.Categories,"Id","Name");
+            ViewBag.Brands = new SelectList(_dataContext.Categories, "Id", "Name");
+            return View();
+        }
     }
 }
