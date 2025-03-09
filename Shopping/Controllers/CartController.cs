@@ -16,7 +16,7 @@ namespace Shopping.Controllers
         public IActionResult Index()
         {
             List<CartItemModel> cartItem = HttpContext.Session.GetJson<List<CartItemModel>>("Cart") ?? new List<CartItemModel>();
-            CartItemViewModel cartVM = new ()
+            CartItemViewModel cartVM = new()
             {
                 CartItems = cartItem,
                 GrandTotal = cartItem.Sum(x => x.Quantity * x.Price)
@@ -28,5 +28,31 @@ namespace Shopping.Controllers
         {
             return View("~/View/Checkout/Index.cshtml");
         }
+        public async Task<IActionResult> Add(int Id)
+        {
+            ProductModel product = await _datacontext.Products.FindAsync(Id);
+
+            if (product == null)
+            {
+                return NotFound("Product not found");
+            }
+
+            List<CartItemModel> cart = HttpContext.Session.GetJson<List<CartItemModel>>("Cart") ?? new List<CartItemModel>();
+            CartItemModel cartItem = cart.FirstOrDefault(c => c.ProductId == Id);
+
+            if (cartItem == null)
+            {
+                cart.Add(new CartItemModel(product));
+            }
+            else
+            {
+                cartItem.Quantity ++;
+            }
+
+            HttpContext.Session.SetJson("Cart", cart);
+            return Redirect(Request.Headers["Referer"].ToString());
+        }
+
     }
+
 }

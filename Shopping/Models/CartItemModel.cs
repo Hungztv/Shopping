@@ -17,6 +17,10 @@
         }
         public CartItemModel(ProductModel product)
         {
+            if (product == null)
+            {
+                throw new ArgumentNullException(nameof(product), "Product cannot be null");
+            }
             ProductId = product.Id;
             ProductName = product.Name;
             Price = decimal.Parse(product.Price);
