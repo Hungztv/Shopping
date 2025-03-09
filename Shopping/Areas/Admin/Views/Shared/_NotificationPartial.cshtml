@@ -1,0 +1,76 @@
+﻿@if (TempData["success"] != null)
+{
+    <div id="notification-success" class="alert alert-success notification show">
+        @TempData["success"]
+        <span class="close-btn">&times;</span>
+    </div>
+}
+
+@if (TempData["error"] != null)
+{
+    <div id="notification-error" class="alert alert-danger notification show">
+        @TempData["error"]
+        <span class="close-btn">&times;</span>
+    </div>
+}
+
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        let notifications = document.querySelectorAll(".notification");
+
+        notifications.forEach(notification => {
+            setTimeout(() => {
+                notification.classList.add("hide"); // Bắt đầu hiệu ứng ẩn đi
+                setTimeout(() => notification.remove(), 500); // Sau 0.5s thì xóa khỏi DOM
+            }, 3000);
+
+            // Cho phép người dùng click để đóng ngay lập tức
+            notification.querySelector(".close-btn").addEventListener("click", function () {
+                notification.classList.add("hide");
+                setTimeout(() => notification.remove(), 500);
+            });
+        });
+    });
+</script>
+
+<style>
+    .notification {
+        position: fixed;
+        top: -50px; /* Ẩn phía trên trước khi xuất hiện */
+        right: 20px;
+        z-index: 9999;
+        min-width: 250px;
+        padding: 10px 15px;
+        border-radius: 5px;
+        transition: transform 0.5s ease, opacity 0.5s ease-in-out;
+        opacity: 0;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+    }
+
+        /* Khi thông báo hiển thị */
+        .notification.show {
+            top: 20px; /* Trượt xuống */
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* Khi thông báo ẩn đi */
+        .notification.hide {
+            opacity: 0;
+            transform: translateY(-20px);
+        }
+
+    /* Nút đóng (X) */
+    .close-btn {
+        cursor: pointer;
+        font-size: 18px;
+        font-weight: bold;
+        margin-left: 10px;
+    }
+
+        .close-btn:hover {
+            color: red;
+        }
+</style>
