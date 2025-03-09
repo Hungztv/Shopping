@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Http.HttpResults;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using Microsoft.EntityFrameworkCore;
@@ -37,6 +38,26 @@ namespace Shopping.Areas.Admin.Controllers
         {
             ViewBag.Categories = new SelectList(_dataContext.Categories, "Id", "Name",product.CategoryId);
             ViewBag.Brands = new SelectList(_dataContext.Brands, "Id", "Name",product.BrandId);
+            if (ModelState.IsValid)
+            {
+                TempData["success"] = "ok heets";
+            }
+            else
+            {
+                TempData["error"] = "Có lỗi xảy ra";
+                List<string> errors = new List<string>();
+                foreach (var value in ModelState.Values)
+
+                {
+                    foreach (var error in value.Errors)
+                    {
+                        errors.Add(error.ErrorMessage);
+                    }
+                }
+                string errorMessages = string.Join("\n", errors);
+                return BadRequest(errorMessages);
+            }
+           
             return View(product);
         }
     }
