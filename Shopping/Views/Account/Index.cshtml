@@ -1,0 +1,39 @@
+﻿@model UserModel
+@{
+    ViewData["Title"] = "Login";
+}
+
+<section id="form">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-md-6">
+                <div class="card shadow-lg p-4">
+                    <h2 class="text-center text-primary">Login to your account</h2>
+                    <div asp-validation-summary="ModelOnly" class="alert alert-danger"></div>
+                    <form asp-action="Login" asp-controller="Account">
+                        <div class="form-group">
+                            <label for="UserName">Username</label>
+                            <input asp-for="UserName" class="form-control" placeholder="Enter your username" required />
+                            <span asp-validation-for="UserName" class="text-danger"></span>
+                        </div>
+                        <div class="form-group">
+                            <label for="Password">Password</label>
+                            <input asp-for="Password" type="password" class="form-control" placeholder="Enter your password" required />
+                            <span asp-validation-for="Password" class="text-danger"></span>
+                        </div>
+                        <button type="submit" class="btn btn-primary btn-block mt-3">Login</button>
+                        <p class="text-center mt-2">
+                            <a href="#">Forgot password?</a> |
+                            <a asp-action="Create" asp-controller="Account">Sign up</a>
+                        </p>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}
