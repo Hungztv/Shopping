@@ -5,38 +5,38 @@ using Shopping.Models;
 using Shopping.Models.Repository;
 
 var builder = WebApplication.CreateBuilder(args);
-//connect to the database
+// K?t n?i ??n c? s? d? li?u
 builder.Services.AddDbContext<DataContext>(options =>
     options.UseSqlServer(builder.Configuration["ConnectionStrings:DbConnectedDb"]));
 
-// Add services to the container.
+// Thêm các d?ch v? vào container
 builder.Services.AddControllersWithViews();
 
-
-builder.Services.AddSession( options =>
+builder.Services.AddSession(options =>
 {
     options.IdleTimeout = TimeSpan.FromSeconds(30);
     options.Cookie.IsEssential = true;
-}
-    );
-var app = builder.Build();
-app.UseSession();
-builder.Services.AddIdentity<AppUserModel,IdentityRole>()
-    .AddEntityFrameworkStores<DbContext>().AddDefaultTokenProviders();
+});
+
+builder.Services.AddIdentity<AppUserModel, IdentityRole>()
+    .AddEntityFrameworkStores<DataContext>().AddDefaultTokenProviders();
 
 builder.Services.Configure<IdentityOptions>(options =>
 {
-    // Password settings.
+    // Cài ??t m?t kh?u
     options.Password.RequireDigit = true;
     options.Password.RequireLowercase = true;
     options.Password.RequireNonAlphanumeric = false;
     options.Password.RequireUppercase = false;
     options.Password.RequiredLength = 6;
 
-  
     options.User.RequireUniqueEmail = true;
 });
-// Configure the HTTP request pipeline.
+
+var app = builder.Build();
+app.UseSession();
+
+// C?u hình pipeline yêu c?u HTTP
 if (!app.Environment.IsDevelopment())
 {
     app.UseExceptionHandler("/Home/Error");
@@ -52,7 +52,7 @@ app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Home}/{action=Index}/{id?}");
 
-//Seeding Data
+// Seed d? li?u
 var context = app.Services.CreateScope().ServiceProvider.GetRequiredService<DataContext>();
 SeedData.SeedingData(context);
 app.Run();
