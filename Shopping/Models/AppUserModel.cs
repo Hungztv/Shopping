@@ -2,7 +2,8 @@
 
 namespace Shopping.Models
 {
-    public class AppUserModel: IdentityUser
+    public class AppUserModel : IdentityUser
     {
+        // Thêm các thuộc tính nếu cần
     }
 }

@@ -22,5 +22,33 @@ namespace Shopping.Controllers
         {
             return View();
         }
+        public IActionResult Create()
+        {
+            return View();
+        }
+        [HttpPost]
+        
+        public async Task<IActionResult> Create(UserModel user)
+        {
+            if (ModelState.IsValid)
+            {
+                AppUserModel newUser = new AppUserModel
+                {
+                    UserName = user.UserName,
+                    Email = user.Email
+                };
+                IdentityResult result = await _userManager.CreateAsync(newUser, user.Password);
+                if (result.Succeeded)
+                {
+                    TempData["success"] = "Tạo tài khoản thành công!";
+                    return RedirectToAction("Index","Account");
+                }
+                foreach (IdentityError error in result.Errors)
+                {
+                    ModelState.AddModelError("", error.Description);
+                }
+            }
+            return View(user);
+        }
     }
 }
