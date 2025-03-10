@@ -13,5 +13,6 @@ namespace Shopping.Models
         
         public string Slug { get; set; }
         public string Status { get; set; }
+        
     }
 }
