@@ -1,4 +1,7 @@
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection;
+using Shopping.Models;
 using Shopping.Models.Repository;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -18,16 +21,29 @@ builder.Services.AddSession( options =>
     );
 var app = builder.Build();
 app.UseSession();
+builder.Services.AddIdentity<AppUserModel,IdentityRole>()
+    .AddEntityFrameworkStores<DbContext>().AddDefaultTokenProviders();
 
+builder.Services.Configure<IdentityOptions>(options =>
+{
+    // Password settings.
+    options.Password.RequireDigit = true;
+    options.Password.RequireLowercase = true;
+    options.Password.RequireNonAlphanumeric = false;
+    options.Password.RequireUppercase = false;
+    options.Password.RequiredLength = 6;
+
+  
+    options.User.RequireUniqueEmail = true;
+});
 // Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())
 {
     app.UseExceptionHandler("/Home/Error");
 }
 app.UseStaticFiles();
-
 app.UseRouting();
-
+app.UseAuthentication();
 app.UseAuthorization();
 app.MapControllerRoute(
     name: "Areas",
