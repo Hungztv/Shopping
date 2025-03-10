@@ -1,5 +1,6 @@
 ﻿@using Shopping.Models.ViewModels
 @model CartItemViewModel
+
 <section id="cart_items">
 	<div class="container">
 		<div class="breadcrumbs">
@@ -27,7 +28,7 @@
 						{
 							<tr>
 								<td class="cart_product">
-									<a href=""><img src="~/images/@item.Image" alt=""></a>
+									<a href=""><img src="~/media/products/@item.Image" alt=""></a>
 								</td>
 								<td class="cart_description">
 									<h4><a href="">@item.ProductName</a></h4>
