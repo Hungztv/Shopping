@@ -38,12 +38,12 @@
 									<p>@item.Price</p>
 								</td>
 								<td class="cart_quantity">
-									
-										<a class="btn btn-default btn-sm" asp-controller="Cart" asp-action="Increase" asp-route-id="@item.ProductId"  > + </a>
-										<input class="cart_quantity_input" type="text" name="quantity" value="@item.Quantity" autocomplete="off" size="2">
-										<a class="btn btn-success btn-sm" asp-controller="Cart" asp-action="Decrease" asp-route-id="@item.ProductId"> - </a>
-										<a class="btn btn-danger btn-sm" asp-controller="Cart" asp-action="Remove" asp-route-id="@item.ProductId"> Remove </a>
-									
+
+									<a class="btn btn-default btn-sm" asp-controller="Cart" asp-action="Increase" asp-route-id="@item.ProductId"  > + </a>
+									<input class="cart_quantity_input" type="text" name="quantity" value="@item.Quantity" autocomplete="off" size="2">
+									<a class="btn btn-success btn-sm" asp-controller="Cart" asp-action="Decrease" asp-route-id="@item.ProductId"> - </a>
+									<a class="btn btn-danger btn-sm" asp-controller="Cart" asp-action="Remove" asp-route-id="@item.ProductId"> Remove </a>
+
 								</td>
 								<td class="cart_total">
 									<p class="cart_total_price"> @Model.CartItems.Where(x => x.ProductId == item.ProductId).Sum(x => x.Quantity*x.Price).ToString() </p>
@@ -53,9 +53,14 @@
 								</td>
 							</tr>
 						}
-						<tr rowspan="6">
+						<tr rowspan="5">
 							<td colspan="6">Tổng Tiền: <p class="cart_total_price">@Model.GrandTotal.ToString() VNĐ</p></td>
 							<td><a class="btn btn-danger btn-sm" asp-controller="Cart" asp-action="CLear" > Clear </a></td>
+							@if (User.Identity?.IsAuthenticated ?? false)
+							{
+								<td><a class="btn btn-primary btn-sm" asp-controller="Checkout" asp-action="CLear"> CheckOut </a></td>
+							}
+						
 </tr>
 					}
 					else
