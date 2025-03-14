@@ -96,6 +96,10 @@ namespace Shopping.Areas.Admin.Controllers
         public async Task<IActionResult> Edit(int Id)
         {
             ProductModel product = await _dataContext.Products.FindAsync(Id);
+            if (product == null)
+            {
+                return NotFound(); 
+            }
             ViewBag.Categories = new SelectList(_dataContext.Categories, "Id", "Name", product.CategoryId);
             ViewBag.Brands = new SelectList(_dataContext.Brands, "Id", "Name", product.BrandId);
             return View(product);
