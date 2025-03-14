@@ -1,6 +1,8 @@
-﻿using Microsoft.AspNetCore.Identity;
+﻿
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Shopping.Models;
+using Shopping.Models.ViewModels;
 
 namespace Shopping.Controllers
 {
@@ -14,9 +16,9 @@ namespace Shopping.Controllers
             _signInManager = signInManager;
         }
 
-        public IActionResult Index()
+        public IActionResult Index(string returnUrl)
         {
-            return View();
+            return View(new LoginViewModel { ReturnUrl = returnUrl});
         }
         public async Task<IActionResult> Login()
         {
