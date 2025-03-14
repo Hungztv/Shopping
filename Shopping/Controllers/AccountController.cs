@@ -16,13 +16,27 @@ namespace Shopping.Controllers
             _signInManager = signInManager;
         }
 
-        public IActionResult Index(string returnUrl)
+        public IActionResult Login(string returnUrl)
         {
             return View(new LoginViewModel { ReturnUrl = returnUrl});
         }
-        public async Task<IActionResult> Login()
+        public IActionResult Index()
         {
             return View();
+        }
+        [HttpPost]
+        public async Task<IActionResult> Login(LoginViewModel loginVM)
+        {
+            if (ModelState.IsValid)
+            {
+                Microsoft.AspNetCore.Identity.SignInResult result = await _signInManager.PasswordSignInAsync(loginVM.UserName, loginVM.Password, false, false);
+                if (result.Succeeded)
+                {
+                    return Redirect(loginVM.ReturnUrl ?? "/");
+                }
+                ModelState.AddModelError("", "Sai tài khoản hoặc mật khẩu");
+            }
+            return View(loginVM);
         }
         public IActionResult Create()
         {
