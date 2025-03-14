@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Hosting;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
@@ -10,6 +11,7 @@ using Shopping.Models.Repository;
 namespace Shopping.Areas.Admin.Controllers
 {
     [Area("Admin")]
+    [Authorize]
     public class ProductController : Controller
     {
         private readonly DataContext _dataContext;
