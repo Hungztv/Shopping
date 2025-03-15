@@ -1,10 +1,11 @@
 ﻿@model AppUserModel
 @{
-    ViewData["Title"] = "Create User";
+    ViewData["Title"] = "Edit";
 }
-<h4>Create User</h4>
+<h4>Edit User</h4>
 <div class=" col-md-9">
-    <form asp-action="Create" enctype="multipart/form-data">
+    <form asp-action="Edit" enctype="multipart/form-data">
+        <input type="hidden" asp-for="Id" />
         <div asp-validation-summary="ModelOnly" class="text-danger"></div>
         <div class="form-group">
             <label>User Name</label>
@@ -23,21 +24,20 @@
         </div>
         <div class="form-group">
             <label>Password</label>
-            <input asp-for="PasswordHash" required class="form-control" />
+            <input asp-for="PasswordHash" readonly class="form-control" />
             <span asp-validation-for="PasswordHash" class="text-danger" />
         </div>
         <div class="form-group">
             <label>Roles</label>
             <select asp-for="RoleId" class="form-control" asp-items="ViewBag.Roles">
-
             </select>
-            <span asp-validation-for="RoleId" class="text-danger" ></span>
+            <span asp-validation-for="RoleId" class="text-danger"></span>
         </div>
-        
-      
+
+
 
         <div class="form-group">
-            <button class="btn btn-primary">Create</button>
+            <button class="btn btn-primary">Update</button>
         </div>
     </form>
     <a asp-action="Index">Back to list User</a>
@@ -47,3 +47,4 @@
         await Html.RenderPartialAsync("_ValidationScriptsPartial");
     }
 }
+

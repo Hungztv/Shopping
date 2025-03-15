@@ -7,9 +7,10 @@
 <table class="table">
     <thead>
         <tr>
-            <th scope="col">#</th>
+            <th scope="col">Id</th>
             <th scope="col">User Name</th>
             <th scope="col">EMail</th>
+            <th scope="col">Phone</th>
             <th scope="col">PassWordHash</th>
             <th scope="col">Role</th>
 
@@ -20,9 +21,10 @@
         @foreach (var user in Model)
         {
             <tr>
-                <th>#</th>
+                <th>@user.Id</th>
                 <th >@user.UserName</th>
                 <td>@user.Email</td>
+                <td>@user.PhoneNumber</td>
                 <td>@user.PasswordHash</td>
                 <td>#</td>
                 <td></td>

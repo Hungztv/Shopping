@@ -36,6 +36,66 @@ namespace Shopping.Areas.Admin.Controllers
             ViewBag.Roles = new SelectList(roles, "Id", "Name");
             return View(new AppUserModel());
         }
+        [HttpGet]
+        [Route("Edit")]
+        public async Task<IActionResult> Edit(string id)
+        {
+            if (string.IsNullOrEmpty(id))
+            {
+                return NotFound();
+            }
+            var user = await _userManager.FindByIdAsync(id);
+            if (user == null)
+            {
+                return NotFound();
+            }
+
+            var roles = await _roleManager.Roles.ToListAsync();
+            ViewBag.Roles = new SelectList(roles, "Id", "Name");
+
+            return View(user);
+        }
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        [Route("Edit")]
+        public async Task<IActionResult> Edit(string id, AppUserModel user)
+        {
+            var existingUser = await _userManager.FindByIdAsync(id);//lấy user dựa vao id
+            if (existingUser == null)
+            {
+                return NotFound();
+            }
+
+            if (ModelState.IsValid)
+            {
+                // Update other user properties (excluding password)
+                existingUser.UserName = user.UserName;
+                existingUser.Email = user.Email;
+                existingUser.PhoneNumber = user.PhoneNumber;
+                existingUser.RoleId = user.RoleId;
+
+                var updateUserResult = await _userManager.UpdateAsync(existingUser); //thực hiện update
+                if (updateUserResult.Succeeded)
+                {
+                    return RedirectToAction("Index", "User");
+                }
+                else
+                {
+                    AddIdentityErrors(updateUserResult);
+                    return View(existingUser);
+                }
+            }
+
+            var roles = await _roleManager.Roles.ToListAsync();
+            ViewBag.Roles = new SelectList(roles, "Id", "Name");
+
+            // Model validation failed
+            TempData["error"] = "Model validation failed.";
+            var errors = ModelState.Values.SelectMany(v => v.Errors.Select(e => e.ErrorMessage)).ToList();
+            string errorMessage = string.Join("\n", errors);
+
+            return View(existingUser);
+        }
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Route("Create")]
