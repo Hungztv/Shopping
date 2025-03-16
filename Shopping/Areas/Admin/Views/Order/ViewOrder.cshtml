@@ -1,30 +1,132 @@
 ﻿@model IEnumerable<OrderDetails>
+
 @{
-    ViewData["Title"] = "Order Details";
+    ViewData["title"] = "Order Details";
+    decimal total = 0; // Store total amount
+    decimal subtotal = 0;
+
 }
-<h4>Order Details</h4>
-<table class="table">
-    <thead>
-        <tr>
-            <th scope="col">#</th>
-            <th scope="col">Order Code</th>
-            <th scope="col"> User Name</th>
-            <th scope="col"> Order Date</th>
-            <th scope="col">Order Stattus</th>
-            
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (var item in Model)
-        {
-            <tr>
-                
-                <th>#</th>
-                <th scope="row">@item.OrderCode</th>
-                
-               
-            </tr>
-        }
-</table>
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>Order Details</title>
+</head>
+<body>
+    <h3>Order Details</h3>
+
+
+    <div class="table table-responsive">
+        <table class="table" id="detail_order">
+            <thead>
+                <tr>
+                    <th>Id</th>
+                    <th>Order Code</th>
+                    <th>UserName</th>
+                    <th>Product Name</th>
+                    <th>Product Price</th>
+                    <th>Quantity</th>
+                    <th>Subtotal</th>
+
+
+                </tr>
+            </thead>
+            <tbody>
+
+                @foreach (var item in Model)
+                {
+                    if (item != null)
+                    {
+                        subtotal = item.Quantity * item.Price;
+                        total += subtotal;
+                    }
+                    else
+                    {
+                       <tr>
+                        <input type="hidden" asp-for="@item.OrderCode" class="getId" />
+                        <td>@item.Id</td>
+                        <td>@item.OrderCode</td>
+                        <td>@item.UserName</td>
+                        <td>@item.Product.Name</td>
+                        <td>@item.Price.ToString("#,##0 VNĐ")</td>
+                        <td>@item.Quantity</td>
+                        <td>@subtotal.ToString("#,##0 VNĐ")</td>
+
+                    </tr> 
+                    }
+                    
+                }
+                <tr>
+                    <td>Total:</td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+
+                    <td>Tổng : @total.ToString("#,##0 đ")</td>
+                    <td>Shipping : @ViewBag.ShippingCost.ToString("#,##0 đ")</td>
+
+                    <td>
+                        @if (@ViewBag.Status != 3)
+                        {
+                            <select class="form-control select-update-order">
+
+                                <option value="1">Đơn hàng mới</option>
+                                <option value="0">Đã xử lý</option>
+
+
+                            </select>
+                        }
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+
+    </div>
+</body>
+
+</html>
+@section Scripts {
+    <script>
+        new DataTable('#detail_order', {
+            layout: {
+                topStart: {
+                    buttons: ['pdf','print']
+                }
+            }
+        });
+
+    </script>
+    <script>
+        $(document).ready(function () {
+            $('.select-update-order').change(function () {
+                var status = $(this).val(); //status = 1
+                var ordercode = $('.getId').val(); //
+                // alert(status);
+                // alert(ordercode);
+
+                $.ajax({
+                    type: "POST",
+                    url: "@Url.Action("UpdateOrder")",
+                    data: { status: status, ordercode: ordercode }, // Send data to the server
+
+                    success: function (result) {
+                        // Handle successful update
+                        if (result.success) {
+
+                            Swal.fire("Cập nhật đơn hàng thành công.");
+                        } else {
+
+                            Swal.fire("Cập nhật đơn hàng thất bại." + result.message);
+
+                        }
+                    }
+
+                });
+            });
+        });
+    </script>
+}
    
      

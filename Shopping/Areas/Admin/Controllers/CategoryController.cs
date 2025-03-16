@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore;
 using Shopping.Models;
 using Shopping.Models.Repository;
 
-namespace Shopping_Tutorial.Areas.Admin.Controllers
+namespace Shopping.Areas.Admin.Controllers
 {
     [Area("Admin")]
     [Route("Admin/Category")]

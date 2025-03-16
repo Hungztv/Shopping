@@ -3,9 +3,9 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Shopping.Models.Repository;
-using Shopping.Models.Repository;
 
-namespace Shopping_Tutorial.Areas.Admin.Controllers
+
+namespace Shopping.Areas.Admin.Controllers
 {
     [Area("Admin")]
     [Route("Admin/Role")]

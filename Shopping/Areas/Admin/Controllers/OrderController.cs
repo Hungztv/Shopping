@@ -7,8 +7,8 @@ using Shopping.Models.Repository;
 namespace Shopping.Areas.Admin.Controllers
 {
     [Area("Admin")]
+    [Route("Admin/Order")]
     [Authorize]
-
     public class OrderController : Controller
     {
         private readonly DataContext _dataContext;
@@ -17,7 +17,7 @@ namespace Shopping.Areas.Admin.Controllers
             _dataContext = context;
         }
         [HttpGet]
-       
+        [Route("Index")]
         public async Task<IActionResult> Index()
         {
             return View(await _dataContext.Orders.OrderByDescending(p => p.Id).ToListAsync());
@@ -31,7 +31,7 @@ namespace Shopping.Areas.Admin.Controllers
 
             var Order = _dataContext.Orders.Where(o => o.OrderCode == ordercode).First();
 
-           
+            //ViewBag.ShippingCost = Order.ShippingCost;
             ViewBag.Status = Order.Status;
             return View(DetailsOrder);
         }

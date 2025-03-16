@@ -7,7 +7,8 @@ using Shopping.Models.Repository;
 using Shopping.Models;
 
 
-namespace Shopping_Tutorial.Areas.Admin.Controllers
+
+namespace Shopping.Areas.Admin.Controllers
 {
     [Area("Admin")]
     [Route("Admin/User")]
