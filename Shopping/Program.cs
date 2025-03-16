@@ -3,11 +3,13 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Shopping.Models;
 using Shopping.Models.Repository;
+using Shopping_Tutorial.Areas.Admin.Repository;
 
 var builder = WebApplication.CreateBuilder(args);
 // K?t n?i ??n c? s? d? li?u
 builder.Services.AddDbContext<DataContext>(options =>
     options.UseSqlServer(builder.Configuration["ConnectionStrings:DbConnectedDb"]));
+builder.Services.AddTransient<IEmailSender, EmailSender>();
 
 // Thêm các d?ch v? vào container
 builder.Services.AddControllersWithViews();

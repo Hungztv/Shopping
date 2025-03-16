@@ -5,10 +5,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using Shopping.Models.Repository;
 using Shopping.Models;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+
 
 namespace Shopping_Tutorial.Areas.Admin.Controllers
 {

@@ -3,11 +3,9 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Shopping.Models.Repository;
-using System;
-using System.Linq;
-using System.Threading.Tasks;
+using Shopping.Models.Repository;
 
-namespace Shopping.Areas.Admin.Controllers
+namespace Shopping_Tutorial.Areas.Admin.Controllers
 {
     [Area("Admin")]
     [Route("Admin/Role")]
@@ -16,19 +14,16 @@ namespace Shopping.Areas.Admin.Controllers
     {
         private readonly DataContext _dataContext;
         private readonly RoleManager<IdentityRole> _roleManager;
-
         public RoleController(DataContext context, RoleManager<IdentityRole> roleManager)
         {
             _dataContext = context;
             _roleManager = roleManager;
         }
-
         [Route("Index")]
         public async Task<IActionResult> Index()
         {
             return View(await _dataContext.Roles.OrderByDescending(p => p.Id).ToListAsync());
         }
-
         [HttpGet]
         [Route("Create")]
         public IActionResult Create()
@@ -36,127 +31,94 @@ namespace Shopping.Areas.Admin.Controllers
             return View();
         }
 
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        [Route("Create")]
-        public async Task<IActionResult> Create(IdentityRole model)
-        {
-            if (ModelState.IsValid)
-            {
-                bool roleExists = await _roleManager.RoleExistsAsync(model.Name);
-                if (!roleExists)
-                {
-                    var result = await _roleManager.CreateAsync(new IdentityRole(model.Name));
-                    if (result.Succeeded)
-                    {
-                        TempData["success"] = "Role created successfully!";
-                        return RedirectToAction("Index");
-                    }
-                    else
-                    {
-                        foreach (var error in result.Errors)
-                        {
-                            ModelState.AddModelError("", error.Description);
-                        }
-                    }
-                }
-                else
-                {
-                    ModelState.AddModelError("", "Role already exists.");
-                }
-            }
-            return View(model);
-        }
-
         [HttpGet]
-        [Route("Edit/{id}")]
+        [Route("Edit")]
+
         public async Task<IActionResult> Edit(string id)
         {
             if (string.IsNullOrEmpty(id))
             {
-                return NotFound();
+                return NotFound(); // Handle missing Id
             }
-
             var role = await _roleManager.FindByIdAsync(id);
-            if (role == null)
-            {
-                return NotFound();
-            }
 
             return View(role);
         }
 
+        [Route("Edit")]
         [HttpPost]
         [ValidateAntiForgeryToken]
-        [Route("Edit/{id}")]
         public async Task<IActionResult> Edit(string id, IdentityRole model)
         {
             if (string.IsNullOrEmpty(id))
             {
-                return NotFound();
+                return NotFound(); // Handle missing Id
             }
-
-            if (ModelState.IsValid)
+            if (ModelState.IsValid) // Validate model state before proceeding
             {
                 var role = await _roleManager.FindByIdAsync(id);
                 if (role == null)
                 {
-                    return NotFound();
+                    return NotFound(); // Handle role not found
                 }
-
-                role.Name = model.Name;
-                var result = await _roleManager.UpdateAsync(role);
-                if (result.Succeeded)
+                role.Name = model.Name; // Update role properties with model data
+                try
                 {
+                    await _roleManager.UpdateAsync(role);
                     TempData["success"] = "Role updated successfully!";
-                    return RedirectToAction("Index");
+                    return RedirectToAction("Index"); // Redirect to the index action
                 }
-                else
+                catch (Exception)
                 {
-                    foreach (var error in result.Errors)
-                    {
-                        ModelState.AddModelError("", error.Description);
-                    }
+                    ModelState.AddModelError("", "An error occurred while updating the role.");
                 }
-            }
 
-            return View(model);
+            }
+            return View(model ?? new IdentityRole { Id = id });
+        }
+
+        [Route("Create")]
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+
+        public async Task<IActionResult> Create(IdentityRole model)
+        {
+            //avoid duplicate role
+            if (!_roleManager.RoleExistsAsync(model.Name).GetAwaiter().GetResult())
+            {
+                _roleManager.CreateAsync(new IdentityRole(model.Name)).GetAwaiter().GetResult();
+            }
+            return Redirect("Index");
         }
 
         [HttpGet]
-        [Route("Delete/{id}")]
+        [Route("Delete")]
         public async Task<IActionResult> Delete(string id)
         {
             if (string.IsNullOrEmpty(id))
             {
-                return NotFound();
+                return NotFound(); // Handle missing Id
             }
 
             var role = await _roleManager.FindByIdAsync(id);
+
             if (role == null)
             {
-                return NotFound();
+                return NotFound(); // Handle role not found
             }
 
-            // Kiểm tra nếu role đang được sử dụng
-            var usersInRole = await _dataContext.UserRoles.AnyAsync(ur => ur.RoleId == id);
-            if (usersInRole)
+            try
             {
-                TempData["error"] = "Cannot delete this role because it is assigned to users.";
-                return RedirectToAction("Index");
-            }
-
-            var result = await _roleManager.DeleteAsync(role);
-            if (result.Succeeded)
-            {
+                await _roleManager.DeleteAsync(role);
                 TempData["success"] = "Role deleted successfully!";
             }
-            else
+            catch (Exception)
             {
-                TempData["error"] = "An error occurred while deleting the role.";
+                ModelState.AddModelError("", "An error occurred while deleting the role.");
             }
 
-            return RedirectToAction("Index");
+            return Redirect("Index");
         }
+
     }
 }
