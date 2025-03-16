@@ -65,7 +65,7 @@ namespace Shopping_Tutorial.Areas.Admin.Controllers
                     var role = _roleManager.FindByIdAsync(user.RoleId); //lấy RoleId
                                                                         //gán quyền
                     
-                    
+                    var addToRoleResult = await _userManager.AddToRoleAsync(createUser, role.Result.Name);
 
                     return RedirectToAction("Index", "User");
                 }
