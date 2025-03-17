@@ -39,7 +39,7 @@
 											<div class="productinfo text-center">
 												<a asp-action="Details" asp-controller="Product" asp-route-Id="@item.Id">
 													<img src="~/media/products/@item.Image" alt="@item.Name" width="100%" />
-													<h2>@item.Price</h2>
+													<h2>@string.Format(new System.Globalization.CultureInfo("vi-VN"), "{0:N0} VNĐ", item.Price)</h2>
 													<p>@item.Name</p>
 													<p>Danh Mục: @item.Category.Name</p>
 													<p>Thương Hiệu: @item.Brand.Name</p>
