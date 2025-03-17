@@ -29,6 +29,8 @@ namespace Shopping.Controllers
         {
             if (Id == null) return RedirectToAction("Index");
             var productsById = _datacontext.Products.Where(p => p.Id == Id).FirstOrDefault();
+            var relatedProducts = _datacontext.Products.Where(p => p.CategoryId == productsById.CategoryId && p.Id != Id).ToList();
+            ViewBag.RelatedProducts = relatedProducts;
             return View(productsById);
         }
     }
