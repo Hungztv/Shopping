@@ -36,11 +36,12 @@
 
         <div class="form-group">
             <label>Roles</label>
+           
             <select asp-for="RoleId" class="form-control" asp-items="ViewBag.Roles">
+                <option value="">-- Chọn Role --</option>
             </select>
             <span asp-validation-for="RoleId" class="text-danger"></span>
         </div>
-
         <div class="form-group">
             <button class="btn btn-primary">Create</button>
         </div>

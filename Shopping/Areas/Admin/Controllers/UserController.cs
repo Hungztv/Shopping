@@ -12,7 +12,7 @@ namespace Shopping.Areas.Admin.Controllers
 {
     [Area("Admin")]
     [Route("Admin/User")]
-    [Authorize]
+    [Authorize(Roles = "Publisher,Author,Admin")]
     public class UserController : Controller
     {
         private readonly UserManager<AppUserModel> _userManager;
@@ -45,7 +45,15 @@ namespace Shopping.Areas.Admin.Controllers
         [Route("Create")]
         public async Task<IActionResult> Create()
         {
-            ViewBag.Roles = new SelectList(await _roleManager.Roles.ToListAsync(), "Id", "Name");
+            var roles = await _roleManager.Roles.ToListAsync();
+
+            // Debug danh sách Role
+            foreach (var r in roles)
+            {
+                Console.WriteLine($"Role ID: {r.Id}, Role Name: {r.Name}");
+            }
+
+            ViewBag.Roles = new SelectList(roles, "Id", "Name");
             return View(new AppUserModel());
         }
         [HttpPost]
@@ -60,10 +68,23 @@ namespace Shopping.Areas.Admin.Controllers
                 {
                     var createUser = await _userManager.FindByEmailAsync(user.Email); //tìm user dựa vào email
                     var userId = createUser.Id; // lấy user Id
-                    var role = _roleManager.FindByIdAsync(user.RoleId); //lấy RoleId
-                                                                        //gán quyền
-                    
-                    var addToRoleResult = await _userManager.AddToRoleAsync(createUser, role.Result.Name);
+                    var role = await _roleManager.FindByIdAsync(user.RoleId);
+                    if (role == null)
+                    {
+                        Console.WriteLine("⚠ Role không tìm thấy trong database!");
+                        ModelState.AddModelError("", "Role không hợp lệ hoặc không tồn tại.");
+                        return View(user);
+                    }
+
+                    // Gán quyền
+                    var addToRoleResult = await _userManager.AddToRoleAsync(createUser, role.Name);
+                    if (!addToRoleResult.Succeeded)
+                    {
+                        foreach (var error in createUserResult.Errors)
+                        {
+                            ModelState.AddModelError(string.Empty, error.Description);
+                        }
+                    }
 
                     return RedirectToAction("Index", "User");
                 }

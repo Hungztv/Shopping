@@ -6,7 +6,7 @@ namespace Shopping.Models
     public class AppUserModel : IdentityUser
     {
         public string occupation { get; set; }
-       
-        public string RoleId { get; internal set; }
+
+        public string? RoleId { get; set; }
     }
 }
