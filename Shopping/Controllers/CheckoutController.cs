@@ -35,12 +35,12 @@ namespace Shopping.Controllers
                 List<CartItemModel> cartItem = HttpContext.Session.GetJson<List<CartItemModel>>("Cart") ?? new List<CartItemModel>();
                 foreach (var cart in cartItem)
                 {
-                    var orderDetail = new OrderDetails();
+                    var orderDetail = new OrderDetail();
                     orderDetail.UserName = userEmail.Value;
                     orderDetail.OrderCode = ordercode;
                     orderDetail.Quantity = cart.Quantity;
                     orderDetail.Price = cart.Price;
-                    orderDetail.ProductId = cart.ProductId;
+                    orderDetail.ProductId = (int)cart.ProductId;
                     _context.Add(orderDetail);
                     await _context.SaveChangesAsync();
 

@@ -1,9 +1,9 @@
-﻿@model IEnumerable<OrderDetails>
+﻿@model IEnumerable<OrderDetail>
 
 @{
     ViewData["title"] = "Order Details";
-    decimal total = 0; // Store total amount
-    decimal subtotal = 0;
+    // decimal total = 0; 
+    // decimal subtotal = 0;
 
 }
 
@@ -29,43 +29,37 @@
                     <th>Product Price</th>
                     <th>Quantity</th>
                     <th>Subtotal</th>
-
-
                 </tr>
             </thead>
             <tbody>
-
+                @{
+                    decimal total = 0;
+                }
                 @foreach (var item in Model)
                 {
-                    if (item != null)
-                    {
-                        subtotal = item.Quantity * item.Price;
-                        total += subtotal;
-                    }
-                    else
-                    {
-                       <tr>
-                        <input type="hidden" asp-for="@item.OrderCode" class="getId" />
+                    var subtotal = item.Price * item.Quantity;
+                    total += subtotal;
+                    <tr>
                         <td>@item.Id</td>
                         <td>@item.OrderCode</td>
                         <td>@item.UserName</td>
-                        <td>@item.Product.Name</td>
-                        <td>@item.Price.ToString("#,##0 VNĐ")</td>
+                        <td>@(item.Product != null ? item.Product.Name : "N/A")</td>
+                        <td>@item.Price</td>
                         <td>@item.Quantity</td>
-                        <td>@subtotal.ToString("#,##0 VNĐ")</td>
-
-                    </tr> 
-                    }
-                    
+                        <td>@subtotal</td>
+                    </tr>
                 }
+            </tbody>
+            <tfoot>
                 <tr>
-                    <td>Total:</td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-
-                    <td>Tổng : @total.ToString("#,##0 đ")</td>
-                    <td>Shipping : @ViewBag.ShippingCost.ToString("#,##0 đ")</td>
+                    <td colspan="6" class="text-right"><strong>Total:</strong></td>
+                    <td><strong>@total</strong></td>
+                </tr>
+            </tfoot>
+        </table>
+    </div>
+                    
+                    @* <td>Shipping : @ViewBag.ShippingCost.ToString("#,##0 đ")</td> *@
 
                     <td>
                         @if (@ViewBag.Status != 3)
@@ -89,15 +83,46 @@
 </html>
 @section Scripts {
     <script>
+        // Khởi tạo DataTable
         new DataTable('#detail_order', {
             layout: {
                 topStart: {
-                    buttons: ['pdf','print']
+                    buttons: ['pdf', 'print']
                 }
             }
         });
 
+                $('.select-update-order').change(function () {
+            var status = $(this).val();
+
+            var ordercode = $(this).closest('tr').find('td').eq(1).text().trim();
+
+            console.log("Order Code lấy được:", ordercode); // Debug xem giá trị đúng chưa
+
+            if (!ordercode) {
+                Swal.fire("Lỗi!", "Không lấy được mã đơn hàng.", "error");
+                return;
+            }
+
+            $.ajax({
+                type: "POST",
+                url: "@Url.Action("UpdateOrder")",
+                data: { status: status, ordercode: ordercode },
+                success: function (result) {
+                    if (result.success) {
+                        Swal.fire("Thành công!", result.message, "success");
+                    } else {
+                        Swal.fire("Thất bại!", result.message, "error");
+                    }
+                },
+                error: function (xhr) {
+                    Swal.fire("Lỗi!", "Lỗi máy chủ: " + xhr.responseText, "error");
+                }
+            });
+        });
+
     </script>
+}
     <script>
         $(document).ready(function () {
             $('.select-update-order').change(function () {
@@ -128,5 +153,6 @@
         });
     </script>
 }
-   
-     
+
+
+
