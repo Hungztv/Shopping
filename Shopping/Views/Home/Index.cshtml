@@ -1,7 +1,11 @@
 ﻿<!DOCTYPE html>
 <html lang="en">
 	@model IEnumerable<ProductModel>
-<body>
+<partial name="_SliderPartial" />
+<div class="col-sm-3">
+	<partial name="_SidebarPartial" />
+</div>
+
 	
 
 	<section>
@@ -63,7 +67,7 @@
 
 		</div>
 	</section>
-</body>
+
 </html>
 @section Scripts {
 	<script>

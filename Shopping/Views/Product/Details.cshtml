@@ -1,26 +1,12 @@
-﻿
+﻿@model ProductDetailsViewModel
+@{
+	ViewData["Title"] = "Detail";
+	
+}
+
 <div class="row">
 	<div class="col-sm-3">
-		@Html.Partial("_sideBarPartial")
-		<div class="left-sidebar">
-			
-			
-
-			<div class="price-range">
-				<!--price-range-->
-				<h2>Price Range</h2>
-				<div class="well">
-					<input type="text" class="span2" value="" data-slider-min="0" data-slider-max="600" data-slider-step="5" data-slider-value="[250,450]" id="sl2"><br />
-					<b>$ 0</b> <b class="pull-right">$ 600</b>
-				</div>
-			</div><!--/price-range-->
-
-			<div class="shipping text-center">
-				<!--shipping-->
-				<img src="images/home/shipping.jpg" alt="" />
-			</div><!--/shipping-->
-
-		</div>
+		<partial name="_SidebarPartial" />
 	</div>
 
 	<div class="col-sm-9 padding-right">
@@ -28,7 +14,7 @@
 			<!--product-details-->
 			<div class="col-sm-5">
 				<div class="view-product">
-					<img src="~/media/products/@Model.Image" alt="@Model.Name" />
+					<img src="~/media/products/@Model.ProductDetails.Image" alt="" width="100px" height="200px" />
 					<h3>ZOOM</h3>
 				</div>
 				<div id="similar-product" class="carousel slide" data-ride="carousel">
@@ -55,13 +41,10 @@
 			<div class="col-sm-7">
 				<div class="product-information">
 					<!--/product-information-->
-					
-					<h2>@Model.Name</h2>
-					<p>Web ID: 1089772</p>
-					<img src="~/media/products/@Model.Image" alt="@Model.Name" />
+					<h2>@Model.ProductDetails.Name</h2>
 					<span>
-						<h2>@string.Format(new System.Globalization.CultureInfo("vi-VN"), "{0:N0} VNĐ", Model.Price)</h2>
-						<label>Quantity: 1</label>
+						<span>@string.Format(new System.Globalization.CultureInfo("vi-VN"), "{0:N0} VNĐ", Model.ProductDetails.Price)</span>
+						<label>Quantity:</label>
 						<input type="text" value="3" />
 						<button type="button" class="btn btn-fefault cart">
 							<i class="fa fa-shopping-cart"></i>
@@ -70,8 +53,8 @@
 					</span>
 					<p><b>Availability:</b> In Stock</p>
 					<p><b>Condition:</b> New</p>
-					<p><b>Brand:</b> @Model.Brand.Name</p>
-					<p><b>Category</b> @Model.Category.Name</p>
+					<p><b>Brand:</b> @Model.ProductDetails.Name</p>
+					<p><b>Category:</b> @Model.ProductDetails.Name</p>
 					<a href=""><img src="images/product-details/share.png" class="share img-responsive" alt="" /></a>
 				</div><!--/product-information-->
 			</div>
@@ -81,15 +64,37 @@
 			<!--category-tab-->
 			<div class="col-sm-12">
 				<ul class="nav nav-tabs">
-					<li class="active"><a href="#details" data-toggle="tab">Details</a></li>
+					<li><a href="#details" data-toggle="tab">Details</a></li>
 					<li><a href="#companyprofile" data-toggle="tab">Company Profile</a></li>
 					<li><a href="#tag" data-toggle="tab">Tag</a></li>
-					<li class="active" ><a href="#reviews" data-toggle="tab">Đánh Giá (5)</a></li>
+					<li class="active"><a href="#reviews" data-toggle="tab">Đánh giá (5)</a></li>
 				</ul>
 			</div>
 			<div class="tab-content">
-				<div class="tab-pane fade in active in" id="details">
-					@Model.Description					
+				<div class="tab-pane fade active in" id="details">
+
+					@Html.Raw(Model.ProductDetails.Description)
+
+				</div>
+
+				<div class="tab-pane fade" id="companyprofile">
+					@foreach (var relatedProduct in ViewBag.RelatedProducts as IEnumerable<ProductModel>)
+					{
+						<div class="col-sm-3">
+							<div class="product-image-wrapper">
+								<div class="single-products">
+									<div class="productinfo text-center">
+										<img src="images/home/gallery1.jpg" alt="" />
+										<h2>$56</h2>
+										<p>Easy Polo Black Edition</p>
+										<button type="button" class="btn btn-default add-to-cart"><i class="fa fa-shopping-cart"></i>Add to cart</button>
+									</div>
+								</div>
+							</div>
+						</div>
+					}
+
+
 				</div>
 
 				<div class="tab-pane fade" id="tag">
@@ -143,7 +148,7 @@
 					</div>
 				</div>
 
-				<div class="tab-pane fade" id="reviews">
+				<div class="tab-pane fade active in" id="reviews">
 					<div class="col-sm-12">
 						<ul>
 							<li><a href=""><i class="fa fa-user"></i>EUGEN</a></li>
@@ -153,14 +158,21 @@
 						<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.</p>
 						<p><b>Write Your Review</b></p>
 
-						<form action="#">
+
+						<form autocomplete="off" asp-action="CommentProduct" asp-controller="Product" method="POST">
 							<span>
-								<input type="text" placeholder="Your Name" />
-								<input type="email" placeholder="Email Address" />
+								<input asp-for="@Model.ProductDetails.Id" name="ProductId" type="hidden" />
+								<input name="Star" type="hidden" value="4" />
+								<input asp-for="@Model.Name" type="text" placeholder="Your Name" />
+								<span asp-validation-for="@Model.Name" class="text-danger"></span>
+								<input asp-for="@Model.Email" name="Email" type="email" placeholder="Email Address" />
+								<span asp-validation-for="@Model.Email" class="text-danger"></span>
 							</span>
-							<textarea name=""></textarea>
+							<textarea asp-for="@Model.Comment"></textarea>
+							<span asp-validation-for="@Model.Comment" class="text-danger"></span>
+
 							<b>Rating: </b> <img src="images/product-details/rating.png" alt="" />
-							<button type="button" class="btn btn-default pull-right">
+							<button type="submit" class="btn btn-default pull-right">
 								Submit
 							</button>
 						</form>
@@ -173,6 +185,7 @@
 		<div class="recommended_items">
 			<!--recommended_items-->
 			<h2 class="title text-center">Related Products</h2>
+
 			<div id="recommended-item-carousel" class="carousel slide" data-ride="carousel">
 				<div class="carousel-inner">
 
@@ -187,7 +200,7 @@
 										<div class="productinfo text-center">
 											<a asp-action="Detail" asp-controller="Product" asp-route-Id="@relatedProduct.Id">
 												<img src="~/media/products/@relatedProduct.Image" alt="@relatedProduct.Name" width="100px" height="200px" />
-												<h2>@string.Format(new System.Globalization.CultureInfo("vi-VN"), "{0:N0} VNĐ", relatedProduct.Price)</h2>
+												<h2>@string.Format(new System.Globalization.CultureInfo("vi-VN"), "{0:N0} VNĐ", Model.ProductDetails.Price)</h2>
 												<p>@relatedProduct.Name</p>
 												<p>Danh mục: @relatedProduct.Category.Name</p>
 												<p>Thương hiệu: @relatedProduct.Brand.Name</p>
@@ -213,8 +226,13 @@
 				</a>
 			</div>
 
-			
 		</div><!--/recommended_items-->
 
 	</div>
 </div>
+@section Scripts {
+	@{
+		await Html.RenderPartialAsync("_ValidationScriptsPartial");
+	}
+}
+
