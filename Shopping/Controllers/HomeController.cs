@@ -9,25 +9,35 @@ namespace Shopping.Controllers
 
     public class HomeController : Controller
     {
-        private readonly DataContext _Datacontext;
+        private readonly DataContext _datacontext;
         private readonly ILogger<HomeController> _logger;
 
         public HomeController(ILogger<HomeController> logger, DataContext context)
         {
             _logger = logger;
-            _Datacontext = context;
+            _datacontext = context;
         }
 
-        public IActionResult Index()
+       public IActionResult Index()
         {
-            var products = _Datacontext.Products.Include("Category").Include("Brand").ToList();
-            return View(products);
+             var products = _datacontext.Products.Include("Category").Include("Brand").ToList();
+
+             var sliders = _datacontext.Sliders.Where(s => s.Status == 1).ToList();
+                 ViewBag.Sliders = sliders;
+
+                 return View(products);
         }
 
         public IActionResult Privacy()
         {
             return View();
         }
+        public IActionResult Contact()
+        {
+            
+            return View();
+        }
+
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error(int statuscode)
