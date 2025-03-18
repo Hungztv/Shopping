@@ -1,4 +1,5 @@
 ﻿using System.Diagnostics;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Shopping.Models;
@@ -30,9 +31,9 @@ namespace Shopping.Controllers
         {
             return View();
         }
-        public IActionResult Contact()
+        public async Task<IActionResult> Contact()
         {
-            
+            var contact =await _datacontext.Contact.FirstAsync();
             return View();
         }
 
