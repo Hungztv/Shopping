@@ -54,16 +54,18 @@
 					</div>
 					<div class="mainmenu pull-left">
 						<ul class="nav navbar-nav collapse navbar-collapse">
-							<li><a asp-controller="Home" class="active">Home</a></li>
-							<li><a asp-controller="Slider">Slider</a></li>
-							<li><a asp-controller="Product">Products</a></li>
-							<li><a asp-controller="Category">Categories</a></li>
-							<li><a asp-controller="Brand">Brands</a></li>
-							<li><a asp-controller="Order" asp-action="Index">Orders</a></li>
-							<li><a asp-controller="User" asp-action="Index">Users</a></li>
-							<li><a asp-controller="Role">Role</a></li>
-
-
+							<li><a asp-action="index" asp-controller="Home">Homepage</a></li>
+							<li><a asp-action="index" asp-controller="Dashboard" class="active">Dashboard</a></li>
+							<li><a asp-action="Index" asp-controller="Slider">Manage Sliders</a></li>
+							<li><a asp-action="Index" asp-controller="Product">Manage Products</a></li>
+							<li><a asp-action="Index" asp-controller="Shipping">Manage Shippings</a></li>
+							<li><a asp-action="Index" asp-controller="Contact">Manage Contacts</a></li>
+							<li><a asp-action="Index" asp-controller="Category">Manage Categories</a></li>
+							<li><a asp-action="Index" asp-controller="Brand">Manage Brands</a></li>
+							<li><a asp-action="Index" asp-controller="User">Manage Users</a></li>
+							<li><a asp-action="Index" asp-controller="Role">Manage Roles</a></li>
+							<li><a asp-action="Index" asp-controller="Order">Manage Orders</a></li>
+							<li><a asp-action="Index" asp-controller="Contact">Manage Contact</a></li>
 						</ul>
 					</div>
 				</div>
