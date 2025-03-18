@@ -16,6 +16,8 @@ namespace Shopping.Models.Repository
         public DbSet<OrderModel> Orders { get; set; }
         public DbSet<RatingModel> Ratings { get; set; }
         public DbSet<ContactModel> Contact { get; set; }
+        public DbSet<WishlistModel> Wishlists { get; set; }
+        public DbSet<CompareModel> Compares { get; set; }
 
 
     }
