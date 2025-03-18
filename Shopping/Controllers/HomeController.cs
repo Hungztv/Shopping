@@ -1,4 +1,4 @@
-using System.Diagnostics;
+﻿using System.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Shopping.Models;
@@ -21,6 +21,8 @@ namespace Shopping.Controllers
         public IActionResult Index()
         {
             var products = _Datacontext.Products.Include("Category").Include("Brand").ToList();
+            var sliders = _Datacontext.Sliders.Where(s => s.Status == 1).ToList();
+            ViewBag.Sliders = sliders;
             return View(products);
         }
 
