@@ -20,8 +20,8 @@ namespace Shopping.Controllers
 
        public IActionResult Index()
         {
-            var products = _Datacontext.Products.Include("Category").Include("Brand").ToList();
-            var sliders = _Datacontext.Sliders.Where(s => s.Status == 1).ToList();
+            var products = _datacontext.Products.Include("Category").Include("Brand").ToList();
+            var sliders = _datacontext.Sliders.Where(s => s.Status == 1).ToList();
             ViewBag.Sliders = sliders;
             return View(products);
         }
