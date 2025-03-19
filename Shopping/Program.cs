@@ -15,6 +15,8 @@ builder.Services.AddTransient<IEmailSender, EmailSender>();
 
 // Thêm các dịch vụ vào container
 builder.Services.AddControllersWithViews();
+builder.Services.AddSingleton<IEmailSender, EmailSender>();
+
 
 builder.Services.AddSession(options =>
 {

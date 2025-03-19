@@ -75,7 +75,7 @@ namespace Shopping.Controllers
 
 
                 TempData["success"] = "Order Thành Công!";
-                return RedirectToAction("Index");
+                return RedirectToAction("History","Account");
 
             }
                 return View();
