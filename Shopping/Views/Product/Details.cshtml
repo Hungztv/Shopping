@@ -1,8 +1,6 @@
-﻿@model ProductDetailsViewModel
-@{
-	ViewData["Title"] = "Detail";
-	
-}
+﻿
+@model ProductDetailsViewModel
+
 
 <div class="row">
 	<div class="col-sm-3">
@@ -45,20 +43,34 @@
 					<span>
 						<span>@string.Format(new System.Globalization.CultureInfo("vi-VN"), "{0:N0} VNĐ", Model.ProductDetails.Price)</span>
 						<label>Quantity:</label>
-						<input type="text" value="3" />
-						<button type="button" class="btn btn-fefault cart">
+						<input type="text" value="1" />
+						<button type="button" class="btn btn-fefault cart" @(Model.ProductDetails.Quantity == 0 ? "disabled" : "")>
 							<i class="fa fa-shopping-cart"></i>
 							Add to cart
 						</button>
 					</span>
-					<p><b>Availability:</b> In Stock</p>
+
+					<!-- Kiểm tra số lượng và hiển thị trạng thái -->
+					@if (Model.ProductDetails.Quantity > 0)
+					{
+						<p><b>Availability:</b> In Stock</p>
+					}
+					else
+					{
+						<p><b style="color: red;">Availability:</b> Out of Stock</p>
+					}
+
 					<p><b>Condition:</b> New</p>
-					<p><b>Brand:</b> @Model.ProductDetails.Name</p>
-					<p><b>Category:</b> @Model.ProductDetails.Name</p>
+					<p><b>Brand:</b> @Model.ProductDetails.Brand.Name</p>
+					<p><b>Category:</b> @Model.ProductDetails.Category.Name</p>
+					<p><b>Quantity in Stock:</b> @Model.ProductDetails.Quantity</p>
+
 					<a href=""><img src="images/product-details/share.png" class="share img-responsive" alt="" /></a>
+
 				</div><!--/product-information-->
 			</div>
 		</div><!--/product-details-->
+
 
 		<div class="category-tab shop-details-tab">
 			<!--category-tab-->
@@ -200,7 +212,7 @@
 										<div class="productinfo text-center">
 											<a asp-action="Detail" asp-controller="Product" asp-route-Id="@relatedProduct.Id">
 												<img src="~/media/products/@relatedProduct.Image" alt="@relatedProduct.Name" width="100px" height="200px" />
-												<h2>@string.Format(new System.Globalization.CultureInfo("vi-VN"), "{0:N0} VNĐ", Model.ProductDetails.Price)</h2>
+												<h2>@string.Format(new System.Globalization.CultureInfo("vi-VN"), "{0:N0} VNĐ", relatedProduct.Price)</h2>
 												<p>@relatedProduct.Name</p>
 												<p>Danh mục: @relatedProduct.Category.Name</p>
 												<p>Thương hiệu: @relatedProduct.Brand.Name</p>

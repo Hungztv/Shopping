@@ -16,7 +16,10 @@ namespace Shopping.Models
         [Required, MinLength(4, ErrorMessage = "Yêu Cầu Nhập Mô tả Sản phẩm ")]
         public string Description { get; set; }
         public string Price { get; set; }
+
         public int BrandId { get; set; }
+        public int Quantity { get; set; }
+        public int SoldOut { get; set; }
         public int CategoryId { get; set; }
         public CategoryModel Category { get; set; }
         public BrandModel Brand { get; set; }
