@@ -33,18 +33,16 @@ namespace Shopping.Areas.Admin.Controllers
             var Order = await _dataContext.Orders
                 .Where(o => o.OrderCode == ordercode)
                 .FirstOrDefaultAsync();
-
+            var ShippingCost = _dataContext.Orders.Where(o => o.OrderCode == ordercode).First();
             if (Order == null)
             {
-                return NotFound(); // Trả về lỗi nếu không tìm thấy đơn hàng
+                return NotFound(); 
             }
-
-            // Debug: In ra Console để kiểm tra dữ liệu
             foreach (var item in DetailsOrder)
             {
                 Console.WriteLine($"OrderCode: {item.OrderCode}, ProductId: {item.ProductId}, ProductName: {item.Product?.Name ?? "NULL"}");
             }
-
+            ViewBag.ShippingCost = ShippingCost.ShippingCost;
             ViewBag.Status = Order.Status;
             return View(DetailsOrder);
         }

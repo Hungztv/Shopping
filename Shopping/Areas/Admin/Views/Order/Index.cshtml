@@ -24,10 +24,11 @@
             <tr>
                 <th>Id</th>
                 <th>Order Code</th>
-                <th>Created Date</th>
+                <th>Shipping Cost</th>
+                @* <th>Coupon</th> *@
                 <th>UserName</th>
                 <th>Order Status</th>
-               
+                <th>Created Date</th>
                 <th>Action</th>
             </tr>
         </thead>
@@ -37,7 +38,8 @@
                 <tr>
                     <td>@item.Id</td>
                     <td>@item.OrderCode</td>
-                    <td>@item.CreateDate.ToString("dd-MM-yyyy")</td>
+                    <td>@item.ShippingCost.ToString("#,##0 đ")</td>
+                    @* <td>@item.CouponCode</td> *@
                     <td>@item.UserName</td>
                     <td>
                         @if (item.Status == 1)
@@ -54,7 +56,7 @@
                             <span class="text text-danger">Đã hủy</span>
                         }
                     </td>
-                
+                    <td>@item.CreateDate.ToString("dd-MM-yyyy")</td>
                     <td>
                         <a class="btn btn-warning btn-sm" asp-action="ViewOrder" asp-controller="Order" asp-route-ordercode="@item.OrderCode">View Order</a>
                         <a class="btn btn-danger btn-sm" asp-action="Delete" asp-controller="Order" asp-route-ordercode="@item.OrderCode">Delete</a>

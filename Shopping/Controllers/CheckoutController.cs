@@ -4,6 +4,7 @@ using Shopping.Models;
 using Shopping.Models.Repository;
 using System.Security.Claims;
 using Microsoft.EntityFrameworkCore;
+using Newtonsoft.Json;
 
 namespace Shopping.Controllers
 {
@@ -28,6 +29,16 @@ namespace Shopping.Controllers
                 var ordercode = Guid.NewGuid().ToString();
                 var orderItem = new OrderModel();
                 orderItem.OrderCode = ordercode;
+                // Nhận shipping giá từ cookie
+                var shippingPriceCookie = Request.Cookies["ShippingPrice"];
+                decimal shippingPrice = 0;
+
+                if (shippingPriceCookie != null)
+                {
+                    var shippingPriceJson = shippingPriceCookie;
+                    shippingPrice = JsonConvert.DeserializeObject<decimal>(shippingPriceJson);
+                }
+                orderItem.ShippingCost = shippingPrice;
                 orderItem.UserName = userEmail.Value;
                 orderItem.CreateDate = DateTime.Now;
                 orderItem.Status = 1;

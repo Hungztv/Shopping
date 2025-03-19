@@ -29,6 +29,7 @@
                     <th>Product Price</th>
                     <th>Quantity</th>
                     <th>Subtotal</th>
+                    <th>Shipping Cost</th>
                 </tr>
             </thead>
             <tbody>
@@ -54,6 +55,7 @@
                 <tr>
                     <td colspan="6" class="text-right"><strong>Total:</strong></td>
                     <td><strong>@total.ToString("#,##0 VNĐ")</strong></td>
+                    <td>Shipping Cost: @ViewBag.ShippingCost.ToString("#,##0 VNĐ")</td>
                 </tr>
             </tfoot>
         </table>
