@@ -1,5 +1,9 @@
-﻿@using Shopping.Models.ViewModels
+﻿@using Shopping.Models.ViewModels;
 @model CartItemViewModel
+@{
+	ViewData["Title"] = "Giỏ hàng";
+	Layout = "~/Views/Shared/_Layout.cshtml";
+}
 
 <section id="cart_items">
 	<div class="container">
@@ -59,7 +63,7 @@
 							<td rowspan="5">
 								Grand Total: <p class="cart_total_price">@Model.GrandTotal.ToString("#,##0 đ")</p>
 								<form>
-									@* Coupon Code: <input type="text" class="form-control coupon-value" /><span class="text text-success">@Model.CouponCode</span> <br /> *@
+									Coupon Code: <input type="text" class="form-control coupon-value" /><span class="text text-success">@Model.CouponCode</span> <br />
 
 									<input type="button" value="Apply" class="btn btn-sm btn-primary btn-apply-coupon" />
 								</form>

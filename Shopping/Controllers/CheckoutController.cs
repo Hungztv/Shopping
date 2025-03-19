@@ -38,6 +38,9 @@ namespace Shopping.Controllers
                     var shippingPriceJson = shippingPriceCookie;
                     shippingPrice = JsonConvert.DeserializeObject<decimal>(shippingPriceJson);
                 }
+                //Nhận Coupon code từ cookie
+                var coupon_code = Request.Cookies["CouponTitle"];
+                orderItem.CouponCode = coupon_code;
                 orderItem.ShippingCost = shippingPrice;
                 orderItem.UserName = userEmail.Value;
                 orderItem.CreateDate = DateTime.Now;

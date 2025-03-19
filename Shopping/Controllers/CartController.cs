@@ -27,6 +27,8 @@ namespace Shopping.Controllers
                 var shippingPriceJson = shippingPriceCookie;
                 shippingPrice = JsonConvert.DeserializeObject<decimal>(shippingPriceJson);
             }
+            //Nhận Coupon code từ cookie
+            var coupon_code = Request.Cookies["CouponTitle"];
             CartItemViewModel cartVM = new()
             {
                 CartItems = cartItem,

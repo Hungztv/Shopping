@@ -3,10 +3,10 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Shopping.Models.Repository;
 using Shopping.Models;
-using System.Threading.Tasks;
+
 using System.Diagnostics;
 
-namespace Shopping_Tutorial.Controllers
+namespace Shopping.Controllers
 {
     public class HomeController : Controller
     {
