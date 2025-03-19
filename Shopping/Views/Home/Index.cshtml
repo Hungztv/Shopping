@@ -9,10 +9,13 @@
 </div>
 
 <div class="col-sm-9 padding-right">
+	
+		
+	
 	<div class="features_items">
 		<!--features_items-->
 		<h2 class="title text-center">Features Items</h2>
-
+		<partial name="_FilterProducts" />
 		@foreach (var item in Model)
 		{
 
@@ -136,5 +139,20 @@
 		});
 	</script>
 	<!---//Add to Wishlish Script--->
+	<script type="text/javascript">
+		$(document).ready(function () {
+
+			$('#sort_by').on('change', function () {
+
+				var url = $(this).val();
+				// alert(url);
+				if (url) {
+					window.location = url;
+				}
+				return false;
+			});
+
+		});
+	</script>
 }
 

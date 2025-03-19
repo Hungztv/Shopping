@@ -1,131 +1,108 @@
-﻿<!DOCTYPE html>
-<html lang="en">
-	@model IEnumerable<ProductModel>
-<body>
-	<section id="slider">
-		<!--slider-->
-		<div class="container">
-			<div class="row">
-				<div class="col-sm-12">
-					<div id="slider-carousel" class="carousel slide" data-ride="carousel">
-						<ol class="carousel-indicators">
-							<li data-target="#slider-carousel" data-slide-to="0" class="active"></li>
-							<li data-target="#slider-carousel" data-slide-to="1"></li>
-							<li data-target="#slider-carousel" data-slide-to="2"></li>
-						</ol>
+﻿@model IEnumerable<ProductModel>
+@{
+    ViewData["Title"] = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
 
-						<div class="carousel-inner">
-							<div class="item active">
-								<div class="col-sm-6">
-									<h1><span>E</span>-SHOPPER</h1>
-									<h2>Free E-Commerce Template</h2>
-									<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. </p>
-									<button type="button" class="btn btn-default get">Get it now</button>
-								</div>
-								<div class="col-sm-6">
-									<img src="images/home/girl1.jpg" class="girl img-responsive" alt="" />
-									<img src="images/home/pricing.png" class="pricing" alt="" />
-								</div>
-							</div>
-							<div class="item">
-								<div class="col-sm-6">
-									<h1><span>E</span>-SHOPPER</h1>
-									<h2>100% Responsive Design</h2>
-									<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. </p>
-									<button type="button" class="btn btn-default get">Get it now</button>
-								</div>
-								<div class="col-sm-6">
-									<img src="images/home/girl2.jpg" class="girl img-responsive" alt="" />
-									<img src="images/home/pricing.png" class="pricing" alt="" />
-								</div>
-							</div>
+<div class="col-sm-3">
+    <partial name="_SidebarPartial" />
+</div>
 
-							<div class="item">
-								<div class="col-sm-6">
-									<h1><span>E</span>-SHOPPER</h1>
-									<h2>Free Ecommerce Template</h2>
-									<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. </p>
-									<button type="button" class="btn btn-default get">Get it now</button>
-								</div>
-								<div class="col-sm-6">
-									<img src="images/home/girl3.jpg" class="girl img-responsive" alt="" />
-									<img src="images/home/pricing.png" class="pricing" alt="" />
-								</div>
-							</div>
+<div class="col-sm-9 padding-right">
+    <div class="features_items">
+       
+            <partial name="_FilterProducts" />
+     
 
-						</div>
+        <!--features_items-->
+        <h2 class="title text-center">@ViewBag.Slug</h2>
 
-						<a href="#slider-carousel" class="left control-carousel hidden-xs" data-slide="prev">
-							<i class="fa fa-angle-left"></i>
-						</a>
-						<a href="#slider-carousel" class="right control-carousel hidden-xs" data-slide="next">
-							<i class="fa fa-angle-right"></i>
-						</a>
-					</div>
+        @foreach (var item in Model)
+        {
 
-				</div>
-			</div>
-		</div>
-	</section><!--/slider-->
+            <div class="col-sm-4">
+                <div class="product-image-wrapper">
 
-	<section>
-		<div class="container">
-			<div class="row">
-				<div class="col-sm-3">
-					@Html.Partial("_sideBarPartial")
-				</div>
-				<style>
-					.product-image-wrapper {
-						height: 450px;
-					}
+                    <a>
+                        <div class="single-products">
+                            <div class="productinfo text-center">
+                                <img src="~/media/products/@item.Image" alt="@item.Name" width="100px" height="200px" />
+                                <h2>@string.Format(new System.Globalization.CultureInfo("vi-VN"), "{0:N0} VNĐ", item.Price)</h2>
+                                <p>@item.Name</p>
+                                <p>Danh mục: @item.Category.Name</p>
+                                <p>Thương hiệu: @item.Brand.Name</p>
 
-				</style>
+                                <a asp-action="Add" asp-controller="Cart" asp-route-Id="@item.Id" class="btn btn-default add-to-cart"><i class="fa fa-shopping-cart"></i>Add to cart</a>
+                            </div>
+                        </div>
+                    </a>
 
-				<div class="col-sm-9 padding-right">
-					<div class="features_items">
-						<!--features_items-->
-						<h2 class="title text-center">Features Items</h2>
-						@if (Model != null)
-						{
-							@foreach (var item in Model)
-							{
-								<div class="col-sm-4">
-									<div class="product-image-wrapper">
-										<div class="single-products">
-											<a asp-action="Details" asp-controller="Product" asp-route-Id="@item.Id">
-												<div class="productinfo text-center">
-													<img src="~/media/products/@item.Image" alt="@item.Name" width="100%" />
-													<h2>@item.Price</h2>
-													<p>@item.Name</p>
-													<p>Danh Mục: @item.Category.Name</p>
-													<p>Thương Hiệu: @item.Brand.Name</p>
-													<a href="#" class="btn btn-default add-to-cart"><i class="fa fa-shopping-cart"></i>Add to cart</a>
-												</div>
-											</a>
-											
-										</div>
+                    <div class="choose">
+                        <ul class="nav nav-pills nav-justified">
+                            <li><a href="#"><i class="fa fa-plus-square"></i>Add to wishlist</a></li>
+                            <li><a href="#"><i class="fa fa-plus-square"></i>Add to compare</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        }
 
-										<div class="choose">
-											<ul class="nav nav-pills nav-justified">
-												<li><a href="#"><i class="fa fa-plus-square"></i>Add to wishlist</a></li>
-												<li><a href="#"><i class="fa fa-plus-square"></i>Add to compare</a></li>
-											</ul>
-										</div>
-									</div>
-								</div>
-							}
-						}
-
-					</div><!--features_items-->
+    </div><!--features_items-->
 
 
 
-				</div>
-			</div>
+</div>
+@if (ViewBag.count > 0)
+{
+    @section Scripts {
+    <script src="https://code.jquery.com/jquery-3.7.1.js"></script>
+    <script src="https://code.jquery.com/ui/1.14.0/jquery-ui.js"></script>
+    @* <script> *@
+    @*     $(document).ready(function () { *@
 
-		</div>
-	</section>
-</body>
-</html>
+    @*         $("#slider-range").slider({ *@
 
+    @*             range: true, *@
+    @*             min: 100000, *@
+    @*             max: 100000000, *@
+    @*             step: 100000, *@
+    @*             values: 100000, 100000000], *@
+    @*             slide: function (event, ui) { *@
 
+    @*                 $("#amount").val("đ" + ui.values[0] + " - đ" + ui.values[1]); *@
+    @*             } *@
+    @*         }); *@
+    @*        $("#amount").val("đ" + $("#slider-range").slider("values", 0) + *@
+    @*             " - đ" + $("#slider-range").slider("values", 1)); *@
+
+    @*         //btn lọc giá *@
+    @*         $('.btn-locgia').on('click', function () { *@
+
+    @*             var url = $(this).data("current_url"); *@
+    @*             // alert(url); *@
+    @*             if (url) { *@
+    @*                 window.location = url + "?startprice=" + $("#slider-range").slider("values", 0) *@
+    @*                     + "&endprice=" + $("#slider-range").slider("values", 1); *@
+    @*             } *@
+    @*             return false; *@
+    @*         }); *@
+
+    @*     }); *@
+    @* </script> *@
+    <script type="text/javascript">
+        $(document).ready(function () {
+
+            $('#sort_by').on('change', function () {
+
+                var url = $(this).val();
+                // alert(url);
+                if (url) {
+                    window.location = url;
+                }
+                return false;
+            });
+
+        });
+    </script>
+}
+}
