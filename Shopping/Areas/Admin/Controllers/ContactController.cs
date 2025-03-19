@@ -1,10 +1,13 @@
 ﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
-using Shopping.Models;
 using Shopping.Models.Repository;
+using Shopping.Models;
 
-namespace Shopping.Areas.Admin.Controllers
+
+namespace Shopping_Tutorial.Areas.Admin.Controllers
 {
     [Area("Admin")]
     [Route("Admin/Contact")]
@@ -85,3 +88,4 @@ namespace Shopping.Areas.Admin.Controllers
         }
     }
 }
+

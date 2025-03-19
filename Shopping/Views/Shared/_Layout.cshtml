@@ -1,4 +1,6 @@
-﻿<!DOCTYPE html>
+﻿
+
+<!DOCTYPE html>
 <html lang="en">
 <head>
 	<meta charset="utf-8">
@@ -93,13 +95,14 @@
 					<div class="col-sm-8">
 						<div class="shop-menu pull-right">
 							<ul class="nav navbar-nav">
+								<li><a asp-action="Index" asp-controller="Cart"><i class="fa fa-shopping-cart"></i> Cart</a></li>
 
 
 								<li><a asp-action="Index" asp-controller="Cart"><i class="fa fa-shopping-cart"></i> Cart</a></li>
 
 								@if (User.Identity?.IsAuthenticated ?? false)
 								{
-<<<<<<< HEAD
+
 									<li><a asp-action="Index" asp-controller="Cart"><i class="fa fa-crosshairs"></i> Checkout</a></li>
 									<li><a asp-action="History" asp-controller="Account"><i class="fa fa-user"></i> Account</a></li>
 									<li><a asp-action="Wishlist" asp-controller="Home"><i class="fa fa-heart"></i> Wishlist</a></li>
@@ -107,19 +110,9 @@
 									<li><a asp-controller="Dashboard" asp-action="Index" asp-area="Admin"><i class="fa fa-lock"></i>Admin CMS</a></li>
 									<li><a asp-controller="Realtime" asp-action="Index"><i class="fa fa-comment"></i>Chat</a></li>
 									<li><a asp-controller="Account" asp-action="Logout"><i class="fa fa-lock"></i>Hi @User.Identity.Name Logout </a></li>
-=======
-									
-									<li><a href="#"><i class="fa fa-user"></i> Account</a></li>
-									<li><a asp-action="Wishlist" asp-controller="Home"><i class="fa fa-heart"></i> Wishlist</a></li>
-									<li><a asp-action="Compare" asp-controller="Home"><i class="fa fa-star"></i> Compare</a></li>
-									<li><a href="checkout.html"><i class="fa fa-crosshairs"></i> Checkout</a></li>
-									<li><a href="cart.html"><i class="fa fa-shopping-cart"></i> Cart</a></li>
-									<li><a asp-controller="Product" asp-action="Index" asp-area="Admin"><i class="fa fa-lock"></i>Admin CMS</a></li>
-									<li><a asp-controller="Account" asp-action="Logout"><i class="fa fa-lock"></i> Hi, @User.Identity.Name, Logout</a></li>
 								} else
 								{
-									<li><a asp-controller="Account" asp-action="login"><i class="fa fa-lock"></i> Login</a></li>
->>>>>>> hung
+									<li><a asp-controller="Account" asp-action="Login"><i class="fa fa-lock"></i>Login</a></li>
 								}
 								else
 								{
@@ -196,9 +189,12 @@
 
 	<footer id="footer">
 		<!--Footer-->
-		<partial name="_FooterPartial" />
+		@Html.Partial("_FooterPartial")
 
-		@* <div class="footer-widget">
+
+						
+
+		<div class="footer-widget">
 			<div class="container">
 				<div class="row">
 					<div class="col-sm-2">
@@ -267,21 +263,32 @@
 		<div class="footer-bottom">
 			<div class="container">
 				<div class="row">
-					<p class="pull-left">Copyright © 2024 E-SHOPPER Inc. All rights reserved.</p>
+					<p class="pull-left">Copyright © 2025 Phenikaa Inc. All rights reserved.</p>
 					<p class="pull-right">Designed by <span><a target="_blank" href="">Themeum</a></span></p>
 				</div>
 			</div>
 		</div>
 
 	</footer><!--/Footer-->
-
-
-
-	<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+	
+	<script src="~/js/jquery.js"></script>
 	<script src="~/js/bootstrap.min.js"></script>
 	<script src="~/js/jquery.scrollUp.min.js"></script>
 	<script src="~/js/price-range.js"></script>
 	<script src="~/js/jquery.prettyPhoto.js"></script>
+
+	<script src="//cdn.datatables.net/2.1.3/js/dataTables.min.js"></script>
+
+	<script src="https://cdn.datatables.net/buttons/3.1.1/js/dataTables.buttons.js"></script>
+	<script src="https://cdn.datatables.net/buttons/3.1.1/js/buttons.dataTables.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.7/pdfmake.min.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.7/vfs_fonts.js"></script>
+	<script src="https://cdn.datatables.net/buttons/3.1.1/js/buttons.html5.min.js"></script>
+	<script src="https://cdn.datatables.net/buttons/3.1.1/js/buttons.print.min.js"></script>
+	<div id="fb-root"></div>
+	<script async defer crossorigin="anonymous" src="https://connect.facebook.net/vi_VN/sdk.js#xfbml=1&version=v20.0&appId=6125793717446054" nonce="JYxicUjw"></script>
+
 	<script src="~/js/main.js"></script>
 	<div id="fb-root"></div>
 	<script async defer crossorigin="anonymous" src="https://connect.facebook.net/vi_VN/sdk.js#xfbml=1&version=v20.0&appId=6125793717446054" nonce="JYxicUjw"></script>

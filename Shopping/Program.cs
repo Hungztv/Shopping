@@ -6,6 +6,7 @@ using Shopping.Models.Repository;
 using Shopping_Tutorial.Areas.Admin.Repository;
 
 var builder = WebApplication.CreateBuilder(args);
+builder.Services.AddControllersWithViews();
 
 // Kết nối đến cơ sở dữ liệu
 builder.Services.AddDbContext<DataContext>(options =>
