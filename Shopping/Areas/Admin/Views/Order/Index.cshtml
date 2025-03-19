@@ -24,7 +24,7 @@
             <tr>
                 <th>Id</th>
                 <th>Order Code</th>
-               
+                <th>Created Date</th>
                 <th>UserName</th>
                 <th>Order Status</th>
                
@@ -37,7 +37,7 @@
                 <tr>
                     <td>@item.Id</td>
                     <td>@item.OrderCode</td>
-                    
+                    <td>@item.CreateDate.ToString("dd-MM-yyyy")</td>
                     <td>@item.UserName</td>
                     <td>
                         @if (item.Status == 1)

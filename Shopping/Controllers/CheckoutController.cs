@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using Shopping.Models;
 using Shopping.Models.Repository;
 using System.Security.Claims;
+using Microsoft.EntityFrameworkCore;
 
 namespace Shopping.Controllers
 {
@@ -41,6 +42,11 @@ namespace Shopping.Controllers
                     orderDetail.Quantity = cart.Quantity;
                     orderDetail.Price = cart.Price;
                     orderDetail.ProductId = (int)cart.ProductId;
+                    //update product quantity
+                    var product = await _context.Products.Where(p => p.Id == cart.ProductId).FirstAsync();
+                    product.Quantity -= cart.Quantity;
+                    product.SoldOut += cart.Quantity;
+                    _context.Update(product);
                     _context.Add(orderDetail);
                     await _context.SaveChangesAsync();
 
@@ -48,8 +54,9 @@ namespace Shopping.Controllers
                 HttpContext.Session.Remove("Cart");
                 // Send Email
                 var receiver = userEmail.Value;
-                var subject = "Order Confirmation";
-                var message = "Your order has been placed successfully!";
+                var subject = "Xác nhận đơn hàng";
+                var message = "Cảm ơn bạn đã đặt hàng! Chúng tôi sẽ xử lý và giao hàng sớm nhất có thể.";
+
                 await _emailSender.SendEmailAsync(receiver, subject, message);
 
 

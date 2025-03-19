@@ -52,6 +52,8 @@ namespace Shopping.Areas.Admin.Controllers
         [Route("UpdateOrder")]
         public async Task<IActionResult> UpdateOrder(string ordercode, int status)
         {
+            Console.WriteLine($"Nhận request: OrderCode = {ordercode}, Status = {status}");
+
             if (string.IsNullOrEmpty(ordercode))
             {
                 return BadRequest(new { success = false, message = "Mã đơn hàng không hợp lệ." });
@@ -65,7 +67,7 @@ namespace Shopping.Areas.Admin.Controllers
             }
 
             order.Status = status;
-            _dataContext.Orders.Update(order); 
+            _dataContext.Orders.Update(order);
 
             try
             {

@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Shopping.Models;
 using Shopping.Models.Repository;
 using Shopping.Models.ViewModels;
@@ -88,22 +89,34 @@ namespace Shopping.Controllers
 
         public async Task<IActionResult> Increase(int Id)
         {
-            List<CartItemModel> cart = HttpContext.Session.GetJson<List<CartItemModel>>("Cart") ?? new List<CartItemModel>();
+            ProductModel product = await _datacontext.Products.Where(p => p.Id == Id).FirstOrDefaultAsync();
 
-            CartItemModel cartItem = cart.FirstOrDefault(c => c.ProductId == Id);
-
-            if (cartItem != null)
+            List<CartItemModel> cart = HttpContext.Session.GetJson<List<CartItemModel>>("Cart");
+            CartItemModel cartItem = cart.Where(c => c.ProductId == Id).FirstOrDefault();
+            if (cartItem.Quantity >= 1 && product.Quantity > cartItem.Quantity)
             {
-               
                 ++cartItem.Quantity;
-
-                HttpContext.Session.SetJson("Cart", cart);
-                TempData["success"] = "Increased product quantity successfully!";
+                TempData["success"] = "Increase Product to cart Sucessfully! ";
             }
+            else
+            {
+                cartItem.Quantity = product.Quantity;
+                TempData["success"] = "Maximum Product Quantity to cart Sucessfully! ";
+
+                //cart.RemoveAll(p => p.ProductId == Id);
+            }
+            if (cart.Count == 0)
+            {
+                HttpContext.Session.Remove("Cart");
+            }
+            else
+            {
+                HttpContext.Session.SetJson("Cart", cart);
+            }
+
 
             return RedirectToAction("Index");
         }
-
 
         public async Task<IActionResult> Remove(int Id)
         {

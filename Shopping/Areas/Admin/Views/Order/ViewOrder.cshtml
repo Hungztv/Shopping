@@ -44,40 +44,41 @@
                         <td>@item.OrderCode</td>
                         <td>@item.UserName</td>
                         <td>@(item.Product != null ? item.Product.Name : "N/A")</td>
-                        <td>@item.Price</td>
+                        <td>@item.Price.ToString("#,##0 VNĐ")</td>
                         <td>@item.Quantity</td>
-                        <td>@subtotal</td>
+                        <td>@subtotal.ToString("#,##0 VNĐ")</td>
                     </tr>
                 }
             </tbody>
             <tfoot>
                 <tr>
                     <td colspan="6" class="text-right"><strong>Total:</strong></td>
-                    <td><strong>@total</strong></td>
+                    <td><strong>@total.ToString("#,##0 VNĐ")</strong></td>
                 </tr>
             </tfoot>
         </table>
     </div>
-                    
-                    @* <td>Shipping : @ViewBag.ShippingCost.ToString("#,##0 đ")</td> *@
 
-                    <td>
-                        @if (@ViewBag.Status != 3)
-                        {
-                            <select class="form-control select-update-order">
+    <tr>
+        
 
-                                <option value="1">Đơn hàng mới</option>
-                                <option value="0">Đã xử lý</option>
+        <td>
+            @if (@ViewBag.Status != 3)
+            {
+                <select class="form-control select-update-order">
+
+                    <option value="1">Đơn hàng mới</option>
+                    <option value="0">Đã xử lý</option>
 
 
-                            </select>
-                        }
-                    </td>
-                </tr>
-            </tbody>
-        </table>
+                </select>
+            }
+        </td>
+    </tr>
+  
 
-    </div>
+
+
 </body>
 
 </html>
@@ -92,12 +93,13 @@
             }
         });
 
+           
                 $('.select-update-order').change(function () {
             var status = $(this).val();
 
-            var ordercode = $(this).closest('tr').find('td').eq(1).text().trim();
+           var ordercode = $(this).parents('tr').find('td:nth-child(2)').text().trim();
 
-            console.log("Order Code lấy được:", ordercode); // Debug xem giá trị đúng chưa
+            console.log("Order Code lấy được:", ordercode); 
 
             if (!ordercode) {
                 Swal.fire("Lỗi!", "Không lấy được mã đơn hàng.", "error");
@@ -106,7 +108,7 @@
 
             $.ajax({
                 type: "POST",
-                url: "@Url.Action("UpdateOrder")",
+                url: "/Admin/Order/UpdateOrder",
                 data: { status: status, ordercode: ordercode },
                 success: function (result) {
                     if (result.success) {
@@ -152,7 +154,7 @@
             });
         });
     </script>
-}
+
 
 
 
