@@ -7,6 +7,7 @@ using Shopping.Models.Repository;
 using Shopping.Models.ViewModels;
 using Shopping_Tutorial.Areas.Admin.Repository;
 using System.Security.Claims;
+using System.Threading.Tasks;
 
 namespace Shopping.Controllers
 {
@@ -73,11 +74,52 @@ namespace Shopping.Controllers
                 TempData["error"] = "Email not found or token is not right";
                 return RedirectToAction("ForgetPass", "Account");
             }
-            return View();
+         
         }
         public IActionResult ForgetPass(string returnUrl)
         {
             return View();
+        }
+        public async Task<IActionResult> UpdateAccount()
+        {
+            if ((bool)!User.Identity?.IsAuthenticated)
+            {
+
+                return RedirectToAction("Login", "Account");
+            }
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            var userEmail = User.FindFirstValue(ClaimTypes.Email);
+            var user = await _userManager.Users.FirstOrDefaultAsync(u => u.Email == userEmail);
+            if (user == null)
+            {
+                return NotFound();
+            }
+            return View(user);
+           
+        }
+        [HttpPost]
+        public async Task<IActionResult> UpdateInfoAccount(AppUserModel user)
+        {
+           
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            
+            var userById = await _userManager.Users.FirstOrDefaultAsync(u => u.Id == userId);
+            if (userById == null)
+            {
+                return NotFound();
+            }
+            else
+            {
+                var passwordHasher = new PasswordHasher<AppUserModel>();
+                var passwordHash = passwordHasher.HashPassword(userById, user.PasswordHash);
+                userById.PhoneNumber = user.PhoneNumber;
+                userById.PasswordHash = passwordHash;
+                _dataContext.Update(userById);
+                await _dataContext.SaveChangesAsync();
+                TempData["success"] = "UpdateAccount Thành Công!";
+            }
+            return RedirectToAction("UpdateAccount", "Account");
+
         }
         [HttpPost]
         public async Task<IActionResult> SendMailForgetPass(AppUserModel user)
