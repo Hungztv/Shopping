@@ -1,4 +1,6 @@
 ﻿
+using Microsoft.AspNetCore.Authentication.Google;
+using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -8,6 +10,7 @@ using Shopping.Models.ViewModels;
 using Shopping_Tutorial.Areas.Admin.Repository;
 using System.Security.Claims;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authentication.Cookies;
 
 namespace Shopping.Controllers
 {
@@ -238,9 +241,65 @@ namespace Shopping.Controllers
         }
         public async Task<IActionResult> Logout(string returnUrl = "/")
         {
+            await HttpContext.SignOutAsync();
             await _signInManager.SignOutAsync();
             return Redirect(returnUrl);
         }
-        
+        public async Task LoginByGoogle()
+        {
+            await HttpContext.ChallengeAsync(GoogleDefaults.AuthenticationScheme,
+                new AuthenticationProperties
+                {
+                    RedirectUri = Url.Action("GoogleResponse")
+                });
+        }
+        public async Task<IActionResult> GoogleResponse()
+        {
+            // Authenticate using Google scheme
+            var result = await HttpContext.AuthenticateAsync(GoogleDefaults.AuthenticationScheme);
+            if (!result.Succeeded)
+            {
+                //Nếu xác thực ko thành công quay về trang Login
+                return RedirectToAction("Login");
+            }
+            var claims = result.Principal.Identities.FirstOrDefault().Claims.Select(claim => new
+            {
+                claim.Issuer,
+                claim.OriginalIssuer,
+                claim.Type,
+                claim.Value
+            });
+            var email = claims.FirstOrDefault(c => c.Type == ClaimTypes.Email)?.Value;
+            string emailName = email.Split('@')[0];
+            var existingUser = await _userManager.FindByEmailAsync(email);
+            if (existingUser == null)
+            {
+                var passwordHasher = new PasswordHasher<AppUserModel>();
+                var hashedPassword = passwordHasher.HashPassword(null, "h123456789");
+                var newUser = new AppUserModel { UserName = emailName, Email = email };
+                newUser.PasswordHash = hashedPassword;
+                var createUserResult = await _userManager.CreateAsync(newUser);
+                if (!createUserResult.Succeeded)
+                {
+                    TempData["error"] = "Đăng ký tài khoản thất bại. Vui lòng thử lại sau.";
+                    return RedirectToAction("Login", "Account"); // Trả về trang đăng ký nếu fail
+
+                }
+                else
+                {
+                    // Nếu user tạo user thành công thì đăng nhập luôn 
+                    await _signInManager.SignInAsync(newUser, isPersistent: false);
+                    TempData["success"] = "Đăng ký tài khoản thành công.";
+                    return RedirectToAction("Index", "Home");
+                }
+            }
+            else
+            {
+                //Còn user đã tồn tại thì đăng nhập luôn với existingUser
+                await _signInManager.SignInAsync(existingUser, isPersistent: false);
+            }
+            return RedirectToAction("Login","Account");
+        }
+
     }
 }
