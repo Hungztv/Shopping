@@ -10,7 +10,8 @@ namespace Shopping.Areas.Admin.Controllers
 {
     [Area("Admin")]
     [Route("Admin/Product")]
-    
+    [Authorize(Roles = "Admin")]
+
 
     public class ProductController : Controller
     {
@@ -163,11 +164,10 @@ namespace Shopping.Areas.Admin.Controllers
                     fs.Close();
                     existed_product.Image = imageName;
                 }
-
-
                 // Update other product properties
                 existed_product.Name = product.Name;
                 existed_product.Description = product.Description;
+                existed_product.CapitalPrice = product.CapitalPrice;
                 existed_product.Price = product.Price;
                 existed_product.CategoryId = product.CategoryId;
                 existed_product.BrandId = product.BrandId;
@@ -176,7 +176,6 @@ namespace Shopping.Areas.Admin.Controllers
                 await _dataContext.SaveChangesAsync();
                 TempData["success"] = "Cập nhật sản phẩm thành công";
                 return RedirectToAction("Index");
-
             }
             else
             {

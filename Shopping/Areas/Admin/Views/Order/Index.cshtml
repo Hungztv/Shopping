@@ -25,7 +25,7 @@
                 <th>Id</th>
                 <th>Order Code</th>
                 <th>Shipping Cost</th>
-                <th>Coupon</th> 
+                <th>Coupon</th>
                 <th>UserName</th>
                 <th>Order Status</th>
                 <th>Created Date</th>
@@ -39,7 +39,7 @@
                     <td>@item.Id</td>
                     <td>@item.OrderCode</td>
                     <td>@item.ShippingCost.ToString("#,##0 đ")</td>
-                    <td>@item.CouponCode</td> 
+                    <td>@item.CouponCode</td>
                     <td>@item.UserName</td>
                     <td>
                         @if (item.Status == 1)
@@ -49,6 +49,10 @@
                         else if (item.Status == 2)
                         {
                             <span class="text text-success">Đã giao hàng</span>
+                        }
+                        else if (item.Status == 0)
+                        {
+                            <span class="text text-success">Đã Xử Lí</span>
                         }
                         else
                         {
