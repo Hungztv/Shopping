@@ -3,12 +3,16 @@ using Microsoft.AspNetCore.Authentication.Google;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Shopping.Models;
+using Shopping.Models.Momo;
 using Shopping.Models.Repository;
+using Shopping.Services.Momo;
 using Shopping_Tutorial.Areas.Admin.Repository;
 
 var builder = WebApplication.CreateBuilder(args);
-builder.Services.AddControllersWithViews();
+builder.Services.Configure<MomoOptionModel>(builder.Configuration.GetSection("MomoAPI"));
+builder.Services.AddScoped<IMomoService, MomoService>();
 
+builder.Services.AddControllersWithViews();
 // Kết nối đến cơ sở dữ liệu
 builder.Services.AddDbContext<DataContext>(options =>
     options.UseSqlServer(builder.Configuration["ConnectionStrings:DbConnectedDb"]));
@@ -17,7 +21,6 @@ builder.Services.AddDbContext<DataContext>(options =>
 // Thêm các dịch vụ vào container
 builder.Services.AddControllersWithViews();
 builder.Services.AddTransient<IEmailSender, EmailSender>();
-
 
 builder.Services.AddSession(options =>
 {

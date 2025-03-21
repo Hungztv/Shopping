@@ -4,6 +4,10 @@ namespace Shopping.Models
 {
     public class StatisticalModel
     {
+        internal object date;
+        internal object revenue;
+        internal int orders;
+
         [Key]
         public int Id { get; set; }
         public int Quantity { get; set; }

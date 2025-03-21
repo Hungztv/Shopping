@@ -42,6 +42,8 @@
 
     <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
 
+    <PackageReference Include="RestSharp" Version="112.1.0" />
+
   </ItemGroup>
 
 

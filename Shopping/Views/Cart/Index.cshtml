@@ -120,17 +120,17 @@
 								</td>
 								<td>
 									<form method="POST" asp-action="CreatePaymentMomo" asp-controller="Payment">
-										<input type="hidden" name="FullName" value="@User.Identity.Name" />
 										<input type="hidden" name="Amount" value="@Model.GrandTotal" />
-										<input type="hidden" name="OrderInfo" value="Thanh toán qua Momo Payment tại HieuTanStore" />
-
-										<button class="btn btn-danger" name="PayUrl" type="submit">Pay with MoMo</button>
+										<input type="hidden" name="OrderId" value="@Guid.NewGuid().ToString()" />
+										<input type="hidden" name="OrderInfo" value="Thanh toán qua Momo Payment tại HungStore" />
+										<input type="hidden" name="FullName" value="Thanh toán qua Momo Payment tại HungStore" />
+										<button class="btn btn-danger"  type="submit">Pay with MoMo</button>
 									</form>
 									<form method="POST" asp-action="CreatePaymentUrlVnpay" asp-controller="Payment">
 
 										<input type="hidden" name="Name" value="@User.Identity.Name" />
 										<input type="hidden" name="Amount" value="@Model.GrandTotal" />
-										<input type="hidden" name="OrderDescription" value="Thanh toán qua Vnpay tại HieuTanStore" />
+										<input type="hidden" name="OrderDescription" value="Thanh toán qua Vnpay tại HungStore" />
 										<input type="hidden" name="OrderType" value="other" />
 
 										<button class="btn btn-success" type="submit">Pay with Vnpay</button>
