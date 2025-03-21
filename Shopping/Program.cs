@@ -11,11 +11,11 @@ builder.Services.AddControllersWithViews();
 // Kết nối đến cơ sở dữ liệu
 builder.Services.AddDbContext<DataContext>(options =>
     options.UseSqlServer(builder.Configuration["ConnectionStrings:DbConnectedDb"]));
-builder.Services.AddTransient<IEmailSender, EmailSender>();
+
 
 // Thêm các dịch vụ vào container
 builder.Services.AddControllersWithViews();
-builder.Services.AddSingleton<IEmailSender, EmailSender>();
+builder.Services.AddTransient<IEmailSender, EmailSender>();
 
 
 builder.Services.AddSession(options =>
@@ -100,4 +100,5 @@ using (var scope = app.Services.CreateScope())
         }
     }
 }
+
 app.Run();
