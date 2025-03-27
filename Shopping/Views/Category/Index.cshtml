@@ -4,105 +4,145 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<div class="col-sm-3">
-    <partial name="_SidebarPartial" />
-</div>
+<div class="container my-5">
+    <div class="row">
+        <!-- Sidebar -->
+        <div class="col-lg-3">
+            <partial name="_SidebarPartial" />
+        </div>
 
-<div class="col-sm-9 padding-right">
-    <div class="features_items">
-       
-            <partial name="_FilterProducts" />
-     
+        <!-- Product List -->
+        <div class="col-lg-9">
+            <div class="features-items">
+                <partial name="_FilterProducts" />
+                <h2 class="text-center mb-4 fw-bold">@ViewBag.Slug</h2>
+                <div class="row row-cols-1 row-cols-md-3 g-4">
+                    @foreach (var item in Model)
+                    {
+                        <div class="col">
+                            <div class="card h-100 shadow-sm border-0">
+                                <div class="card-img-top text-center p-3">
+                                    <a asp-action="Details" asp-controller="Product" asp-route-Id="@item.Id">
+                                        <img src="~/media/products/@item.Image" alt="@item.Name" class="img-fluid" style="max-height: 200px; object-fit: contain;">
+                                    </a>
+                                </div>
+                                <div class="card-body text-center">
+                                    <h5 class="card-title">
+                                        <a asp-action="Details" asp-controller="Product" asp-route-Id="@item.Id" class="text-dark text-decoration-none">@item.Name</a>
+                                    </h5>
+                                    <p class="text-muted mb-1">Danh mục: @item.Category.Name</p>
+                                    <p class="text-muted mb-1">Thương hiệu: @item.Brand.Name</p>
+                                    <h4 class="text-warning fw-bold mb-3">@string.Format(new System.Globalization.CultureInfo("vi-VN"), "{0:N0} VNĐ", item.Price)</h4>
 
-        <!--features_items-->
-        <h2 class="title text-center">@ViewBag.Slug</h2>
-
-        @foreach (var item in Model)
-        {
-
-            <div class="col-sm-4">
-                <div class="product-image-wrapper">
-
-                    <a>
-                        <div class="single-products">
-                            <div class="productinfo text-center">
-                                <img src="~/media/products/@item.Image" alt="@item.Name" width="100px" height="200px" />
-                                <h2>@string.Format(new System.Globalization.CultureInfo("vi-VN"), "{0:N0} VNĐ", item.Price)</h2>
-                                <p>@item.Name</p>
-                                <p>Danh mục: @item.Category.Name</p>
-                                <p>Thương hiệu: @item.Brand.Name</p>
-
-                                <a asp-action="Add" asp-controller="Cart" asp-route-Id="@item.Id" class="btn btn-default add-to-cart"><i class="fa fa-shopping-cart"></i>Add to cart</a>
+                                    @if (item.Quantity == 0)
+                                    {
+                                        <button type="button" class="btn btn-secondary" disabled><i class="fas fa-shopping-cart"></i> Hết hàng</button>
+                                    }
+                                    else
+                                    {
+                                        <button class="btn btn-warning add-to-cart" data-product_id="@item.Id"><i class="fas fa-shopping-cart"></i> Thêm giỏ hàng</button>
+                                    }
+                                </div>
+                                @if (User.Identity?.IsAuthenticated ?? false)
+                                {
+                                    <div class="card-footer bg-light border-top-0 text-center py-2">
+                                        <div class="btn-group" role="group">
+                                            <button class="btn btn-outline-danger btn-sm add-btn-wishlist" data-product_id="@item.Id"><i class="fas fa-heart"></i></button>
+                                            <button class="btn btn-outline-primary btn-sm add-btn-compare" data-product_id="@item.Id"><i class="fas fa-exchange-alt"></i></button>
+                                        </div>
+                                    </div>
+                                }
                             </div>
                         </div>
-                    </a>
-
-                    <div class="choose">
-                        <ul class="nav nav-pills nav-justified">
-                            <li><a href="#"><i class="fa fa-plus-square"></i>Add to wishlist</a></li>
-                            <li><a href="#"><i class="fa fa-plus-square"></i>Add to compare</a></li>
-                        </ul>
-                    </div>
+                    }
                 </div>
             </div>
-        }
-
-    </div><!--features_items-->
-
-
-
+        </div>
+    </div>
 </div>
-@if (ViewBag.count > 0)
-{
-    @section Scripts {
-    <script src="https://code.jquery.com/jquery-3.7.1.js"></script>
-    <script src="https://code.jquery.com/ui/1.14.0/jquery-ui.js"></script>
-    @* <script> *@
-    @*     $(document).ready(function () { *@
 
-    @*         $("#slider-range").slider({ *@
-
-    @*             range: true, *@
-    @*             min: 100000, *@
-    @*             max: 100000000, *@
-    @*             step: 100000, *@
-    @*             values: 100000, 100000000], *@
-    @*             slide: function (event, ui) { *@
-
-    @*                 $("#amount").val("đ" + ui.values[0] + " - đ" + ui.values[1]); *@
-    @*             } *@
-    @*         }); *@
-    @*        $("#amount").val("đ" + $("#slider-range").slider("values", 0) + *@
-    @*             " - đ" + $("#slider-range").slider("values", 1)); *@
-
-    @*         //btn lọc giá *@
-    @*         $('.btn-locgia').on('click', function () { *@
-
-    @*             var url = $(this).data("current_url"); *@
-    @*             // alert(url); *@
-    @*             if (url) { *@
-    @*                 window.location = url + "?startprice=" + $("#slider-range").slider("values", 0) *@
-    @*                     + "&endprice=" + $("#slider-range").slider("values", 1); *@
-    @*             } *@
-    @*             return false; *@
-    @*         }); *@
-
-    @*     }); *@
-    @* </script> *@
-    <script type="text/javascript">
+@section Scripts {
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <script>
         $(document).ready(function () {
+            // Add to Cart
+            $('.add-to-cart').click(function () {
+                var id = $(this).data("product_id");
+                $.ajax({
+                    type: "POST",
+                    url: "@Url.Action("Add", "Cart")",
+                    data: { Id: id },
+                    success: function (result) {
+                        if (result) {
+                            Swal.fire({
+                                icon: 'success',
+                                title: 'Thành công',
+                                text: 'Đã thêm sản phẩm vào giỏ hàng!',
+                                timer: 1500,
+                                showConfirmButton: false
+                            });
+                        }
+                    },
+                    error: function () {
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Lỗi',
+                            text: 'Có lỗi xảy ra khi thêm vào giỏ hàng.'
+                        });
+                    }
+                });
+            });
 
+            // Add to Wishlist
+            $('.add-btn-wishlist').click(function () {
+                var id = $(this).data("product_id");
+                $.ajax({
+                    type: "POST",
+                    url: "@Url.Action("AddWishlist", "Home")",
+                    data: { Id: id },
+                    success: function (result) {
+                        if (result) {
+                            Swal.fire({
+                                icon: 'success',
+                                title: 'Thành công',
+                                text: 'Đã thêm vào danh sách yêu thích!',
+                                timer: 1500,
+                                showConfirmButton: false
+                            });
+                        }
+                    }
+                });
+            });
+
+            // Add to Compare
+            $('.add-btn-compare').click(function () {
+                var id = $(this).data("product_id");
+                $.ajax({
+                    type: "POST",
+                    url: "@Url.Action("AddCompare", "Home")",
+                    data: { Id: id },
+                    success: function (result) {
+                        if (result) {
+                            Swal.fire({
+                                icon: 'success',
+                                title: 'Thành công',
+                                text: 'Đã thêm vào danh sách so sánh!',
+                                timer: 1500,
+                                showConfirmButton: false
+                            });
+                        }
+                    }
+                });
+            });
+
+            // Sort by
             $('#sort_by').on('change', function () {
-
                 var url = $(this).val();
-                // alert(url);
                 if (url) {
                     window.location = url;
                 }
                 return false;
             });
-
         });
     </script>
-}
 }

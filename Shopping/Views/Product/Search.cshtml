@@ -1,154 +1,140 @@
 ﻿@model IEnumerable<ProductModel>
 @{
     ViewData["Title"] = @ViewBag.Keyword;
-  
+    Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<!DOCTYPE html>
-<html lang="en">
-	
-<body>
-	
+<!-- Main Content -->
+<div class="container my-5">
+    <div class="row">
+        <!-- Sidebar -->
+        <div class="col-lg-3">
+            @Html.Partial("_SidebarPartial")
+        </div>
 
-	<section>
-		<div class="container">
-			<div class="row">
-				<div class="col-sm-3">
-					@Html.Partial("_sideBarPartial")
-				</div>
-				<style>
-					.product-image-wrapper {
-						height: 450px;
-					}
+        <!-- Product List -->
+        <div class="col-lg-9">
+            <div class="features-items">
+                <h2 class="text-center mb-4 fw-bold">Kết quả tìm kiếm: @ViewBag.Keyword</h2>
+                @if (Model != null && Model.Any())
+                {
+                    <div class="row row-cols-1 row-cols-md-3 g-4">
+                        @foreach (var item in Model)
+                        {
+                            <div class="col">
+                                <div class="card h-100 shadow-sm border-0 position-relative">
+                                    <div class="card-img-top text-center p-3">
+                                        <a asp-action="Details" asp-controller="Product" asp-route-Id="@item.Id">
+                                            <img src="~/media/products/@item.Image" alt="@item.Name" class="img-fluid" style="max-height: 200px; object-fit: contain;">
+                                        </a>
+                                    </div>
+                                    <div class="card-body text-center">
+                                        <h5 class="card-title">
+                                            <a asp-action="Details" asp-controller="Product" asp-route-Id="@item.Id" class="text-dark text-decoration-none">@item.Name</a>
+                                        </h5>
+                                        <p class="text-muted mb-1">Danh mục: @item.Category.Name</p>
+                                        <p class="text-muted mb-1">Thương hiệu: @item.Brand.Name</p>
+                                        <h4 class="text-warning fw-bold mb-3">@string.Format(new System.Globalization.CultureInfo("vi-VN"), "{0:N0} VNĐ", item.Price)</h4>
+                                        <button class="btn btn-warning add-to-cart" data-product_id="@item.Id">
+                                            <i class="fas fa-shopping-cart"></i> Thêm giỏ hàng
+                                        </button>
+                                    </div>
+                                    <div class="card-footer bg-light border-top-0 text-center">
+                                        <div class="btn-group" role="group">
+                                            <a href="#" class="btn btn-outline-danger btn-sm add-btn-wishlist" data-product_id="@item.Id">
+                                                <i class="fas fa-heart"></i> Wishlist
+                                            </a>
+                                            <a href="#" class="btn btn-outline-primary btn-sm add-btn-compare" data-product_id="@item.Id">
+                                                <i class="fas fa-exchange-alt"></i> Compare
+                                            </a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        }
+                    </div>
+                }
+                else
+                {
+                    <p class="text-center text-muted">Không tìm thấy sản phẩm nào phù hợp với từ khóa "@ViewBag.Keyword".</p>
+                }
+            </div>
+        </div>
+    </div>
+</div>
 
-				</style>
-
-				<div class="col-sm-9 padding-right">
-					<div class="features_items">
-						<!--features_items-->
-						<h2 class="title text-center">Features Items</h2>
-						@if (Model != null)
-						{
-							@foreach (var item in Model)
-							{
-								<div class="col-sm-4">
-									<div class="product-image-wrapper">
-
-										<div class="single-products">
-
-											<div class="productinfo text-center">
-												<a asp-action="Details" asp-controller="Product" asp-route-Id="@item.Id">
-													<img src="~/media/products/@item.Image" alt="@item.Name" width="100%" />
-													<h2>@string.Format(new System.Globalization.CultureInfo("vi-VN"), "{0:N0} VNĐ", item.Price)</h2>
-													<p>@item.Name</p>
-													<p>Danh Mục: @item.Category.Name</p>
-													<p>Thương Hiệu: @item.Brand.Name</p>
-												</a>
-												<button class="btn btn-default add-to-cart" data-product_id="@item.Id"><i class="fa fa-shopping-cart"></i>Thêm giỏ hàng</button>
-											</div>
-
-										</div>
-										<div class="choose">
-											<ul class="nav nav-pills nav-justified">
-												<li><a href="#"><i class="fa fa-plus-square"></i>Add to wishlist</a></li>
-												<li><a href="#"><i class="fa fa-plus-square"></i>Add to compare</a></li>
-											</ul>
-										</div>
-									</div> <!-- Đóng .product-image-wrapper -->
-								</div> <!-- Đóng .col-sm-4 -->
-							}
-
-						}
-
-					</div><!--features_items-->
-
-
-
-				</div>
-			</div>
-
-		</div>
-	</section>
-</body>
-</html>
 @section Scripts {
-	<script>
-		
-			$('.add-to-cart').click(function () {
-				var Id = $(this).data("product_id");
+    <script>
+        $(document).ready(function () {
+            // Add to Cart
+            $('.add-to-cart').click(function () {
+                var id = $(this).data("product_id");
+                $.ajax({
+                    type: "POST",
+                    url: "@Url.Action("Add", "Cart")",
+                    data: { Id: id },
+                    success: function (result) {
+                        if (result) {
+                            Swal.fire({
+                                icon: 'success',
+                                title: 'Thành công',
+                                text: 'Thêm giỏ hàng thành công!',
+                                timer: 1500,
+                                showConfirmButton: false
+                            });
+                        }
+                    },
+                    error: function () {
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Lỗi',
+                            text: 'Có lỗi xảy ra khi thêm vào giỏ hàng.'
+                        });
+                    }
+                });
+            });
 
-				//alert(product_id);
+            // Add to Wishlist
+            $('.add-btn-wishlist').click(function () {
+                var id = $(this).data("product_id");
+                $.ajax({
+                    type: "POST",
+                    url: "@Url.Action("AddWishlist", "Home")",
+                    data: { Id: id },
+                    success: function (result) {
+                        if (result) {
+                            Swal.fire({
+                                icon: 'success',
+                                title: 'Thành công',
+                                text: 'Thêm vào danh sách yêu thích thành công!',
+                                timer: 1500,
+                                showConfirmButton: false
+                            });
+                        }
+                    }
+                });
+            });
 
-				$.ajax({
-					type: "POST",
-					url: "@Url.Action("Add","Cart")",
-					data: { Id: Id }, // Send data to the server
-
-					success: function (result) {
-						// Handle successful update
-						if (result) {
-
-							Swal.fire("Thêm giỏ hàng thành công.");
-						} 
-					}
-
-				});
-			});
-		
-	</script>
-	<!---Add to Wishlish Script--->
-	<script>
-		$(document).ready(function () {
-			$('.add-btn-wishlist').click(function () {
-				var Id = $(this).data("product_id");
-
-				//alert(product_id);
-
-				$.ajax({
-					type: "POST",
-					url: "@Url.Action("AddWishlist", "Home")",
-					data: { Id: Id }, // Send data to the server
-
-					success: function (result) {
-						// Handle successful update
-						if (result) {
-
-							Swal.fire("Thêm yêu thích sản phẩm thành công.");
-						}
-					}
-
-				});
-			});
-		});
-	</script>
-	<!---//Add to Wishlish Script--->
-	<!---Add to Wishlish Script--->
-	<script>
-		$(document).ready(function () {
-			$('.add-btn-compare').click(function () {
-				var Id = $(this).data("product_id");
-
-				//alert(product_id);
-
-				$.ajax({
-					type: "POST",
-					url: "@Url.Action("AddCompare", "Home")",
-					data: { Id: Id }, // Send data to the server
-
-					success: function (result) {
-						// Handle successful update
-						if (result) {
-
-							Swal.fire("Thêm sao sánh thành công.");
-						}
-					}
-
-				});
-			});
-		});
-	</script>
-	}
-
-
-
-
+            // Add to Compare
+            $('.add-btn-compare').click(function () {
+                var id = $(this).data("product_id");
+                $.ajax({
+                    type: "POST",
+                    url: "@Url.Action("AddCompare", "Home")",
+                    data: { Id: id },
+                    success: function (result) {
+                        if (result) {
+                            Swal.fire({
+                                icon: 'success',
+                                title: 'Thành công',
+                                text: 'Thêm vào danh sách so sánh thành công!',
+                                timer: 1500,
+                                showConfirmButton: false
+                            });
+                        }
+                    }
+                });
+            });
+        });
+    </script>
+}

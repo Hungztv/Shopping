@@ -1,10 +1,24 @@
 ﻿@model IEnumerable<BrandModel>
 
-@foreach (var item in Model)
-{
-	<div class="panel panel-default">
-        <div class="panel-heading">
-            <h4 class="panel-title"><a asp-action="Index" asp-controller="Brand" asp-route-Slug="@item.Slug">@item.Name</a></h4>
-        </div>
-	</div>
-}
+<div class="brand-component">
+  
+    <ul class="list-group shadow-sm border-0">
+        @if (Model != null && Model.Any())
+        {
+            @foreach (var item in Model)
+            {
+                <li class="list-group-item border-0 py-2">
+                    <a asp-action="Index"
+                       asp-controller="Brand"
+                       asp-route-Slug="@item.Slug"
+                       class="text-dark text-decoration-none hover-primary">@item.Name</a>
+                </li>
+            }
+        }
+        else
+        {
+            <li class="list-group-item border-0 py-2 text-muted">Chưa có thương hiệu nào.</li>
+        }
+    </ul>
+</div>
+

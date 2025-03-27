@@ -131,7 +131,7 @@ namespace Shopping.Areas.Admin.Controllers
 
         [Route("Edit")]
 
-        public async Task<IActionResult> Edit(long Id)
+        public async Task<IActionResult> Edit(int Id)
         {
             ProductModel product = await _dataContext.Products.FindAsync(Id);
             ViewBag.Categories = new SelectList(_dataContext.Categories, "Id", "Name", product.CategoryId);

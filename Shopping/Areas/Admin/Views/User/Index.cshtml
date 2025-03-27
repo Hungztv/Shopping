@@ -1,52 +1,123 @@
 ﻿@{
-    ViewData["title"] = "List User";
+    ViewData["Title"] = "List User";
 }
 
 <!DOCTYPE html>
-
-<html>
+<html lang="en">
 <head>
-    <meta name="viewport" content="width=device-width" />
-    <title>Index</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>@ViewData["Title"]</title>
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" rel="stylesheet">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f8f9fa;
+            padding: 20px;
+            overflow-y: auto; 
+        }
+
+        h3 {
+            color: #2c3e50;
+            margin-bottom: 20px;
+        }
+
+        .table-responsive {
+            background: #fff;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            overflow-x: auto; 
+        }
+
+        .table {
+            margin-bottom: 0;
+        }
+
+            .table thead th {
+                background-color: #2c3e50;
+                color: #fff;
+                border: none;
+                padding: 12px;
+            }
+
+            .table tbody tr:hover {
+                background-color: #f1f2f6;
+            }
+
+            .table td {
+                vertical-align: middle;
+                padding: 10px;
+            }
+
+        .btn-primary {
+            background-color: #3498db;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 5px;
+            margin-bottom: 15px;
+        }
+
+            .btn-primary:hover {
+                background-color: #2980b9;
+            }
+
+        .btn-warning {
+            padding: 5px 10px;
+            margin-right: 5px;
+        }
+
+        .btn-danger {
+            padding: 5px 10px;
+        }
+    </style>
 </head>
 <body>
-    <h3>List User</h3>
+    <div class="container">
+        <h3><i class="fas fa-users me-2"></i>List User</h3>
 
-    <a class="btn btn-primary" asp-action="Create" asp-controller="User">Add User</a>
-    <div class="table table-responsive">
-        <table class="table table-responsive" id="myTable" id="myTable">
-        <thead>
-            <tr>
-                <th>Id</th>
-                <th>UserName</th>
-                <th>Email</th>
-                <th>PasswordHash</th>
-                <th>Phone</th>
-                <th>Role</th>
-                <th></th>
-            </tr>
-        </thead>
-        <tbody>
-                @foreach (var usersWithRoles in Model)
-            {
-                <tr>
-                        <td>@usersWithRoles.User.Id</td>
-                        <td>@usersWithRoles.User.UserName</td>
-                        <td>@usersWithRoles.User.Email</td>
-                        <td>@usersWithRoles.User.PasswordHash</td>
-                        <td>@usersWithRoles.User.PhoneNumber</td>
-                    <td>
-                            @usersWithRoles.RoleName
-                    </td>
-                    <td>
-                            <a class="btn btn-warning btn-sm" asp-action="Edit" asp-controller="User" asp-route-Id="@usersWithRoles.User.Id">Edit</a>
-                            <a class="btn btn-danger btn-sm confirmDeletion" asp-action="Delete" asp-controller="User" asp-route-Id="@usersWithRoles.User.Id">Delete</a>
-                    </td>
-                </tr>
-            }
-        </tbody>
-        </table>
+        <a class="btn btn-primary" asp-action="Create" asp-controller="User"><i class="fas fa-plus me-1"></i>Add User</a>
+
+        <div class="table-responsive">
+            <table class="table table-striped" id="myTable">
+                <thead>
+                    <tr>
+                        <th>Id</th>
+                        <th>UserName</th>
+                        <th>Email</th>
+                       
+                        <th>Phone</th>
+                        <th>Role</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var usersWithRoles in Model)
+                    {
+                        <tr>
+                            <td>@usersWithRoles.User.Id</td>
+                            <td>@usersWithRoles.User.UserName</td>
+                            <td>@usersWithRoles.User.Email</td>
+                           
+                            <td>@usersWithRoles.User.PhoneNumber</td>
+                            <td>@usersWithRoles.RoleName</td>
+                            <td>
+                                <a class="btn btn-warning btn-sm" asp-action="Edit" asp-controller="User" asp-route-Id="@usersWithRoles.User.Id">
+                                    <i class="fas fa-edit"></i> Edit
+                                </a>
+                                <a class="btn btn-danger btn-sm confirmDeletion" asp-action="Delete" asp-controller="User" asp-route-Id="@usersWithRoles.User.Id">
+                                    <i class="fas fa-trash"></i> Delete
+                                </a>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
     </div>
+
+ 
+   
 </body>
 </html>
-

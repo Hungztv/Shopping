@@ -1,41 +1,79 @@
 ﻿@model LoginViewModel
 @{
-    ViewData["Title"] = "Login";
+    ViewData["Title"] = "Đăng nhập";
+    Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<section id="">
+<section id="login" class="my-5">
     <div class="container">
         <div class="row justify-content-center">
-            <div class="col-md-6">
-                <div class="card shadow-lg p-4">
-                    <h2 class="text-center text-primary">Login to your account</h2>
-                    <div asp-validation-summary="ModelOnly" class="alert alert-danger"></div>
-                    <form asp-action="Login" asp-controller="Account">
-                        <div class="form-group">
-                            <label for="UserName">Username</label>
-                            <input asp-for="UserName" class="form-control" placeholder="Enter your username" required />
+            <div class="col-md-6 col-lg-4">
+                <div class="card shadow-sm border-0 p-4">
+                    <h2 class="text-center fw-bold mb-4 text-primary">Đăng nhập</h2>
+                    <div asp-validation-summary="ModelOnly" class="alert alert-danger" role="alert"></div>
+                    <form asp-action="Login" asp-controller="Account" method="post">
+                        <div class="mb-3">
+                            <label asp-for="UserName" class="form-label">Tên đăng nhập</label>
+                            <input asp-for="UserName" class="form-control" placeholder="Nhập tên đăng nhập" required />
                             <span asp-validation-for="UserName" class="text-danger"></span>
                         </div>
-                        <div class="form-group">
-                            <label for="Password">Password</label>
-                            <input asp-for="Password" type="password" class="form-control" placeholder="Enter your password" required />
+                        <div class="mb-3">
+                            <label asp-for="Password" class="form-label">Mật khẩu</label>
+                            <div class="input-group">
+                                <input asp-for="Password" type="password" class="form-control" placeholder="Nhập mật khẩu" required id="passwordInput" />
+                                <button type="button" class="btn btn-outline-secondary" id="togglePassword">
+                                    <i class="fas fa-eye"></i>
+                                </button>
+                            </div>
                             <span asp-validation-for="Password" class="text-danger"></span>
                         </div>
-                        <button type="submit" class="btn btn-primary btn-block mt-3">Login</button>
-                        <p class="text-center mt-2">
-                            <a asp-action="ForgetPass" asp-controller="Account">Forgot password?</a> |
-                            <a asp-action="Create" asp-controller="Account">Sign up</a>
-                            <a asp-action="LoginByGoogle" asp-controller="Account">Login Google</a><br />
+                        <div class="mb-3 form-check">
+                            <input type="checkbox" class="form-check-input" id="rememberMe" name="RememberMe" />
+                            <label class="form-check-label" for="rememberMe">Ghi nhớ tôi</label>
+                        </div>
+                        <button type="submit" class="btn btn-primary w-100 mt-3" id="loginButton">
+                            <span id="loginText">Đăng nhập</span>
+                            <span class="spinner-border spinner-border-sm d-none" id="loginSpinner" role="status" aria-hidden="true"></span>
+                        </button>
+                        <p class="text-center mt-3">
+                            <a asp-action="ForgetPass" asp-controller="Account" class="text-muted">Quên mật khẩu?</a> |
+                            <a asp-action="Create" asp-controller="Account" class="text-primary">Đăng ký</a>
                         </p>
+                        <div class="text-center mt-3">
+                            <a asp-action="LoginByGoogle" asp-controller="Account" class="btn btn-outline-danger w-100">
+                                <i class="fab fa-google me-2"></i> Đăng nhập bằng Google
+                            </a>
+                        </div>
                     </form>
                 </div>
             </div>
         </div>
     </div>
 </section>
-@section Scripts {
-    @{
-        await Html.RenderPartialAsync("_ValidationScriptsPartial");
-    }
-}
 
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+    <script>
+        $(document).ready(function () {
+            // Toggle password visibility
+            $("#togglePassword").click(function () {
+                var passwordInput = $("#passwordInput");
+                var icon = $(this).find("i");
+                if (passwordInput.attr("type") === "password") {
+                    passwordInput.attr("type", "text");
+                    icon.removeClass("fa-eye").addClass("fa-eye-slash");
+                } else {
+                    passwordInput.attr("type", "password");
+                    icon.removeClass("fa-eye-slash").addClass("fa-eye");
+                }
+            });
+
+            // Show loading spinner on form submit
+            $("form").submit(function () {
+                $("#loginText").addClass("d-none");
+                $("#loginSpinner").removeClass("d-none");
+                $("#loginButton").prop("disabled", true);
+            });
+        });
+    </script>
+}

@@ -11,13 +11,10 @@ using Shopping_Tutorial.Areas.Admin.Repository;
 var builder = WebApplication.CreateBuilder(args);
 builder.Services.Configure<MomoOptionModel>(builder.Configuration.GetSection("MomoAPI"));
 builder.Services.AddScoped<IMomoService, MomoService>();
-
 builder.Services.AddControllersWithViews();
 // Kết nối đến cơ sở dữ liệu
 builder.Services.AddDbContext<DataContext>(options =>
     options.UseSqlServer(builder.Configuration["ConnectionStrings:DbConnectedDb"]));
-
-
 // Thêm các dịch vụ vào container
 builder.Services.AddControllersWithViews();
 builder.Services.AddTransient<IEmailSender, EmailSender>();

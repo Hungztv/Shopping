@@ -1,141 +1,141 @@
-﻿
-@model IEnumerable<ProductModel>
+﻿@model IEnumerable<ProductModel>
 @{
-	ViewData["Title"] = "Web bán hàng ASP.NET8";
-	Layout = "~/Views/Shared/_Layout.cshtml";
+    ViewData["Title"] = "Web bán hàng ASP.NET8";
+    Layout = "~/Views/Shared/_Layout.cshtml";
 }
+
+<!-- Slider Section -->
 <partial name="_SliderPartial" />
-<div class="col-sm-3">
-	<partial name="_SidebarPartial" />
+
+<!-- Main Content -->
+<div class="container my-5">
+    <div class="row">
+        <!-- Sidebar -->
+        <div class="col-lg-3">
+            <partial name="_SidebarPartial" />
+        </div>
+
+        <!-- Product List -->
+        <div class="col-lg-9">
+            <div class="features-items">
+                <h2 class="text-center mb-4 fw-bold">Sản phẩm nổi bật</h2>
+                <div class="row row-cols-1 row-cols-md-3 g-4">
+                    @foreach (var item in Model)
+                    {
+                        <div class="col">
+                            <div class="card h-100 shadow-sm border-0">
+                                <div class="card-img-top text-center p-3">
+                                    <a asp-action="Details" asp-controller="Product" asp-route-Id="@item.Id">
+                                        <img src="~/media/products/@item.Image" alt="@item.Name" class="img-fluid" style="max-height: 200px; object-fit: contain;">
+                                    </a>
+                                </div>
+                                <div class="card-body text-center">
+                                    <h5 class="card-title">
+                                        <a asp-action="Details" asp-controller="Product" asp-route-Id="@item.Id" class="text-dark text-decoration-none">@item.Name</a>
+                                    </h5>
+                                    <p class="text-muted mb-1">Danh mục: @item.Category.Name</p>
+                                    <p class="text-muted mb-1">Thương hiệu: @item.Brand.Name</p>
+                                    <h4 class="text-warning fw-bold mb-3">@string.Format(new System.Globalization.CultureInfo("vi-VN"), "{0:N0} VNĐ", item.Price)</h4>
+
+                                    @if (item.Quantity == 0)
+                                    {
+                                        <button type="button" class="btn btn-secondary" disabled><i class="fas fa-shopping-cart"></i> Hết hàng</button>
+                                    }
+                                    else
+                                    {
+                                        <button class="btn btn-warning add-to-cart" data-product_id="@item.Id"><i class="fas fa-shopping-cart"></i> Thêm giỏ hàng</button>
+                                    }
+                                </div>
+                                @if (User.Identity?.IsAuthenticated ?? false)
+                                {
+                                    <div class="card-footer bg-light border-top-0 text-center py-2">
+                                        <div class="btn-group" role="group">
+                                            <button class="btn btn-outline-danger btn-sm add-btn-wishlist" data-product_id="@item.Id"><i class="fas fa-heart"></i></button>
+                                            <button class="btn btn-outline-primary btn-sm add-btn-compare" data-product_id="@item.Id"><i class="fas fa-exchange-alt"></i></button>
+                                        </div>
+                                    </div>
+                                }
+                            </div>
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
 
-<div class="col-sm-9 padding-right">
-	<div class="features_items">
-		<!--features_items-->
-		<h2 class="title text-center">Features Items</h2>
-
-		@foreach (var item in Model)
-		{
-
-			<div class="col-sm-4">
-				<div class="product-image-wrapper">
-					<div class="single-products">
-
-
-						<div class="productinfo text-center">
-							<a asp-action="Details" asp-controller="Product" asp-route-Id="@item.Id">
-								<img src="~/media/products/@item.Image" alt="@item.Name" width="100px" height="200px" />
-								<h2>@string.Format(new System.Globalization.CultureInfo("vi-VN"), "{0:N0} VNĐ", item.Price)</h2>
-								<p>@item.Name</p>
-								<p>Danh mục: @item.Category.Name</p>
-								<p>Thương hiệu: @item.Brand.Name</p>
-							</a>
-							
-							@if (@item.Quantity == 0)
-							{
-								<button type="button" class="btn btn-default"><i class="fa fa-shopping-cart"></i>Hết hàng</button>
-							}
-							else
-							{
-								<button class="btn btn-default add-to-cart" data-product_id="@item.Id"><i class="fa fa-shopping-cart"></i>Thêm giỏ hàng</button>
-							}
-
-
-						</div>
-
-
-					</div>
-					<div class="choose">
-						@if (User.Identity?.IsAuthenticated ?? false)
-						{
-							<ul class="nav nav-pills nav-justified">
-								<li><button class="btn btn-danger add-btn-wishlist" data-product_id="@item.Id">Yêu thích</button></li>
-								<li><button class="btn btn-primary add-btn-compare" data-product_id="@item.Id">So sánh</button></li>
-							</ul>
-						}
-					</div>
-				</div>
-			</div>
-		}
-
-	</div><!--features_items-->
-</div>
 @section Scripts {
-	<script>
+    <script>
+        $(document).ready(function () {
+            // Add to Cart
+            $('.add-to-cart').click(function () {
+                var id = $(this).data("product_id");
+                $.ajax({
+                    type: "POST",
+                    url: "@Url.Action("Add", "Cart")",
+                    data: { Id: id },
+                    success: function (result) {
+                        if (result) {
+                            Swal.fire({
+                                icon: 'success',
+                                title: 'Thành công',
+                                text: 'Đã thêm sản phẩm vào giỏ hàng!',
+                                timer: 1500,
+                                showConfirmButton: false
+                            });
+                        }
+                    },
+                    error: function () {
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Lỗi',
+                            text: 'Có lỗi xảy ra khi thêm vào giỏ hàng.'
+                        });
+                    }
+                });
+            });
 
-		$('.add-to-cart').click(function () {
-			var Id = $(this).data("product_id");
+            // Add to Wishlist
+            $('.add-btn-wishlist').click(function () {
+                var id = $(this).data("product_id");
+                $.ajax({
+                    type: "POST",
+                    url: "@Url.Action("AddWishlist", "Home")",
+                    data: { Id: id },
+                    success: function (result) {
+                        if (result) {
+                            Swal.fire({
+                                icon: 'success',
+                                title: 'Thành công',
+                                text: 'Đã thêm vào danh sách yêu thích!',
+                                timer: 1500,
+                                showConfirmButton: false
+                            });
+                        }
+                    }
+                });
+            });
 
-			//alert(product_id);
-
-			$.ajax({
-				type: "POST",
-				url: "@Url.Action("Add", "Cart")",
-				data: { Id: Id }, // Send data to the server
-
-				success: function (result) {
-					// Handle successful update
-					if (result) {
-
-						Swal.fire("Thêm giỏ hàng thành công.");
-					}
-				}
-
-			});
-		});
-
-	</script>
-	<!---Add to Wishlish Script--->
-	<script>
-		$(document).ready(function () {
-			$('.add-btn-wishlist').click(function () {
-				var Id = $(this).data("product_id");
-
-				//alert(product_id);
-
-				$.ajax({
-					type: "POST",
-					url: "@Url.Action("AddWishlist", "Home")",
-					data: { Id: Id }, // Send data to the server
-
-					success: function (result) {
-						// Handle successful update
-						if (result) {
-
-							Swal.fire("Thêm yêu thích sản phẩm thành công.");
-						}
-					}
-
-				});
-			});
-		});
-	</script>
-	<!---//Add to Wishlish Script--->
-	<!---Add to Wishlish Script--->
-	<script>
-		$(document).ready(function () {
-			$('.add-btn-compare').click(function () {
-				var Id = $(this).data("product_id");
-
-				//alert(product_id);
-
-				$.ajax({
-					type: "POST",
-					url: "@Url.Action("AddCompare", "Home")",
-					data: { Id: Id }, // Send data to the server
-
-					success: function (result) {
-						// Handle successful update
-						if (result) {
-
-							Swal.fire("Thêm sao sánh thành công.");
-						}
-					}
-
-				});
-			});
-		});
-	</script>
-	<!---//Add to Wishlish Script--->
+            // Add to Compare
+            $('.add-btn-compare').click(function () {
+                var id = $(this).data("product_id");
+                $.ajax({
+                    type: "POST",
+                    url: "@Url.Action("AddCompare", "Home")",
+                    data: { Id: id },
+                    success: function (result) {
+                        if (result) {
+                            Swal.fire({
+                                icon: 'success',
+                                title: 'Thành công',
+                                text: 'Đã thêm vào danh sách so sánh!',
+                                timer: 1500,
+                                showConfirmButton: false
+                            });
+                        }
+                    }
+                });
+            });
+        });
+    </script>
 }
-

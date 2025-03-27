@@ -1,22 +1,52 @@
 ﻿@model ContactModel
-<div class="row">
+@{
+    ViewData["Title"] = "Liên hệ";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
 
-    <div class="col-sm-3">
-        <div class="companyinfo">
-            <p><img src="~/media/logo/@Model.LogoImg" width="200px" height="120px" /></p>
-            <p>@Html.Raw(@Model.Description)</p>
+<!-- Main Content -->
+<div class="container my-5">
+    <div class="row">
+        <div class="col-12">
+            <h2 class="text-center mb-4 fw-bold">Liên hệ với chúng tôi</h2>
+        </div>
+
+        <!-- Company Info Section -->
+        <div class="col-md-3 mb-4">
+            <div class="card shadow-sm border-0">
+                <div class="card-body text-center">
+                    <img src="~/media/logo/@Model.LogoImg" class="img-fluid mb-3" alt="Logo" style="max-width: 200px; max-height: 120px; object-fit: contain;">
+                    <div class="text-muted">
+                        @Html.Raw(@Model.Description)
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Map Section -->
+        <div class="col-md-5 mb-4">
+            <div class="card shadow-sm border-0">
+                <div class="card-body">
+                    <h5 class="card-title fw-bold mb-3">Bản đồ</h5>
+                    <div class="map-container">
+                        @Html.Raw(@Model.Map)
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Contact Info Section -->
+        <div class="col-md-4 mb-4">
+            <div class="card shadow-sm border-0">
+                <div class="card-body">
+                    <h5 class="card-title fw-bold mb-3">Thông tin liên hệ</h5>
+                    <ul class="list-unstyled">
+                        <li><strong>Tên:</strong> @Model.Name</li>
+                        <li><strong>Email:</strong> @Model.Email</li>
+                        <li><strong>Điện thoại:</strong> @Model.Phone</li>
+                    </ul>
+                </div>
+            </div>
         </div>
     </div>
-    <div class="col-sm-5 col-md-5">
-        @Html.Raw(@Model.Map)
-    </div>
-    <div class="col-sm-4">
-        <div class="address">
-            <h5><b>Name : @Model.Name</b></h5>
-            <h5>Email : @Model.Email</h5>
-            <h5>@Model.Phone</h5>
-
-        </div>
-    </div>
-
 </div>

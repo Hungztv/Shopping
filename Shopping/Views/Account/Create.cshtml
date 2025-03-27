@@ -1,42 +1,74 @@
 ﻿@model UserModel
 @{
-	ViewData["Title"] = "Create";
+    ViewData["Title"] = "Đăng ký";
+    Layout = "~/Views/Shared/_Layout.cshtml";
 }
-<section id="">
-	<!--form-->
-	<div class="container">
-		<div class="row">
-			<div class="col-sm-12 col-sm-offset-1">
-				<div class="signup-form">
-					<!--sign up form-->
-					<h2>New User Signup!</h2>
-					<div asp-validation-summary="ModelOnly" class="text-danger"></div>
-					<form asp-action="Create" asp-controller="Account">
-						<div class="form-group">
-							<label>UserName</label>
-							<input asp-for="UserName" class="form-control" />
-							<span asp-validation-for="UserName" class="text-danger" />
-						</div>
-						<div class="form-group">
-							<label>Email</label>
-							<input asp-for="Email" class="form-control" />
-							<span asp-validation-for="Email" class="text-danger" />
-						</div>
-						<div class="form-group">
-							<label>Password</label>
-							<input asp-for="Password" class="form-control" />
-							<span asp-validation-for="Password" class="text-danger" />
-						</div>
-						<button class="btn btn-default">Create</button>
 
-					</form>
-				</div><!--/sign up form-->
-			</div>
-		</div>
-	</div>
-</section><!--/form-->
+<section id="signup" class="my-5">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-md-6 col-lg-4">
+                <div class="card shadow-sm border-0 p-4">
+                    <h2 class="text-center fw-bold mb-4 text-primary">Đăng ký tài khoản</h2>
+                    <div asp-validation-summary="ModelOnly" class="alert alert-danger" role="alert"></div>
+                    <form asp-action="Create" asp-controller="Account" method="post">
+                        <div class="mb-3">
+                            <label asp-for="UserName" class="form-label">Tên đăng nhập</label>
+                            <input asp-for="UserName" class="form-control" placeholder="Nhập tên đăng nhập" required />
+                            <span asp-validation-for="UserName" class="text-danger"></span>
+                        </div>
+                        <div class="mb-3">
+                            <label asp-for="Email" class="form-label">Email</label>
+                            <input asp-for="Email" type="email" class="form-control" placeholder="Nhập email" required />
+                            <span asp-validation-for="Email" class="text-danger"></span>
+                        </div>
+                        <div class="mb-3">
+                            <label asp-for="Password" class="form-label">Mật khẩu</label>
+                            <div class="input-group">
+                                <input asp-for="Password" type="password" class="form-control" placeholder="Nhập mật khẩu" required id="passwordInput" />
+                                <button type="button" class="btn btn-outline-secondary" id="togglePassword">
+                                    <i class="fas fa-eye"></i>
+                                </button>
+                            </div>
+                            <span asp-validation-for="Password" class="text-danger"></span>
+                        </div>
+                        <button type="submit" class="btn btn-primary w-100 mt-3" id="signupButton">
+                            <span id="signupText">Đăng ký</span>
+                            <span class="spinner-border spinner-border-sm d-none" id="signupSpinner" role="status" aria-hidden="true"></span>
+                        </button>
+                        <p class="text-center mt-3">
+                            Đã có tài khoản? <a asp-action="Login" asp-controller="Account" class="text-primary">Đăng nhập ngay</a>
+                        </p>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
 @section Scripts {
-    @{
-        await Html.RenderPartialAsync("_ValidationScriptsPartial");
-    }
+    <partial name="_ValidationScriptsPartial" />
+    <script>
+        $(document).ready(function () {
+            // Toggle password visibility
+            $("#togglePassword").click(function () {
+                var passwordInput = $("#passwordInput");
+                var icon = $(this).find("i");
+                if (passwordInput.attr("type") === "password") {
+                    passwordInput.attr("type", "text");
+                    icon.removeClass("fa-eye").addClass("fa-eye-slash");
+                } else {
+                    passwordInput.attr("type", "password");
+                    icon.removeClass("fa-eye-slash").addClass("fa-eye");
+                }
+            });
+
+            // Show loading spinner on form submit
+            $("form").submit(function () {
+                $("#signupText").addClass("d-none");
+                $("#signupSpinner").removeClass("d-none");
+                $("#signupButton").prop("disabled", true);
+            });
+        });
+    </script>
 }

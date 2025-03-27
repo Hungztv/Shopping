@@ -1,73 +1,79 @@
 ﻿@model IEnumerable<OrderModel>
-
 @{
-    ViewData["Title"] = "List Orders History" + @ViewBag.UserEmail;
-
+    ViewData["Title"] = "Lịch sử đơn hàng - " + ViewBag.UserEmail;
+    Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<!DOCTYPE html>
-
-<html>
-<head>
-    <meta name="viewport" content="width=device-width" />
-
-</head>
-<body>
-    <h3>List Orders History placed by: @ViewBag.UserEmail</h3>
-
-    <table class="table" id="myTable">
-        <thead>
-            <tr>
-                <th>Id</th>
-                <th>Order Code</th>
-                <th>Shipping Cost</th>
-                <th>Coupon</th>
-                <th>UserName</th>
-                <th>Order Status</th>
-                <th>Created Date</th>
-                <th>Action</th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach (var item in Model)
-            {
-                <tr>
-                    <td>@item.Id</td>
-                    <td>@item.OrderCode</td>
-                    <td>@item.ShippingCost.ToString("#,##0 đ")</td>
-                    <td>@item.CouponCode</td>
-                    <td>@item.UserName</td>
-                    <td>
-                        @if (item.Status == 1)
-                        {
-                            <span class="text text-success">Đơn hàng mới</span>
-                        }
-                        else if (item.Status == 2)
-                        {
-                            <span class="text text-success">Đã giao hàng</span>
-                        }
-                        else if (item.Status == 0)
-                        {
-                            <span class="text text-success">Đã Xử Lý</span>
-                        }
-                        else
-                        {
-
-                            <span class="text text-danger">Đã hủy</span>
-                        }
-                    </td>
-                    <td>@item.CreateDate.ToString("dd-MM-yyyy")</td>
-                    <td>
-
-                        <a onclick="return confirm('Bạn xác nhận muốn hủy?')" class="btn btn-warning btn-sm" asp-action="CancelOrder" asp-controller="Account" asp-route-ordercode="@item.OrderCode">Hủy đơn hàng</a>
-
-
-                    </td>
-                </tr>
-            }
-        </tbody>
-    </table>
-
-</body>
-</html>
-
+<section id="order-history" class="my-5">
+    <div class="container">
+        <h3 class="mb-4 fw-bold">Lịch sử đơn hàng của: @ViewBag.UserEmail</h3>
+        <div class="card shadow-sm border-0">
+            <div class="card-body p-0">
+                <div class="table-responsive">
+                    <table class="table table-hover table-striped align-middle" id="myTable">
+                        <thead class="table-dark">
+                            <tr>
+                                <th>ID</th>
+                                <th>Mã đơn hàng</th>
+                                <th>Phí vận chuyển</th>
+                                <th>Mã giảm giá</th>
+                                <th>Tên người dùng</th>
+                                <th>Trạng thái</th>
+                                <th>Ngày tạo</th>
+                                <th>Hành động</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @if (Model != null && Model.Any())
+                            {
+                                foreach (var item in Model)
+                                {
+                                    <tr>
+                                        <td>@item.Id</td>
+                                        <td>@item.OrderCode</td>
+                                        <td>@item.ShippingCost.ToString("#,##0 VNĐ")</td>
+                                        <td>@(item.CouponCode ?? "Không có")</td>
+                                        <td>@item.UserName</td>
+                                        <td>
+                                            @switch (item.Status)
+                                            {
+                                                case 1:
+                                                    <span class="badge bg-success">Đơn hàng mới</span>
+                                                    break;
+                                                case 2:
+                                                    <span class="badge bg-success">Đã giao hàng</span>
+                                                    break;
+                                                case 0:
+                                                    <span class="badge bg-success">Đã xử lý</span>
+                                                    break;
+                                                default:
+                                                    <span class="badge bg-danger">Đã hủy</span>
+                                                    break;
+                                            }
+                                        </td>
+                                        <td>@item.CreateDate.ToString("dd-MM-yyyy")</td>
+                                        <td>
+                                            <a onclick="return confirm('Bạn có chắc chắn muốn hủy đơn hàng này?')"
+                                               class="btn btn-warning btn-sm"
+                                               asp-action="CancelOrder"
+                                               asp-controller="Account"
+                                               asp-route-ordercode="@item.OrderCode">Hủy đơn</a>
+                                        </td>
+                                    </tr>
+                                }
+                            }
+                            else
+                            {
+                                <tr>
+                                    <td colspan="8" class="text-center py-4">
+                                        <p class="mb-0">Bạn chưa có đơn hàng nào.</p>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>

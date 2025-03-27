@@ -1,54 +1,87 @@
 ﻿@{
-	int index = 0;
+    int index = 0;
 }
+
+<section id="slider" class="mb-5">
+    <div class="container">
+        <div class="row">
+            <div class="col-12">
+                <div id="slider-carousel" class="carousel slide" data-bs-ride="carousel">
+                    <!-- Indicators -->
+                    <ol class="carousel-indicators">
+                        @for (int i = 0; i < ViewBag.Sliders.Count; i++)
+                        {
+                            <li data-bs-target="#slider-carousel" data-bs-slide-to="@i" class="@(i == 0 ? "active" : "")"></li>
+                        }
+                    </ol>
+
+                    <!-- Slides -->
+                    <div class="carousel-inner">
+                        @foreach (var slider in ViewBag.Sliders)
+                        {
+                            <div class="carousel-item @(index == 0 ? "active" : "")">
+                                <img src="~/media/sliders/@slider.Image" class="d-block w-100" alt="Slider @index" style="max-height: 400px; object-fit: cover;">
+                            </div>
+                            index++;
+                        }
+                    </div>
+
+                    <!-- Controls -->
+                    <a class="carousel-control-prev" href="#slider-carousel" role="button" data-bs-slide="prev">
+                        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                        <span class="visually-hidden">Previous</span>
+                    </a>
+                    <a class="carousel-control-next" href="#slider-carousel" role="button" data-bs-slide="next">
+                        <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                        <span class="visually-hidden">Next</span>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
 <style>
-	.carousel-inner {
-		width: 100%;
-		max-height: 400px !important;
-	}
+    #slider .carousel-inner {
+        width: 100%;
+        max-height: 400px !important;
+        border-radius: 10px;
+        overflow: hidden;
+    }
+
+    #slider .carousel-item img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        transition: transform 0.5s ease;
+    }
+
+    #slider .carousel-item:hover img {
+        transform: scale(1.05); /* Zoom nhẹ khi hover */
+    }
+
+    #slider .carousel-control-prev,
+    #slider .carousel-control-next {
+        width: 5%;
+        opacity: 0.7;
+        transition: opacity 0.3s ease;
+    }
+
+        #slider .carousel-control-prev:hover,
+        #slider .carousel-control-next:hover {
+            opacity: 1;
+        }
+
+    #slider .carousel-indicators li {
+        width: 10px;
+        height: 10px;
+        border-radius: 50%;
+        background-color: #fff;
+        border: 1px solid #333;
+    }
+
+    #slider .carousel-indicators .active {
+        background-color: #ffc107;
+        border-color: #ffc107;
+    }
 </style>
-<section id="slider">
-	<!--slider-->
-	<div class="container">
-		<div class="row">
-			<div class="col-sm-12">
-				<div id="slider-carousel" class="carousel slide" data-ride="carousel">
-					<ol class="carousel-indicators">
-						<li data-target="#slider-carousel" data-slide-to="0" class="active"></li>
-						<li data-target="#slider-carousel" data-slide-to="1"></li>
-						<li data-target="#slider-carousel" data-slide-to="2"></li>
-					</ol>
-
-					<div class="carousel-inner">
-
-
-
-						@foreach (var slider in ViewBag.Sliders)
-						{
-							<div class="item @(index == 0 ? "active" : "")">
-
-								<div class="col-sm-12">
-									<img src="~/media/sliders/@slider.Image" class="girl img-responsive" alt="" />
-
-								</div>
-							</div>
-							index++;
-						}
-
-
-
-
-					</div>
-
-					<a href="#slider-carousel" class="left control-carousel hidden-xs" data-slide="prev">
-						<i class="fa fa-angle-left"></i>
-					</a>
-					<a href="#slider-carousel" class="right control-carousel hidden-xs" data-slide="next">
-						<i class="fa fa-angle-right"></i>
-					</a>
-				</div>
-
-			</div>
-		</div>
-	</div>
-</section><!--/slider-->
