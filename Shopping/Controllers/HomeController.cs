@@ -3,8 +3,9 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Shopping.Models.Repository;
 using Shopping.Models;
-
 using System.Diagnostics;
+
+using X.PagedList.Extensions;
 
 namespace Shopping.Controllers
 {
@@ -22,11 +23,19 @@ namespace Shopping.Controllers
 
         }
 
-        public IActionResult Index()
+        public IActionResult Index(int? page)
         {
+            int pageSize = 6; 
+            int pageNumber = page ?? 1;
 
-            var products = _dataContext.Products.Include("Category").Include("Brand").ToList();
+            var products = _dataContext.Products
+                .Include(p => p.Category)
+                .Include(p => p.Brand)
+                
+                .OrderByDescending(p => p.Id) 
+                .ToPagedList(pageNumber, pageSize);
 
+          
             var sliders = _dataContext.Sliders.Where(s => s.Status == 1).ToList();
             ViewBag.Sliders = sliders;
 

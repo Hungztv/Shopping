@@ -17,7 +17,7 @@ namespace Shopping.Models
         public string Description { get; set; }
         public string Price { get; set; }
         [Required, MinLength(4, ErrorMessage = "Yêu Cầu Nhập Giá Sản phẩm ")]
-        public decimal CapitalPrice { get; set; }
+        public string CapitalPrice { get; set; }
         public int BrandId { get; set; }
         public int Quantity { get; set; }
         public int SoldOut { get; set; }

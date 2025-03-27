@@ -2520,4 +2520,12 @@ h2.title {
   color: #FE980F;
 }
 
+.pagination {
+	display: flex !important;
+	flex-direction: row !important;
+	justify-content: center !important;
+}
 
+.page-item {
+	display: inline-block !important;
+}

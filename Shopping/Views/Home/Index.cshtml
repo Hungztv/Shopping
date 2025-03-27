@@ -1,4 +1,6 @@
-﻿@model IEnumerable<ProductModel>
+﻿@model X.PagedList.IPagedList<ProductModel>
+@using X.PagedList.Mvc.Core
+
 @{
     ViewData["Title"] = "Web bán hàng ASP.NET8";
     Layout = "~/Views/Shared/_Layout.cshtml";
@@ -59,10 +61,43 @@
                         </div>
                     }
                 </div>
+
+                <!-- Phân trang với Bootstrap -->
+                <div class="d-flex justify-content-center mt-4">
+                    <nav>
+                        <ul class="pagination">
+                            @Html.PagedListPager(Model, page => Url.Action("Index", new { page }),
+                                     new PagedListRenderOptions
+                            {
+                                DisplayLinkToFirstPage = PagedListDisplayMode.Always,
+                                DisplayLinkToLastPage = PagedListDisplayMode.Always,
+                                DisplayLinkToPreviousPage = PagedListDisplayMode.Always,
+                                DisplayLinkToNextPage = PagedListDisplayMode.Always,
+                                UlElementClasses = new[] { "pagination" },
+                                LiElementClasses = new[] { "page-item" },
+                                PageClasses = new[] { "page-link" }
+                            })
+                        </ul>
+                    </nav>
+                </div>
             </div>
         </div>
     </div>
 </div>
+
+@section Styles {
+    <style>
+        .pagination {
+            display: flex !important;
+            flex-direction: row !important;
+            justify-content: center !important;
+        }
+
+        .page-item {
+            display: inline-block !important;
+        }
+    </style>
+}
 
 @section Scripts {
     <script>
