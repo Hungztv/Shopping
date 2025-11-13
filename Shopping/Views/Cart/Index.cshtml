@@ -41,8 +41,9 @@
                                 {
                                     <tr>
                                         <td class="text-center">
-                                            <img src="~/media/products/@item.Image" alt="@item.ProductName"
-                                                class="img-thumbnail" style="width: 80px; height: 80px; object-fit: contain;">
+                                            <img src="@(item.Image.StartsWith("http") ? item.Image : Url.Content("~/media/products/" + item.Image))"
+                                                alt="@item.ProductName" class="img-thumbnail"
+                                                style="width: 80px; height: 80px; object-fit: contain;">
                                         </td>
                                         <td>
                                             <h6 class="mb-0"><a asp-action="Details" asp-controller="Product"
@@ -162,7 +163,8 @@
                         <form method="POST" asp-action="CreatePaymentMomo" asp-controller="Payment" class="d-inline">
                             <input type="hidden" name="Amount" value="@((int)(Model.GrandTotal + Model.ShippingPrice))" />
                             <input type="hidden" name="OrderInformation" value="Thanh toán qua Momo tại HungStore" />
-                            <input type="hidden" name="FullName" value="@(User.Identity.IsAuthenticated ? User.Identity.Name : "Khách hàng")" />
+                            <input type="hidden" name="FullName"
+                                value="@(User.Identity.IsAuthenticated? User.Identity.Name : "Khách hàng")" />
                             <button class="btn btn-danger" type="submit">Thanh toán MoMo</button>
                         </form>
                         <form method="POST" asp-action="CreatePaymentUrlVnpay" asp-controller="Payment" class="d-inline">

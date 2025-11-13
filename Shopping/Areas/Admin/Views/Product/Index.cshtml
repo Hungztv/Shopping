@@ -39,8 +39,8 @@
                             </div>
                         </td>
                         <td>
-                            <img src="~/media/products/@item.Image" width="80px" height="80px" alt="@item.Name"
-                                style="object-fit: cover;" />
+                            <img src="@(item.Image.StartsWith("http") ? item.Image : Url.Content("~/media/products/" + item.Image))"
+                                width="80px" height="80px" alt="@item.Name" style="object-fit: cover;" />
                         </td>
                         <td>
                             <span class="badge-custom badge-success-custom">

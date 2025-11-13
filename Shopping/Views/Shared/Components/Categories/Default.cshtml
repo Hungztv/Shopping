@@ -1,23 +1,25 @@
 ﻿@model IEnumerable<CategoryModel>
 
-<div class="category-component">
-
-    <ul class="list-group shadow-sm border-0">
-        @if (Model != null && Model.Any())
-        {
-            @foreach (var item in Model)
-            {
-                <li class="list-group-item border-0 py-2">
-                    <a asp-action="Index"
-                       asp-controller="Category"
-                       asp-route-Slug="@item.Slug"
-                       class="text-dark text-decoration-none hover-primary">@item.Name</a>
-                </li>
-            }
-        }
-        else
-        {
-            <li class="list-group-item border-0 py-2 text-muted">Chưa có thương hiệu nào.</li>
-        }
-    </ul>
-</div>
+@if (Model != null && Model.Any())
+{
+    @foreach (var item in Model)
+    {
+        <li class="category-item">
+            <a asp-action="Index" asp-controller="Category" asp-route-Slug="@item.Slug" class="category-link">
+                <div class="category-icon">
+                    <i class="fas fa-folder"></i>
+                </div>
+                <span class="category-name">@item.Name</span>
+                <span class="category-count">@(ViewBag.CategoryProductCount != null &&
+                                ViewBag.CategoryProductCount.ContainsKey(item.Id) ? ViewBag.CategoryProductCount[item.Id] : 0)</span>
+            </a>
+        </li>
+    }
+}
+else
+{
+    <li class="text-center text-muted py-3">
+        <i class="fas fa-inbox" style="font-size: 2rem; opacity: 0.3;"></i>
+        <p class="mt-2 mb-0">Chưa có danh mục nào</p>
+    </li>
+}

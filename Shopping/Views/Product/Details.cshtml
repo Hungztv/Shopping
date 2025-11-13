@@ -20,7 +20,9 @@
                     <div class="col-md-5 mb-4">
                         <div class="card shadow-sm border-0">
                             <div class="card-body text-center">
-                                <img src="~/media/products/@Model.ProductDetails.Image" alt="@Model.ProductDetails.Name" class="img-fluid" style="max-height: 300px; object-fit: contain;">
+                                <img src="@(Model.ProductDetails.Image.StartsWith("http") ? Model.ProductDetails.Image : Url.Content("~/media/products/" + Model.ProductDetails.Image))"
+                                    alt="@Model.ProductDetails.Name" class="img-fluid"
+                                    style="max-height: 300px; object-fit: contain;">
                             </div>
                         </div>
                         <!-- Similar Products Carousel -->
@@ -28,7 +30,7 @@
                             <div class="carousel-inner">
                                 <div class="carousel-item active">
                                     <div class="d-flex justify-content-center">
-                                        
+
                                     </div>
                                 </div>
                             </div>
@@ -46,9 +48,11 @@
                         <div class="card shadow border-0">
                             <div class="card-body p-4">
                                 <h2 class="fw-bold mb-3" style="color: #2c3e50;">@Model.ProductDetails.Name</h2>
-                                
+
                                 <div class="mb-4">
-                                    <h3 class="text-warning fw-bold d-inline-block me-3">@string.Format(new System.Globalization.CultureInfo("vi-VN"), "{0:N0} VNĐ", Model.ProductDetails.Price)</h3>
+                                    <h3 class="text-warning fw-bold d-inline-block me-3">@string.Format(new
+                                                                                System.Globalization.CultureInfo("vi-VN"), "{0:N0} VNĐ",
+                                                                                Model.ProductDetails.Price)</h3>
                                     @if (Model.ProductDetails.Quantity > 0)
                                     {
                                         <span class="badge bg-success"><i class="fas fa-check-circle"></i> Còn hàng</span>
@@ -60,25 +64,36 @@
                                 </div>
 
                                 <div class="product-info mb-4">
-                                    <p class="mb-2"><i class="fas fa-tag text-primary me-2"></i><strong>Danh mục:</strong> <span class="badge bg-light text-dark">@Model.ProductDetails.Category.Name</span></p>
-                                    <p class="mb-2"><i class="fas fa-copyright text-primary me-2"></i><strong>Thương hiệu:</strong> <span class="badge bg-light text-dark">@Model.ProductDetails.Brand.Name</span></p>
-                                    <p class="mb-2"><i class="fas fa-box text-primary me-2"></i><strong>Trong kho:</strong> <span class="badge bg-info text-dark">@Model.ProductDetails.Quantity sản phẩm</span></p>
-                                    <p class="mb-2"><i class="fas fa-certificate text-primary me-2"></i><strong>Tình trạng:</strong> <span class="badge bg-success">Mới 100%</span></p>
+                                    <p class="mb-2"><i class="fas fa-tag text-primary me-2"></i><strong>Danh
+                                            mục:</strong> <span
+                                            class="badge bg-light text-dark">@Model.ProductDetails.Category.Name</span>
+                                    </p>
+                                    <p class="mb-2"><i class="fas fa-copyright text-primary me-2"></i><strong>Thương
+                                            hiệu:</strong> <span
+                                            class="badge bg-light text-dark">@Model.ProductDetails.Brand.Name</span></p>
+                                    <p class="mb-2"><i class="fas fa-box text-primary me-2"></i><strong>Trong
+                                            kho:</strong> <span
+                                            class="badge bg-info text-dark">@Model.ProductDetails.Quantity sản
+                                            phẩm</span></p>
+                                    <p class="mb-2"><i class="fas fa-certificate text-primary me-2"></i><strong>Tình
+                                            trạng:</strong> <span class="badge bg-success">Mới 100%</span></p>
                                 </div>
 
                                 <div class="quantity-selector mb-4">
                                     <label class="fw-bold mb-2">Số lượng:</label>
                                     <div class="input-group w-50">
-                                        <button class="btn btn-outline-secondary" type="button" onclick="decreaseQuantity()"><i class="fas fa-minus"></i></button>
-                                        <input type="number" id="quantity" class="form-control text-center" value="1" min="1" max="@Model.ProductDetails.Quantity" readonly>
-                                        <button class="btn btn-outline-secondary" type="button" onclick="increaseQuantity()"><i class="fas fa-plus"></i></button>
+                                        <button class="btn btn-outline-secondary" type="button"
+                                            onclick="decreaseQuantity()"><i class="fas fa-minus"></i></button>
+                                        <input type="number" id="quantity" class="form-control text-center" value="1"
+                                            min="1" max="@Model.ProductDetails.Quantity" readonly>
+                                        <button class="btn btn-outline-secondary" type="button"
+                                            onclick="increaseQuantity()"><i class="fas fa-plus"></i></button>
                                     </div>
                                 </div>
 
                                 <div class="d-grid gap-2">
-                                    <button type="button" class="btn btn-warning btn-lg add-to-cart" 
-                                    data-product_id="@Model.ProductDetails.Id" 
-                                    @(Model.ProductDetails.Quantity == 0 ? "disabled" : "")>
+                                    <button type="button" class="btn btn-warning btn-lg add-to-cart"
+                                        data-product_id="@Model.ProductDetails.Id" @(Model.ProductDetails.Quantity == 0 ? "disabled" : "")>
                                         <i class="fas fa-shopping-cart me-2"></i> Thêm vào giỏ hàng
                                     </button>
                                 </div>
@@ -90,10 +105,14 @@
                 <!-- Tabs -->
                 <div class="card shadow-sm border-0 mt-4">
                     <ul class="nav nav-tabs" id="productTabs" role="tablist">
-                        <li class="nav-item"><a class="nav-link" id="details-tab" data-bs-toggle="tab" href="#details">Chi tiết</a></li>
-                        <li class="nav-item"><a class="nav-link" id="companyprofile-tab" data-bs-toggle="tab" href="#companyprofile">Sản phẩm</a></li>
-                        <li class="nav-item"><a class="nav-link" id="tag-tab" data-bs-toggle="tab" href="#tag">Tag</a></li>
-                        <li class="nav-item"><a class="nav-link active" id="reviews-tab" data-bs-toggle="tab" href="#reviews">Đánh giá</a></li>
+                        <li class="nav-item"><a class="nav-link" id="details-tab" data-bs-toggle="tab"
+                                href="#details">Chi tiết</a></li>
+                        <li class="nav-item"><a class="nav-link" id="companyprofile-tab" data-bs-toggle="tab"
+                                href="#companyprofile">Sản phẩm</a></li>
+                        <li class="nav-item"><a class="nav-link" id="tag-tab" data-bs-toggle="tab" href="#tag">Tag</a>
+                        </li>
+                        <li class="nav-item"><a class="nav-link active" id="reviews-tab" data-bs-toggle="tab"
+                                href="#reviews">Đánh giá</a></li>
                     </ul>
                     <div class="tab-content p-4">
                         <div class="tab-pane fade" id="details">
@@ -106,18 +125,22 @@
                                     <div class="col-md-3 mb-3">
                                         <div class="card h-100 shadow-sm border-0">
                                             <div class="card-img-top text-center p-2">
-                                                <img src="~/media/products/@relatedProduct.Image" alt="@relatedProduct.Name" class="img-fluid" style="max-height: 100px;">
+                                                <img src="@(relatedProduct.Image.StartsWith("http") ? relatedProduct.Image : Url.Content("~/media/products/" + relatedProduct.Image))" alt="@relatedProduct.Name"
+                                                    class="img-fluid" style="max-height: 100px;">
                                             </div>
                                             <div class="card-body text-center">
                                                 <h5>@relatedProduct.Name</h5>
-                                                <p class="text-warning fw-bold">@string.Format(new System.Globalization.CultureInfo("vi-VN"), "{0:N0} VNĐ", relatedProduct.Price)</p>
-                                                <button type="button" class="btn btn-warning btn-sm add-to-cart" data-product_id="@relatedProduct.Id">
-                                                    <i class="fas fa-shopping-cart"></i> Add to cart
-                                                </button>
-                                            </div>
+                                                <p class="text-warning fw-bold">@string.Format(new
+                                                                                                    System.Globalization.CultureInfo("vi-VN"), "{0:N0} VNĐ",
+                                                                                                    relatedProduct.Price)</p>
+                                            <button type="button" class="btn btn-warning btn-sm add-to-cart"
+                                                data-product_id="@relatedProduct.Id">
+                                                <i class="fas fa-shopping-cart"></i> Add to cart
+                                            </button>
                                         </div>
                                     </div>
-                                }
+                                </div>
+                                                                }
                             </div>
                         </div>
                         <div class="tab-pane fade" id="tag">
@@ -141,11 +164,13 @@
                                     <span asp-validation-for="@Model.Name" class="text-danger"></span>
                                 </div>
                                 <div class="mb-3">
-                                    <input asp-for="@Model.Email" name="Email" type="email" class="form-control" placeholder="Địa chỉ email" />
+                                    <input asp-for="@Model.Email" name="Email" type="email" class="form-control"
+                                        placeholder="Địa chỉ email" />
                                     <span asp-validation-for="@Model.Email" class="text-danger"></span>
                                 </div>
                                 <div class="mb-3">
-                                    <textarea asp-for="@Model.Comment" class="form-control" rows="4" placeholder="Nhận xét của bạn"></textarea>
+                                    <textarea asp-for="@Model.Comment" class="form-control" rows="4"
+                                        placeholder="Nhận xét của bạn"></textarea>
                                     <span asp-validation-for="@Model.Comment" class="text-danger"></span>
                                 </div>
                                 <div class="mb-3">
@@ -165,36 +190,47 @@
                         <div class="carousel-inner">
                             <div class="carousel-item active">
                                 <div class="row">
-                                    @foreach (var relatedProduct in ViewBag.RelatedProducts as IEnumerable<ProductModel>)
+                                    @foreach (var relatedProduct in ViewBag.RelatedProducts as
+                                                                        IEnumerable<ProductModel>)
                                     {
                                         <div class="col-md-4 mb-3">
                                             <div class="card h-100 shadow-sm border-0">
                                                 <div class="card-img-top text-center p-3">
-                                                    <a asp-action="Details" asp-controller="Product" asp-route-Id="@relatedProduct.Id">
-                                                        <img src="~/media/products/@relatedProduct.Image" alt="@relatedProduct.Name" class="img-fluid" style="max-height: 200px; object-fit: contain;">
+                                                    <a asp-action="Details" asp-controller="Product"
+                                                        asp-route-Id="@relatedProduct.Id">
+                                                        <img src="@(relatedProduct.Image.StartsWith("http") ? relatedProduct.Image : Url.Content("~/media/products/" + relatedProduct.Image))"
+                                                            alt="@relatedProduct.Name" class="img-fluid"
+                                                            style="max-height: 200px; object-fit: contain;">
                                                     </a>
                                                 </div>
                                                 <div class="card-body text-center">
                                                     <h5>
-                                                        <a asp-action="Details" asp-controller="Product" asp-route-Id="@relatedProduct.Id" class="text-dark text-decoration-none">@relatedProduct.Name</a>
+                                                        <a asp-action="Details" asp-controller="Product"
+                                                            asp-route-Id="@relatedProduct.Id"
+                                                            class="text-dark text-decoration-none">@relatedProduct.Name</a>
                                                     </h5>
                                                     <p class="text-muted">Danh mục: @relatedProduct.Category.Name</p>
                                                     <p class="text-muted">Thương hiệu: @relatedProduct.Brand.Name</p>
-                                                    <h4 class="text-warning fw-bold">@string.Format(new System.Globalization.CultureInfo("vi-VN"), "{0:N0} VNĐ", relatedProduct.Price)</h4>
-                                                    <button type="button" class="btn btn-warning add-to-cart" data-product_id="@relatedProduct.Id">
-                                                        <i class="fas fa-shopping-cart"></i> Thêm giỏ hàng
-                                                    </button>
-                                                </div>
+                                                    <h4 class="text-warning fw-bold">@string.Format(new
+                                                                                                            System.Globalization.CultureInfo("vi-VN"), "{0:N0} VNĐ",
+                                                                                                            relatedProduct.Price)</h4>
+                                                <button type="button" class="btn btn-warning add-to-cart"
+                                                    data-product_id="@relatedProduct.Id">
+                                                    <i class="fas fa-shopping-cart"></i> Thêm giỏ hàng
+                                                </button>
                                             </div>
                                         </div>
-                                    }
+                                    </div>
+                                                                        }
                                 </div>
                             </div>
                         </div>
-                        <a class="carousel-control-prev" href="#recommended-item-carousel" role="button" data-bs-slide="prev">
+                        <a class="carousel-control-prev" href="#recommended-item-carousel" role="button"
+                            data-bs-slide="prev">
                             <span class="carousel-control-prev-icon" aria-hidden="true"></span>
                         </a>
-                        <a class="carousel-control-next" href="#recommended-item-carousel" role="button" data-bs-slide="next">
+                        <a class="carousel-control-next" href="#recommended-item-carousel" role="button"
+                            data-bs-slide="next">
                             <span class="carousel-control-next-icon" aria-hidden="true"></span>
                         </a>
                     </div>
@@ -208,7 +244,7 @@
     @{
         await Html.RenderPartialAsync("_ValidationScriptsPartial");
     }
-  
+
     <script>
         function increaseQuantity() {
             var qty = parseInt($('#quantity').val());

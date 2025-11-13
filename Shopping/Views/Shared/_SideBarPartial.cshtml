@@ -1,84 +1,541 @@
-﻿<div class="left-sidebar shadow-sm p-4 mb-4 bg-white rounded-3">
-    <!-- Categories Dropdown -->
-    <div class="dropdown mb-4">
-        <h4 class="fw-semibold mb-3 text-dark">Danh mục sản phẩm</h4>
-        <button class="btn btn-outline-primary w-100 dropdown-toggle shadow-sm" type="button"
-                data-bs-toggle="dropdown" aria-expanded="false">
-            Chọn danh mục
-        </button>
-        <ul class="dropdown-menu w-100 border-light shadow-sm">
+﻿<style>
+    .modern-sidebar {
+        background: white;
+        border-radius: 20px;
+        box-shadow: 0 8px 30px rgba(0, 0, 0, 0.12);
+        overflow: hidden;
+        position: sticky;
+        top: 100px;
+        transition: all 0.3s ease;
+    }
+
+    .modern-sidebar:hover {
+        box-shadow: 0 12px 40px rgba(0, 0, 0, 0.15);
+    }
+
+    .sidebar-section {
+        padding: 1.75rem;
+        border-bottom: 2px solid #f5f5f5;
+        position: relative;
+    }
+
+    .sidebar-section::before {
+        content: '';
+        position: absolute;
+        left: 0;
+        top: 0;
+        width: 4px;
+        height: 100%;
+        background: linear-gradient(180deg, #667eea 0%, #764ba2 100%);
+        opacity: 0;
+        transition: opacity 0.3s ease;
+    }
+
+    .sidebar-section:hover::before {
+        opacity: 1;
+    }
+
+    .sidebar-section.brand-section::before {
+        background: linear-gradient(180deg, #f093fb 0%, #f5576c 100%);
+    }
+
+    .sidebar-section:last-child {
+        border-bottom: none;
+    }
+
+    .sidebar-title {
+        font-size: 1.15rem;
+        font-weight: 700;
+        color: #2c3e50;
+        margin-bottom: 1.25rem;
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        padding-bottom: 0.75rem;
+        border-bottom: 2px solid #f0f0f0;
+    }
+
+    .sidebar-title i {
+        width: 38px;
+        height: 38px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        border-radius: 10px;
+        font-size: 1rem;
+        box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+    }
+
+    .sidebar-title.brand-title i {
+        background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+        box-shadow: 0 4px 12px rgba(240, 147, 251, 0.3);
+    }
+
+    .sidebar-title span {
+        flex: 1;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+    }
+
+    .sidebar-title.brand-title span {
+        background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+    }
+
+    /* Category & Brand List */
+    .category-list,
+    .brand-list {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+        max-height: 420px;
+        overflow-y: auto;
+        padding-right: 5px;
+    }
+
+    .category-list::-webkit-scrollbar,
+    .brand-list::-webkit-scrollbar {
+        width: 5px;
+    }
+
+    .category-list::-webkit-scrollbar-track,
+    .brand-list::-webkit-scrollbar-track {
+        background: #f1f3f5;
+        border-radius: 10px;
+    }
+
+    .category-list::-webkit-scrollbar-thumb,
+    .brand-list::-webkit-scrollbar-thumb {
+        background: linear-gradient(180deg, #667eea 0%, #764ba2 100%);
+        border-radius: 10px;
+    }
+
+    .brand-list::-webkit-scrollbar-thumb {
+        background: linear-gradient(180deg, #f093fb 0%, #f5576c 100%);
+    }
+
+    .category-item,
+    .brand-item {
+        margin-bottom: 10px;
+    }
+
+    .category-link,
+    .brand-link {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        padding: 13px 16px;
+        border-radius: 13px;
+        text-decoration: none;
+        color: #495057;
+        background: #f8f9fa;
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        font-weight: 500;
+        font-size: 0.95rem;
+        border: 2px solid transparent;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .category-link::before,
+    .brand-link::before {
+        content: '';
+        position: absolute;
+        left: 0;
+        top: 0;
+        width: 0;
+        height: 100%;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        transition: width 0.4s ease;
+        z-index: 0;
+    }
+
+    .brand-link::before {
+        background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+    }
+
+    .category-link:hover,
+    .brand-link:hover {
+        color: white;
+        transform: translateX(8px);
+        box-shadow: 0 6px 20px rgba(102, 126, 234, 0.35);
+        border-color: transparent;
+    }
+
+    .category-link:hover::before,
+    .brand-link:hover::before {
+        width: 100%;
+    }
+
+    .brand-link:hover {
+        box-shadow: 0 6px 20px rgba(240, 147, 251, 0.35);
+    }
+
+    .category-link.active,
+    .brand-link.active {
+        color: white;
+        border-color: transparent;
+        box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+    }
+
+    .category-link.active::before {
+        width: 100%;
+    }
+
+    .brand-link.active {
+        box-shadow: 0 4px 15px rgba(240, 147, 251, 0.4);
+    }
+
+    .brand-link.active::before {
+        width: 100%;
+    }
+
+    .category-icon,
+    .brand-icon {
+        width: 38px;
+        height: 38px;
+        min-width: 38px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: white;
+        border-radius: 10px;
+        font-size: 1.05rem;
+        transition: all 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+        color: #667eea;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+        position: relative;
+        z-index: 1;
+    }
+
+    .brand-icon {
+        color: #f093fb;
+    }
+
+    .category-link:hover .category-icon,
+    .brand-link:hover .brand-icon,
+    .category-link.active .category-icon,
+    .brand-link.active .brand-icon {
+        transform: rotate(360deg) scale(1.1);
+        background: white;
+        box-shadow: 0 4px 15px rgba(255, 255, 255, 0.3);
+    }
+
+    .category-name,
+    .brand-name {
+        flex: 1;
+        font-weight: 600;
+        position: relative;
+        z-index: 1;
+        letter-spacing: 0.2px;
+    }
+
+    .category-count,
+    .brand-count {
+        background: rgba(102, 126, 234, 0.15);
+        color: #667eea;
+        padding: 5px 12px;
+        border-radius: 20px;
+        font-size: 0.8rem;
+        font-weight: 700;
+        min-width: 35px;
+        text-align: center;
+        position: relative;
+        z-index: 1;
+        transition: all 0.3s ease;
+    }
+
+    .brand-count {
+        background: rgba(240, 147, 251, 0.15);
+        color: #f093fb;
+    }
+
+    .category-link:hover .category-count,
+    .brand-link:hover .brand-count,
+    .category-link.active .category-count,
+    .brand-link.active .brand-count {
+        background: rgba(255, 255, 255, 0.95);
+        color: #667eea;
+        transform: scale(1.05);
+    }
+
+    .brand-link:hover .brand-count,
+    .brand-link.active .brand-count {
+        color: #f093fb;
+    }
+
+    /* Empty State */
+    .empty-state {
+        text-align: center;
+        padding: 3rem 1rem;
+        color: #adb5bd;
+    }
+
+    .empty-state i {
+        font-size: 3rem;
+        opacity: 0.3;
+        margin-bottom: 1rem;
+        display: block;
+    }
+
+    .empty-state p {
+        margin: 0;
+        font-size: 0.9rem;
+    }
+
+    /* Search Box */
+    .sidebar-search {
+        position: relative;
+        margin-bottom: 1.25rem;
+    }
+
+    .sidebar-search input {
+        width: 100%;
+        padding: 13px 45px 13px 18px;
+        border: 2px solid #e9ecef;
+        border-radius: 14px;
+        font-size: 0.9rem;
+        transition: all 0.3s ease;
+        background: #f8f9fa;
+    }
+
+    .sidebar-search input:focus {
+        outline: none;
+        border-color: #667eea;
+        background: white;
+        box-shadow: 0 0 0 4px rgba(102, 126, 234, 0.1);
+        transform: translateY(-1px);
+    }
+
+    .brand-section .sidebar-search input:focus {
+        border-color: #f093fb;
+        box-shadow: 0 0 0 4px rgba(240, 147, 251, 0.1);
+    }
+
+    .sidebar-search i {
+        position: absolute;
+        right: 18px;
+        top: 50%;
+        transform: translateY(-50%);
+        color: #adb5bd;
+        transition: all 0.3s ease;
+        font-size: 0.95rem;
+    }
+
+    .sidebar-search input:focus+i {
+        color: #667eea;
+    }
+
+    .brand-section .sidebar-search input:focus+i {
+        color: #f093fb;
+    }
+
+    /* Mobile Responsive */
+    @@media (max-width: 991px) {
+        .modern-sidebar {
+            margin-bottom: 2rem;
+            position: relative;
+            top: 0;
+        }
+
+        .category-list,
+        .brand-list {
+            max-height: 300px;
+        }
+    }
+
+    /* Animation */
+    @@keyframes fadeInUp {
+        from {
+            opacity: 0;
+            transform: translateY(10px);
+        }
+
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    .category-item,
+    .brand-item {
+        animation: fadeInUp 0.4s ease forwards;
+        opacity: 0;
+    }
+
+    .category-item:nth-child(1) {
+        animation-delay: 0.05s;
+    }
+
+    .category-item:nth-child(2) {
+        animation-delay: 0.1s;
+    }
+
+    .category-item:nth-child(3) {
+        animation-delay: 0.15s;
+    }
+
+    .category-item:nth-child(4) {
+        animation-delay: 0.2s;
+    }
+
+    .category-item:nth-child(5) {
+        animation-delay: 0.25s;
+    }
+
+    .brand-item:nth-child(1) {
+        animation-delay: 0.05s;
+    }
+
+    .brand-item:nth-child(2) {
+        animation-delay: 0.1s;
+    }
+
+    .brand-item:nth-child(3) {
+        animation-delay: 0.15s;
+    }
+
+    .brand-item:nth-child(4) {
+        animation-delay: 0.2s;
+    }
+
+    .brand-item:nth-child(5) {
+        animation-delay: 0.25s;
+    }
+</style>
+
+<div class="modern-sidebar">
+    <!-- Categories Section -->
+    <div class="sidebar-section">
+        <h4 class="sidebar-title">
+            <i class="fas fa-th-large"></i>
+            <span>Danh mục sản phẩm</span>
+        </h4>
+
+        <div class="sidebar-search">
+            <input type="text" id="categorySearch" placeholder="Tìm kiếm danh mục...">
+            <i class="fas fa-search"></i>
+        </div>
+
+        <ul class="category-list">
             <vc:categories></vc:categories>
         </ul>
     </div>
 
-    <!-- Brands Dropdown -->
-    <div class="dropdown">
-        <h4 class="fw-semibold mb-3 text-dark">Thương hiệu</h4>
-        <button class="btn btn-outline-primary w-100 dropdown-toggle shadow-sm" type="button"
-                data-bs-toggle="dropdown" aria-expanded="false">
-            Chọn thương hiệu
-        </button>
-        <ul class="dropdown-menu w-100 border-light shadow-sm">
+    <!-- Brands Section -->
+    <div class="sidebar-section brand-section">
+        <h4 class="sidebar-title brand-title">
+            <i class="fas fa-certificate"></i>
+            <span>Thương hiệu</span>
+        </h4>
+
+        <div class="sidebar-search">
+            <input type="text" id="brandSearch" placeholder="Tìm kiếm thương hiệu...">
+            <i class="fas fa-search"></i>
+        </div>
+
+        <ul class="brand-list">
             <vc:brands></vc:brands>
         </ul>
     </div>
 </div>
 
-<style>
-    .left-sidebar {
-        min-width: 250px;
-        background: linear-gradient(145deg, #ffffff, #f8f9fa);
-        border: none;
-        transition: all 0.3s ease;
-    }
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        // Category Search with highlight
+        const categorySearch = document.getElementById('categorySearch');
+        if (categorySearch) {
+            categorySearch.addEventListener('input', function (e) {
+                const searchTerm = e.target.value.toLowerCase().trim();
+                const categoryItems = document.querySelectorAll('.category-list .category-item');
+                let visibleCount = 0;
 
-        .left-sidebar:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 8px 25px rgba(0,0,0,0.1) !important;
+                categoryItems.forEach(item => {
+                    const text = item.textContent.toLowerCase();
+                    if (text.includes(searchTerm)) {
+                        item.style.display = 'block';
+                        visibleCount++;
+                        // Add highlight animation
+                        item.style.animation = 'none';
+                        setTimeout(() => {
+                            item.style.animation = '';
+                        }, 10);
+                    } else {
+                        item.style.display = 'none';
+                    }
+                });
+
+                // Show empty state if no results
+                const existingEmpty = document.querySelector('.category-list .empty-search-state');
+                if (existingEmpty) existingEmpty.remove();
+
+                if (visibleCount === 0 && searchTerm) {
+                    const emptyState = document.createElement('li');
+                    emptyState.className = 'empty-search-state';
+                    emptyState.innerHTML = `
+                        <div class="empty-state">
+                            <i class="fas fa-search"></i>
+                            <p>Không tìm thấy danh mục phù hợp</p>
+                        </div>
+                    `;
+                    document.querySelector('.category-list').appendChild(emptyState);
+                }
+            });
         }
 
-    .btn-outline-primary {
-        border-color: #007bff;
-        color: #007bff;
-        padding: 10px 15px;
-        border-radius: 8px;
-        transition: all 0.3s ease;
-    }
+        // Brand Search with highlight
+        const brandSearch = document.getElementById('brandSearch');
+        if (brandSearch) {
+            brandSearch.addEventListener('input', function (e) {
+                const searchTerm = e.target.value.toLowerCase().trim();
+                const brandItems = document.querySelectorAll('.brand-list .brand-item');
+                let visibleCount = 0;
 
-        .btn-outline-primary:hover {
-            background-color: #007bff;
-            color: white;
-            border-color: #007bff;
-            box-shadow: 0 4px 15px rgba(0,123,255,0.3);
+                brandItems.forEach(item => {
+                    const text = item.textContent.toLowerCase();
+                    if (text.includes(searchTerm)) {
+                        item.style.display = 'block';
+                        visibleCount++;
+                        // Add highlight animation
+                        item.style.animation = 'none';
+                        setTimeout(() => {
+                            item.style.animation = '';
+                        }, 10);
+                    } else {
+                        item.style.display = 'none';
+                    }
+                });
+
+                // Show empty state if no results
+                const existingEmpty = document.querySelector('.brand-list .empty-search-state');
+                if (existingEmpty) existingEmpty.remove();
+
+                if (visibleCount === 0 && searchTerm) {
+                    const emptyState = document.createElement('li');
+                    emptyState.className = 'empty-search-state';
+                    emptyState.innerHTML = `
+                        <div class="empty-state">
+                            <i class="fas fa-search"></i>
+                            <p>Không tìm thấy thương hiệu phù hợp</p>
+                        </div>
+                    `;
+                    document.querySelector('.brand-list').appendChild(emptyState);
+                }
+            });
         }
 
-    .dropdown-menu {
-        max-height: 300px;
-        overflow-y: auto;
-        border-radius: 8px;
-        padding: 10px 0;
-        border: 1px solid #e9ecef;
-    }
-
-    .dropdown-item {
-        color: #495057;
-        padding: 8px 20px;
-        border-radius: 4px;
-        margin: 2px 10px;
-        transition: all 0.2s ease;
-    }
-
-        .dropdown-item:hover {
-            color: #007bff;
-            background-color: #f1f3f5;
-            transform: translateX(5px);
-        }
-
-    h4 {
-        font-size: 1.25rem;
-        letter-spacing: 0.5px;
-        background: linear-gradient(to right, #facc15, #fbbf24);
-        -webkit-background-clip: text;
-        -webkit-text-fill-color: transparent;
-    }
-</style>
+        // Highlight active category/brand based on URL
+        const currentUrl = window.location.pathname.toLowerCase();
+        document.querySelectorAll('.category-link, .brand-link').forEach(link => {
+            if (link.href && currentUrl.includes(link.getAttribute('href').toLowerCase())) {
+                link.classList.add('active');
+            }
+        });
+    });
+</script>

@@ -48,8 +48,8 @@ namespace Shopping.Areas.Admin.Controllers
 
             order.Status = status;
             _dataContext.Orders.Update(order);
-           
-          
+
+
             try
             {
                 await _dataContext.SaveChangesAsync();
@@ -62,31 +62,48 @@ namespace Shopping.Areas.Admin.Controllers
                 return StatusCode(500, "An error occurred while updating the order status.");
             }
         }
-        [HttpGet]
+        [HttpPost]
         [Route("Delete")]
         public async Task<IActionResult> Delete(string ordercode)
         {
+            if (string.IsNullOrEmpty(ordercode))
+            {
+                TempData["error"] = "Mã đơn hàng không hợp lệ";
+                return RedirectToAction("Index");
+            }
+
             var order = await _dataContext.Orders.FirstOrDefaultAsync(o => o.OrderCode == ordercode);
 
             if (order == null)
             {
-                return NotFound();
+                TempData["error"] = "Không tìm thấy đơn hàng";
+                return RedirectToAction("Index");
             }
+
             try
             {
+                // Delete OrderDetails first (foreign key constraint)
+                var orderDetails = await _dataContext.OrderDetails
+                    .Where(od => od.OrderCode == ordercode)
+                    .ToListAsync();
 
-                //delete order
+                if (orderDetails.Any())
+                {
+                    _dataContext.OrderDetails.RemoveRange(orderDetails);
+                }
+
+                // Then delete the Order
                 _dataContext.Orders.Remove(order);
-
 
                 await _dataContext.SaveChangesAsync();
 
+                TempData["success"] = "Đã xóa đơn hàng thành công";
                 return RedirectToAction("Index");
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-
-                return StatusCode(500, "An error occurred while deleting the order.");
+                TempData["error"] = $"Lỗi khi xóa đơn hàng: {ex.Message}";
+                return RedirectToAction("Index");
             }
         }
 

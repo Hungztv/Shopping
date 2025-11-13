@@ -25,38 +25,45 @@
                                 <div class="card h-100 shadow-sm border-0 position-relative">
                                     <div class="card-img-top text-center p-3">
                                         <a asp-action="Details" asp-controller="Product" asp-route-Id="@item.Id">
-                                            <img src="~/media/products/@item.Image" alt="@item.Name" class="img-fluid" style="max-height: 200px; object-fit: contain;">
+                                            <img src="@(item.Image.StartsWith("http") ? item.Image : Url.Content("~/media/products/" + item.Image))"
+                                                alt="@item.Name" class="img-fluid"
+                                                style="max-height: 200px; object-fit: contain;">
                                         </a>
                                     </div>
                                     <div class="card-body text-center">
                                         <h5 class="card-title">
-                                            <a asp-action="Details" asp-controller="Product" asp-route-Id="@item.Id" class="text-dark text-decoration-none">@item.Name</a>
+                                            <a asp-action="Details" asp-controller="Product" asp-route-Id="@item.Id"
+                                                class="text-dark text-decoration-none">@item.Name</a>
                                         </h5>
                                         <p class="text-muted mb-1">Danh mục: @item.Category.Name</p>
                                         <p class="text-muted mb-1">Thương hiệu: @item.Brand.Name</p>
-                                        <h4 class="text-warning fw-bold mb-3">@string.Format(new System.Globalization.CultureInfo("vi-VN"), "{0:N0} VNĐ", item.Price)</h4>
-                                        <button class="btn btn-warning add-to-cart" data-product_id="@item.Id">
-                                            <i class="fas fa-shopping-cart"></i> Thêm giỏ hàng
-                                        </button>
-                                    </div>
-                                    <div class="card-footer bg-light border-top-0 text-center">
-                                        <div class="btn-group" role="group">
-                                            <a href="#" class="btn btn-outline-danger btn-sm add-btn-wishlist" data-product_id="@item.Id">
-                                                <i class="fas fa-heart"></i> Wishlist
-                                            </a>
-                                            <a href="#" class="btn btn-outline-primary btn-sm add-btn-compare" data-product_id="@item.Id">
-                                                <i class="fas fa-exchange-alt"></i> Compare
-                                            </a>
-                                        </div>
-                                    </div>
+                                        <h4 class="text-warning fw-bold mb-3">@string.Format(new
+                                                                                System.Globalization.CultureInfo("vi-VN"), "{0:N0} VNĐ", item.Price)</h4>
+                                <button class="btn btn-warning add-to-cart" data-product_id="@item.Id">
+                                    <i class="fas fa-shopping-cart"></i> Thêm giỏ hàng
+                                </button>
+                            </div>
+                            <div class="card-footer bg-light border-top-0 text-center">
+                                <div class="btn-group" role="group">
+                                    <a href="#" class="btn btn-outline-danger btn-sm add-btn-wishlist"
+                                        data-product_id="@item.Id">
+                                        <i class="fas fa-heart"></i> Wishlist
+                                    </a>
+                                    <a href="#" class="btn btn-outline-primary btn-sm add-btn-compare"
+                                        data-product_id="@item.Id">
+                                        <i class="fas fa-exchange-alt"></i> Compare
+                                    </a>
                                 </div>
                             </div>
-                        }
+                        </div>
+                    </div>
+                                        }
                     </div>
                 }
                 else
                 {
-                    <p class="text-center text-muted">Không tìm thấy sản phẩm nào phù hợp với từ khóa "@ViewBag.Keyword".</p>
+                    <p class="text-center text-muted">Không tìm thấy sản phẩm nào phù hợp với từ khóa "@ViewBag.Keyword".
+                    </p>
                 }
             </div>
         </div>

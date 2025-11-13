@@ -24,12 +24,15 @@
                                 <div class="col-md-6 text-center text-md-start">
                                     <h1 class="display-4 fw-bold"><span class="text-warning">E</span>-SHOPPER</h1>
                                     <h2 class="fw-semibold">Free E-Commerce Template</h2>
-                                    <p class="text-muted mb-4">Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
+                                    <p class="text-muted mb-4">Lorem ipsum dolor sit amet, consectetur adipisicing elit,
+                                        sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
                                     <a href="#" class="btn btn-warning btn-lg">Get it now</a>
                                 </div>
                                 <div class="col-md-6 text-center">
-                                    <img src="images/home/girl1.jpg" class="img-fluid" alt="Girl 1" style="max-height: 400px; object-fit: contain;">
-                                    <img src="images/home/pricing.png" class="pricing position-absolute" alt="Pricing" style="bottom: 20px; right: 20px; max-width: 150px;">
+                                    <img src="images/home/girl1.jpg" class="img-fluid" alt="Girl 1"
+                                        style="max-height: 400px; object-fit: contain;">
+                                    <img src="images/home/pricing.png" class="pricing position-absolute" alt="Pricing"
+                                        style="bottom: 20px; right: 20px; max-width: 150px;">
                                 </div>
                             </div>
                         </div>
@@ -38,12 +41,15 @@
                                 <div class="col-md-6 text-center text-md-start">
                                     <h1 class="display-4 fw-bold"><span class="text-warning">E</span>-SHOPPER</h1>
                                     <h2 class="fw-semibold">100% Responsive Design</h2>
-                                    <p class="text-muted mb-4">Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
+                                    <p class="text-muted mb-4">Lorem ipsum dolor sit amet, consectetur adipisicing elit,
+                                        sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
                                     <a href="#" class="btn btn-warning btn-lg">Get it now</a>
                                 </div>
                                 <div class="col-md-6 text-center">
-                                    <img src="images/home/girl2.jpg" class="img-fluid" alt="Girl 2" style="max-height: 400px; object-fit: contain;">
-                                    <img src="images/home/pricing.png" class="pricing position-absolute" alt="Pricing" style="bottom: 20px; right: 20px; max-width: 150px;">
+                                    <img src="images/home/girl2.jpg" class="img-fluid" alt="Girl 2"
+                                        style="max-height: 400px; object-fit: contain;">
+                                    <img src="images/home/pricing.png" class="pricing position-absolute" alt="Pricing"
+                                        style="bottom: 20px; right: 20px; max-width: 150px;">
                                 </div>
                             </div>
                         </div>
@@ -52,12 +58,15 @@
                                 <div class="col-md-6 text-center text-md-start">
                                     <h1 class="display-4 fw-bold"><span class="text-warning">E</span>-SHOPPER</h1>
                                     <h2 class="fw-semibold">Free Ecommerce Template</h2>
-                                    <p class="text-muted mb-4">Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
+                                    <p class="text-muted mb-4">Lorem ipsum dolor sit amet, consectetur adipisicing elit,
+                                        sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
                                     <a href="#" class="btn btn-warning btn-lg">Get it now</a>
                                 </div>
                                 <div class="col-md-6 text-center">
-                                    <img src="images/home/girl3.jpg" class="img-fluid" alt="Girl 3" style="max-height: 400px; object-fit: contain;">
-                                    <img src="images/home/pricing.png" class="pricing position-absolute" alt="Pricing" style="bottom: 20px; right: 20px; max-width: 150px;">
+                                    <img src="images/home/girl3.jpg" class="img-fluid" alt="Girl 3"
+                                        style="max-height: 400px; object-fit: contain;">
+                                    <img src="images/home/pricing.png" class="pricing position-absolute" alt="Pricing"
+                                        style="bottom: 20px; right: 20px; max-width: 150px;">
                                 </div>
                             </div>
                         </div>
@@ -99,22 +108,28 @@
                                 <div class="card h-100 shadow-sm border-0 position-relative">
                                     <div class="card-img-top text-center p-3">
                                         <a asp-action="Details" asp-controller="Product" asp-route-Id="@item.Id">
-                                            <img src="~/images/@item.Image" alt="@item.Name" class="img-fluid" style="max-height: 200px; object-fit: contain;">
+                                            <img src="@(item.Image.StartsWith("http") ? item.Image : Url.Content("~/media/products/" + item.Image))"
+                                                alt="@item.Name" class="img-fluid"
+                                                style="max-height: 200px; object-fit: contain;">
                                         </a>
                                     </div>
                                     <div class="card-body text-center">
                                         <h5 class="card-title">
-                                            <a asp-action="Details" asp-controller="Product" asp-route-Id="@item.Id" class="text-dark text-decoration-none">@item.Name</a>
+                                            <a asp-action="Details" asp-controller="Product" asp-route-Id="@item.Id"
+                                                class="text-dark text-decoration-none">@item.Name</a>
                                         </h5>
                                         <p class="text-muted mb-1">Danh mục: @item.Category.Name</p>
                                         <p class="text-muted mb-1">Thương hiệu: @item.Brand.Name</p>
                                         <h4 class="text-warning fw-bold mb-3">@item.Price</h4>
-                                        <a href="#" class="btn btn-warning add-to-cart"><i class="fas fa-shopping-cart"></i> Add to cart</a>
+                                        <a href="#" class="btn btn-warning add-to-cart"><i class="fas fa-shopping-cart"></i> Add
+                                            to cart</a>
                                     </div>
                                     <div class="card-footer bg-light border-top-0 text-center">
                                         <div class="btn-group" role="group">
-                                            <a href="#" class="btn btn-outline-danger btn-sm"><i class="fas fa-heart"></i> Wishlist</a>
-                                            <a href="#" class="btn btn-outline-primary btn-sm"><i class="fas fa-exchange-alt"></i> Compare</a>
+                                            <a href="#" class="btn btn-outline-danger btn-sm"><i class="fas fa-heart"></i>
+                                                Wishlist</a>
+                                            <a href="#" class="btn btn-outline-primary btn-sm"><i
+                                                    class="fas fa-exchange-alt"></i> Compare</a>
                                         </div>
                                     </div>
                                     <!-- Overlay -->
@@ -124,7 +139,8 @@
                                             <p class="text-white">@item.Name</p>
                                             <p class="text-white">Danh mục: @item.Category.Name</p>
                                             <p class="text-white">Thương hiệu: @item.Brand.Name</p>
-                                            <a href="#" class="btn btn-warning add-to-cart"><i class="fas fa-shopping-cart"></i> Add to cart</a>
+                                            <a href="#" class="btn btn-warning add-to-cart"><i class="fas fa-shopping-cart"></i>
+                                                Add to cart</a>
                                         </div>
                                     </div>
                                 </div>
