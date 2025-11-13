@@ -4,47 +4,293 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<section id="signup" class="my-5">
+<section id="signup" class="signup-section">
     <div class="container">
-        <div class="row justify-content-center">
-            <div class="col-md-6 col-lg-4">
-                <div class="card shadow-sm border-0 p-4">
-                    <h2 class="text-center fw-bold mb-4 text-primary">Đăng ký tài khoản</h2>
-                    <div asp-validation-summary="ModelOnly" class="alert alert-danger" role="alert"></div>
-                    <form asp-action="Create" asp-controller="Account" method="post">
-                        <div class="mb-3">
-                            <label asp-for="UserName" class="form-label">Tên đăng nhập</label>
-                            <input asp-for="UserName" class="form-control" placeholder="Nhập tên đăng nhập" required />
-                            <span asp-validation-for="UserName" class="text-danger"></span>
-                        </div>
-                        <div class="mb-3">
-                            <label asp-for="Email" class="form-label">Email</label>
-                            <input asp-for="Email" type="email" class="form-control" placeholder="Nhập email" required />
-                            <span asp-validation-for="Email" class="text-danger"></span>
-                        </div>
-                        <div class="mb-3">
-                            <label asp-for="Password" class="form-label">Mật khẩu</label>
-                            <div class="input-group">
-                                <input asp-for="Password" type="password" class="form-control" placeholder="Nhập mật khẩu" required id="passwordInput" />
-                                <button type="button" class="btn btn-outline-secondary" id="togglePassword">
-                                    <i class="fas fa-eye"></i>
-                                </button>
+        <div class="row min-vh-80 align-items-center justify-content-center">
+            <!-- Signup Card -->
+            <div class="col-lg-10">
+                <div class="signup-card shadow-lg">
+                    <div class="row g-0">
+                        <!-- Left Side - Illustration -->
+                        <div class="col-md-6 signup-illustration d-none d-md-flex">
+                            <div class="illustration-content">
+                                <div class="illustration-icon">
+                                    <i class="fas fa-user-plus"></i>
+                                </div>
+                                <h3 class="text-white fw-bold mb-3">Tạo tài khoản mới!</h3>
+                                <p class="text-white-50">Tham gia cùng chúng tôi và khám phá hàng ngàn sản phẩm chất lượng.</p>
+                                <div class="features mt-4">
+                                    <div class="feature-item">
+                                        <i class="fas fa-gift"></i>
+                                        <span>Ưu đãi đặc biệt cho thành viên mới</span>
+                                    </div>
+                                    <div class="feature-item">
+                                        <i class="fas fa-shipping-fast"></i>
+                                        <span>Miễn phí vận chuyển đơn đầu tiên</span>
+                                    </div>
+                                    <div class="feature-item">
+                                        <i class="fas fa-star"></i>
+                                        <span>Tích điểm mỗi đơn hàng</span>
+                                    </div>
+                                </div>
                             </div>
-                            <span asp-validation-for="Password" class="text-danger"></span>
                         </div>
-                        <button type="submit" class="btn btn-primary w-100 mt-3" id="signupButton">
-                            <span id="signupText">Đăng ký</span>
-                            <span class="spinner-border spinner-border-sm d-none" id="signupSpinner" role="status" aria-hidden="true"></span>
-                        </button>
-                        <p class="text-center mt-3">
-                            Đã có tài khoản? <a asp-action="Login" asp-controller="Account" class="text-primary">Đăng nhập ngay</a>
-                        </p>
-                    </form>
+
+                        <!-- Right Side - Signup Form -->
+                        <div class="col-md-6">
+                            <div class="signup-form-wrapper">
+                                <div class="text-center mb-4">
+                                    <div class="signup-icon mb-3">
+                                        <i class="fas fa-user-circle"></i>
+                                    </div>
+                                    <h2 class="fw-bold mb-2">Đăng ký tài khoản</h2>
+                                    <p class="text-muted">Điền thông tin để tạo tài khoản mới</p>
+                                </div>
+
+                                <div asp-validation-summary="ModelOnly" class="alert alert-danger alert-dismissible fade show" role="alert">
+                                    <i class="fas fa-exclamation-circle me-2"></i>
+                                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                                </div>
+
+                                <form asp-action="Create" asp-controller="Account" method="post" class="signup-form">
+                                    <div class="form-group mb-3">
+                                        <label asp-for="UserName" class="form-label fw-semibold">
+                                            <i class="fas fa-user me-2 text-primary"></i>Tên đăng nhập
+                                        </label>
+                                        <input asp-for="UserName" class="form-control form-control-lg" placeholder="Nhập tên đăng nhập" required />
+                                        <span asp-validation-for="UserName" class="text-danger small"></span>
+                                    </div>
+
+                                    <div class="form-group mb-3">
+                                        <label asp-for="Email" class="form-label fw-semibold">
+                                            <i class="fas fa-envelope me-2 text-primary"></i>Email
+                                        </label>
+                                        <input asp-for="Email" type="email" class="form-control form-control-lg" placeholder="Nhập địa chỉ email" required />
+                                        <span asp-validation-for="Email" class="text-danger small"></span>
+                                    </div>
+
+                                    <div class="form-group mb-3">
+                                        <label asp-for="Password" class="form-label fw-semibold">
+                                            <i class="fas fa-lock me-2 text-primary"></i>Mật khẩu
+                                        </label>
+                                        <div class="input-group input-group-lg">
+                                            <input asp-for="Password" type="password" class="form-control" placeholder="Nhập mật khẩu" required id="passwordInput" />
+                                            <button type="button" class="btn btn-outline-secondary" id="togglePassword">
+                                                <i class="fas fa-eye"></i>
+                                            </button>
+                                        </div>
+                                        <small class="form-text text-muted">
+                                            <i class="fas fa-info-circle"></i> Mật khẩu tối thiểu 6 ký tự
+                                        </small>
+                                        <span asp-validation-for="Password" class="text-danger small d-block"></span>
+                                    </div>
+
+                                    <div class="form-check mb-4">
+                                        <input type="checkbox" class="form-check-input" id="agreeTerms" required />
+                                        <label class="form-check-label" for="agreeTerms">
+                                            Tôi đồng ý với <a href="#" class="text-primary">Điều khoản dịch vụ</a> và <a href="#" class="text-primary">Chính sách bảo mật</a>
+                                        </label>
+                                    </div>
+
+                                    <button type="submit" class="btn btn-primary btn-lg w-100 mb-3 btn-signup" id="signupButton">
+                                        <span id="signupText"><i class="fas fa-user-plus me-2"></i>Đăng ký</span>
+                                        <span class="spinner-border spinner-border-sm d-none" id="signupSpinner" role="status"></span>
+                                    </button>
+
+                                    <div class="text-center mt-4">
+                                        <p class="text-muted mb-0">
+                                            Đã có tài khoản? 
+                                            <a asp-action="Login" asp-controller="Account" class="text-primary fw-semibold text-decoration-none">
+                                                Đăng nhập ngay
+                                            </a>
+                                        </p>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
 </section>
+
+<style>
+    .signup-section {
+        padding: 3rem 0;
+        min-height: 80vh;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        position: relative;
+    }
+
+    .signup-section::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background-image: 
+            radial-gradient(circle at 20% 50%, rgba(255,255,255,0.1) 0%, transparent 50%),
+            radial-gradient(circle at 80% 80%, rgba(255,255,255,0.1) 0%, transparent 50%);
+    }
+
+    .signup-card {
+        background: white;
+        border-radius: 20px;
+        overflow: hidden;
+        animation: slideUp 0.6s ease;
+        position: relative;
+    }
+
+    @@keyframes slideUp {
+        from {
+            opacity: 0;
+            transform: translateY(30px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    .signup-illustration {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        padding: 3rem;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .signup-illustration::before {
+        content: '';
+        position: absolute;
+        width: 300px;
+        height: 300px;
+        background: rgba(255,255,255,0.1);
+        border-radius: 50%;
+        top: -100px;
+        left: -100px;
+    }
+
+    .signup-illustration::after {
+        content: '';
+        position: absolute;
+        width: 200px;
+        height: 200px;
+        background: rgba(255,255,255,0.1);
+        border-radius: 50%;
+        bottom: -50px;
+        right: -50px;
+    }
+
+    .illustration-content {
+        position: relative;
+        z-index: 1;
+    }
+
+    .illustration-icon {
+        width: 120px;
+        height: 120px;
+        background: rgba(255,255,255,0.2);
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin: 0 auto 2rem;
+        backdrop-filter: blur(10px);
+    }
+
+    .illustration-icon i {
+        font-size: 4rem;
+        color: white;
+    }
+
+    .feature-item {
+        display: flex;
+        align-items: center;
+        color: white;
+        margin-bottom: 1rem;
+        font-size: 0.95rem;
+    }
+
+    .feature-item i {
+        margin-right: 0.75rem;
+        color: #ffc107;
+        font-size: 1.2rem;
+        min-width: 25px;
+    }
+
+    .signup-form-wrapper {
+        padding: 3rem 2.5rem;
+    }
+
+    .signup-icon {
+        width: 80px;
+        height: 80px;
+        margin: 0 auto;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .signup-icon i {
+        font-size: 2.5rem;
+        color: white;
+    }
+
+    .signup-form .form-control {
+        border: 2px solid #e0e0e0;
+        border-radius: 10px;
+        padding: 0.75rem 1rem;
+        transition: all 0.3s ease;
+    }
+
+    .signup-form .form-control:focus {
+        border-color: #667eea;
+        box-shadow: 0 0 0 0.2rem rgba(102, 126, 234, 0.15);
+    }
+
+    .signup-form .input-group-lg .btn {
+        border-radius: 0 10px 10px 0;
+        border: 2px solid #e0e0e0;
+        border-left: none;
+    }
+
+    .btn-signup {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        border: none;
+        border-radius: 10px;
+        padding: 0.875rem;
+        font-weight: 600;
+        transition: all 0.3s ease;
+        box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+    }
+
+    .btn-signup:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
+    }
+
+    .form-check-input:checked {
+        background-color: #667eea;
+        border-color: #667eea;
+    }
+
+    @@media (max-width: 767px) {
+        .signup-form-wrapper {
+            padding: 2rem 1.5rem;
+        }
+
+        .signup-section {
+            padding: 1.5rem 0;
+        }
+    }
+</style>
 
 @section Scripts {
     <partial name="_ValidationScriptsPartial" />

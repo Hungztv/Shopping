@@ -97,8 +97,11 @@ using (var scope = app.Services.CreateScope())
 
     // Gọi hàm tạo Role
     await InitializeRoles(services);
+
+    // Tạo Admin Account
+    await SeedData.CreateAdminAccount(services);
 }
-    static async Task InitializeRoles(IServiceProvider serviceProvider)
+static async Task InitializeRoles(IServiceProvider serviceProvider)
 {
     var roleManager = serviceProvider.GetRequiredService<RoleManager<IdentityRole>>();
     string[] roleNames = { "Admin", "User", "Moderator" };

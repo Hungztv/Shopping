@@ -25,17 +25,17 @@ namespace Shopping.Controllers
 
         public IActionResult Index(int? page)
         {
-            int pageSize = 6; 
+            int pageSize = 6;
             int pageNumber = page ?? 1;
 
             var products = _dataContext.Products
                 .Include(p => p.Category)
                 .Include(p => p.Brand)
-                
-                .OrderByDescending(p => p.Id) 
+
+                .OrderByDescending(p => p.Id)
                 .ToPagedList(pageNumber, pageSize);
 
-          
+
             var sliders = _dataContext.Sliders.Where(s => s.Status == 1).ToList();
             ViewBag.Sliders = sliders;
 
@@ -133,7 +133,19 @@ namespace Shopping.Controllers
         }
         public async Task<IActionResult> Contact()
         {
-            var contact = await _dataContext.Contact.FirstAsync();
+            var contact = await _dataContext.Contact.FirstOrDefaultAsync();
+            if (contact == null)
+            {
+                // Tạo contact mặc định nếu chưa có
+                contact = new ContactModel
+                {
+                    Name = "Shopping Store",
+                    Email = "duongmanhung1210@gmail.com",
+                    Phone = "+84 865322936",
+                    Description = "Chúng tôi cung cấp các sản phẩm công nghệ chất lượng cao",
+                    Map = "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3724.4!2d105.8!3d21.0!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2zMjHCsDAwJzAwLjAiTiAxMDXCsDQ4JzAwLjAiRQ!5e0!3m2!1sen!2s!4v1234567890"
+                };
+            }
             return View(contact);
         }
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]

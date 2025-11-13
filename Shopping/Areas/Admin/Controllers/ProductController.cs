@@ -195,22 +195,78 @@ namespace Shopping.Areas.Admin.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Delete(long Id)
+        public async Task<IActionResult> Delete(int Id)
         {
-            ProductModel product = await _dataContext.Products.FindAsync(Id);
-            if (!string.Equals(product.Image, "noname.jpg"))
+            try
             {
-                string uploadsDir = Path.Combine(_webHostEnviroment.WebRootPath, "media/products");
-                string oldfilePath = Path.Combine(uploadsDir, product.Image);
-                if (System.IO.File.Exists(oldfilePath))
+                ProductModel product = await _dataContext.Products.FindAsync(Id);
+
+                if (product == null)
                 {
-                    System.IO.File.Delete(oldfilePath);
+                    TempData["error"] = "Sản phẩm không tồn tại";
+                    return RedirectToAction("Index");
                 }
+
+                // Remove related data first to avoid foreign key conflicts
+                // Remove ratings
+                var ratings = await _dataContext.Ratings.Where(r => r.ProductId == Id).ToListAsync();
+                if (ratings.Any())
+                {
+                    _dataContext.Ratings.RemoveRange(ratings);
+                }
+
+                // Remove wishlists
+                var wishlists = await _dataContext.Wishlists.Where(w => w.ProductId == Id).ToListAsync();
+                if (wishlists.Any())
+                {
+                    _dataContext.Wishlists.RemoveRange(wishlists);
+                }
+
+                // Remove compares
+                var compares = await _dataContext.Compares.Where(c => c.ProductId == Id).ToListAsync();
+                if (compares.Any())
+                {
+                    _dataContext.Compares.RemoveRange(compares);
+                }
+
+                // Remove product quantities
+                var productQuantities = await _dataContext.ProductQuantities.Where(pq => pq.ProductId == Id).ToListAsync();
+                if (productQuantities.Any())
+                {
+                    _dataContext.ProductQuantities.RemoveRange(productQuantities);
+                }
+
+                // Check if product is in any orders
+                var orderDetails = await _dataContext.OrderDetails.Where(od => od.ProductId == Id).AnyAsync();
+                if (orderDetails)
+                {
+                    TempData["error"] = "Không thể xóa sản phẩm này vì đã có trong đơn hàng. Bạn có thể đặt số lượng về 0 thay vì xóa.";
+                    return RedirectToAction("Index");
+                }
+
+                // Delete product image if it exists
+                if (!string.IsNullOrEmpty(product.Image) && !string.Equals(product.Image, "noname.jpg"))
+                {
+                    string uploadsDir = Path.Combine(_webHostEnviroment.WebRootPath, "media/products");
+                    string oldfilePath = Path.Combine(uploadsDir, product.Image);
+                    if (System.IO.File.Exists(oldfilePath))
+                    {
+                        System.IO.File.Delete(oldfilePath);
+                    }
+                }
+
+                // Finally remove the product
+                _dataContext.Products.Remove(product);
+                await _dataContext.SaveChangesAsync();
+
+                TempData["success"] = "Sản phẩm đã được xóa thành công";
+                return RedirectToAction("Index");
             }
-            _dataContext.Products.Remove(product);
-            await _dataContext.SaveChangesAsync();
-            TempData["success"] = "sản phẩm đã được xóa thành công";
-            return RedirectToAction("Index");
+            catch (Exception ex)
+            {
+                TempData["error"] = $"Lỗi khi xóa sản phẩm: {ex.Message}";
+                return RedirectToAction("Index");
+            }
         }
     }
 }

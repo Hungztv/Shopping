@@ -1,5 +1,6 @@
 ﻿<!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -16,131 +17,143 @@
     <!-- Custom CSS -->
     <link href="~/css/main.css" rel="stylesheet">
     <link href="~/css/responsive.css" rel="stylesheet">
+    <link href="~/css/custom-optimized.css" rel="stylesheet">
 
     <!-- Favicon -->
     <link rel="shortcut icon" href="images/ico/favicon.ico">
     <link rel="apple-touch-icon-precomposed" sizes="144x144" href="images/ico/apple-touch-icon-144-precomposed.png">
 </head>
+
 <body>
-    <!-- Header -->
-    <header id="header" class="shadow-sm">
-        <!-- Top Bar -->
-        <div class="header-top bg-dark text-white py-2">
+    <!-- Header - Optimized -->
+    <header id="header" class="header-optimized shadow-sm">
+        <!-- Compact Top Bar -->
+        <div class="top-bar py-1">
             <div class="container">
                 <div class="row align-items-center">
-                    <div class="col-md-6">
-                        <ul class="list-inline mb-0">
-                            <li class="list-inline-item"><a href="#" class="text-white"><i class="fas fa-phone"></i> +84 865322936</a></li>
-                            <li class="list-inline-item"><a href="#" class="text-white"><i class="fas fa-envelope"></i> duongmanhung1210@gmail.com</a></li>
-                        </ul>
+                    <div class="col-md-6 d-none d-md-block">
+                        <div class="contact-info">
+                            <a href="tel:+84865322936" class="me-3"><i class="fas fa-phone"></i> +84 865322936</a>
+                            <a href="mailto:duongmanhung1210@gmail.com"><i class="fas fa-envelope"></i> Email</a>
+                        </div>
                     </div>
                     <div class="col-md-6 text-end">
-                        <ul class="list-inline mb-0">
-                            <li class="list-inline-item"><a href="#" class="text-white"><i class="fab fa-facebook-f"></i></a></li>
-                            <li class="list-inline-item"><a href="#" class="text-white"><i class="fab fa-twitter"></i></a></li>
-                            <li class="list-inline-item"><a href="#" class="text-white"><i class="fab fa-linkedin-in"></i></a></li>
-                            <li class="list-inline-item"><a href="#" class="text-white"><i class="fab fa-instagram"></i></a></li>
-                        </ul>
+                        <div class="social-links">
+                            <a href="#"><i class="fab fa-facebook-f"></i></a>
+                            <a href="#"><i class="fab fa-twitter"></i></a>
+                            <a href="#"><i class="fab fa-instagram"></i></a>
+                            <a href="#"><i class="fab fa-linkedin-in"></i></a>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
 
-        <!-- Middle Header -->
-        <div class="header-middle py-3">
+        <!-- Main Header - All in One -->
+        <div class="main-header py-2">
             <div class="container">
                 <div class="row align-items-center">
-                    <div class="col-md-3">
-                        <a href="index.html" class="d-block"><img src="images/home/logo.png" alt="Logo" class="img-fluid" style="max-height: 60px;"></a>
+                    <!-- Logo -->
+                    <div class="col-lg-2 col-md-3 col-6">
+                        <a asp-controller="Home" asp-action="Index" class="logo">
+                            <img src="~/images/home/logo.png" alt="Logo" style="max-height: 40px;">
+                        </a>
                     </div>
-                    <div class="col-md-9">
-                        <nav class="navbar navbar-expand-lg navbar-light">
-                            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-                                <span class="navbar-toggler-icon"></span>
-                            </button>
-                            <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
-                                <ul class="navbar-nav align-items-center">
-                                    <li class="nav-item"><a class="nav-link" asp-action="Index" asp-controller="Cart"><i class="fas fa-shopping-cart"></i> Cart</a></li>
-                                    @if (User.Identity?.IsAuthenticated ?? false)
-                                    {
-                                        <li class="nav-item"><a class="nav-link" asp-action="Index" asp-controller="Cart"><i class="fas fa-crosshairs"></i> Checkout</a></li>
-                                        <li class="nav-item dropdown">
-                                            <a class="nav-link dropdown-toggle" href="#" data-bs-toggle="dropdown"><i class="fas fa-user"></i> @User.Identity.Name</a>
-                                            <ul class="dropdown-menu">
-                                                <li><a class="dropdown-item" asp-action="History" asp-controller="Account">Order History</a></li>
-                                                <li><a class="dropdown-item" asp-action="UpdateAccount" asp-controller="Account">Update Info</a></li>
-                                                <li><a class="dropdown-item" asp-action="Wishlist" asp-controller="Home">Wishlist</a></li>
-                                                <li><a class="dropdown-item" asp-action="Compare" asp-controller="Home">Compare</a></li>
-                                            </ul>
-                                        </li>
-                                        <li class="nav-item"><a class="nav-link" asp-controller="Dashboard" asp-action="Index" asp-area="Admin"><i class="fas fa-lock"></i> Admin CMS</a></li>
-                                        <li class="nav-item"><a class="nav-link" asp-action="Logout" asp-controller="Account"><i class="fas fa-sign-out-alt"></i> Logout</a></li>
-                                    }
-                                    else
-                                    {
-                                        <li class="nav-item"><a class="nav-link" asp-action="Login" asp-controller="Account"><i class="fas fa-sign-in-alt"></i> Login</a></li>
-                                    }
-                                </ul>
-                            </div>
-                        </nav>
-                    </div>
-                </div>
-            </div>
-        </div>
 
-        <div class="header-bottom bg-dark py-3">
-            <div class="container">
-                <div class="row align-items-center">
-                    <!-- Navigation -->
-                    <div class="col-lg-9">
-                        <nav class="navbar navbar-expand-lg navbar-dark">
-                            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#mainNav" aria-controls="mainNav" aria-expanded="false" aria-label="Toggle navigation">
-                                <span class="navbar-toggler-icon"></span>
-                            </button>
-                            <div class="collapse navbar-collapse" id="mainNav">
-                                <ul class="navbar-nav">
-                                    <li class="nav-item">
-                                        <a class="nav-link active fw-semibold px-3" asp-controller="Home" asp-action="Index">Trang chủ</a>
-                                    </li>
-                                    <li class="nav-item dropdown">
-                                        <a class="nav-link dropdown-toggle fw-semibold px-3" href="#" data-bs-toggle="dropdown">Cửa hàng</a>
-                                        <ul class="dropdown-menu">
-                                            <li><a class="dropdown-item" href="#">Đồ nam</a></li>
-                                            <li><a class="dropdown-item" href="#">Đồ nữ</a></li>
-                                            <li><a class="dropdown-item" href="#">Đồ trẻ em</a></li>
-                                        </ul>
-                                    </li>
-                                    <li class="nav-item dropdown">
-                                        <a class="nav-link dropdown-toggle fw-semibold px-3" href="#" data-bs-toggle="dropdown">Blog</a>
-                                        <ul class="dropdown-menu">
-                                            <li><a class="dropdown-item" href="blog.html">Danh sách bài viết</a></li>
-                                            <li><a class="dropdown-item" href="blog-single.html">Bài viết chi tiết</a></li>
-                                        </ul>
-                                    </li>
-                                    <li class="nav-item">
-                                        <a class="nav-link fw-semibold px-3" asp-controller="Home" asp-action="Contact">Liên hệ</a>
-                                    </li>
-                                </ul>
-                            </div>
+                    <!-- Main Navigation -->
+                    <div class="col-lg-5 d-none d-lg-block">
+                        <nav class="main-nav">
+                            <ul class="nav-menu">
+                                <li><a asp-controller="Home" asp-action="Index">Trang chủ</a></li>
+                                <li class="dropdown">
+                                    <a href="#" class="dropdown-toggle" data-bs-toggle="dropdown">Cửa hàng <i class="fas fa-chevron-down"></i></a>
+                                    <ul class="dropdown-menu">
+                                        <li><a class="dropdown-item" href="#">Đồ nam</a></li>
+                                        <li><a class="dropdown-item" href="#">Đồ nữ</a></li>
+                                        <li><a class="dropdown-item" href="#">Đồ trẻ em</a></li>
+                                    </ul>
+                                </li>
+                                <li><a href="#">Blog</a></li>
+                                <li><a asp-controller="Home" asp-action="Contact">Liên hệ</a></li>
+                            </ul>
                         </nav>
                     </div>
 
-                    <!-- Search Form -->
-                    <div class="col-lg-3">
-                        <form asp-controller="Product" asp-action="Search" method="post" class="d-flex">
-                            <input type="text" class="form-control me-2 rounded-pill" placeholder="Tìm kiếm sản phẩm..." name="searchTerm">
-                            <button class="btn btn-warning rounded-pill" type="submit">
-                                <i class="fas fa-search"></i>
-                            </button>
-                        </form>
+                    <!-- Right Section: Search + Actions -->
+                    <div class="col-lg-5 col-md-9 col-6">
+                        <div class="header-actions">
+                            <!-- Search -->
+                            <form asp-controller="Product" asp-action="Search" method="post" class="search-form">
+                                <div class="input-group">
+                                    <input type="text" class="form-control" placeholder="Tìm sản phẩm..." name="searchTerm">
+                                    <button class="btn btn-warning" type="submit"><i class="fas fa-search"></i></button>
+                                </div>
+                            </form>
+
+                            <!-- Action Buttons -->
+                            <div class="action-buttons">
+                                <a asp-action="Index" asp-controller="Cart" class="btn-icon" title="Giỏ hàng">
+                                    <i class="fas fa-shopping-cart"></i>
+                                </a>
+
+                                @if (User.Identity?.IsAuthenticated ?? false)
+                                {
+                                    <div class="dropdown">
+                                        <button class="btn-icon dropdown-toggle" type="button" data-bs-toggle="dropdown">
+                                            <i class="fas fa-user"></i>
+                                        </button>
+                                        <ul class="dropdown-menu dropdown-menu-end">
+                                            <li><h6 class="dropdown-header">@User.Identity.Name</h6></li>
+                                            <li><hr class="dropdown-divider"></li>
+                                            <li><a class="dropdown-item" asp-action="History" asp-controller="Account"><i class="fas fa-history"></i> Lịch sử đơn hàng</a></li>
+                                            <li><a class="dropdown-item" asp-action="UpdateAccount" asp-controller="Account"><i class="fas fa-user-edit"></i> Cập nhật thông tin</a></li>
+                                            <li><a class="dropdown-item" asp-action="Wishlist" asp-controller="Home"><i class="fas fa-heart"></i> Yêu thích</a></li>
+                                            <li><a class="dropdown-item" asp-action="Compare" asp-controller="Home"><i class="fas fa-exchange-alt"></i> So sánh</a></li>
+                                            <li><hr class="dropdown-divider"></li>
+                                            <li><a class="dropdown-item" asp-controller="Dashboard" asp-action="Index" asp-area="Admin"><i class="fas fa-lock"></i> Admin</a></li>
+                                            <li><a class="dropdown-item text-danger" asp-action="Logout" asp-controller="Account"><i class="fas fa-sign-out-alt"></i> Đăng xuất</a></li>
+                                        </ul>
+                                    </div>
+                                }
+                                else
+                                {
+                                    <a asp-action="Login" asp-controller="Account" class="btn btn-sm btn-warning">
+                                        <i class="fas fa-sign-in-alt"></i> <span class="d-none d-md-inline">Login</span>
+                                    </a>
+                                }
+
+                                <!-- Mobile Menu Toggle -->
+                                <button class="btn-icon d-lg-none" type="button" data-bs-toggle="offcanvas" data-bs-target="#mobileMenu">
+                                    <i class="fas fa-bars"></i>
+                                </button>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
-        </header>
+
+        <!-- Mobile Menu Offcanvas -->
+        <div class="offcanvas offcanvas-end" tabindex="-1" id="mobileMenu">
+            <div class="offcanvas-header">
+                <h5 class="offcanvas-title">Menu</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="offcanvas"></button>
+            </div>
+            <div class="offcanvas-body">
+                <ul class="mobile-menu">
+                    <li><a asp-controller="Home" asp-action="Index"><i class="fas fa-home"></i> Trang chủ</a></li>
+                    <li><a href="#"><i class="fas fa-store"></i> Đồ nam</a></li>
+                    <li><a href="#"><i class="fas fa-tshirt"></i> Đồ nữ</a></li>
+                    <li><a href="#"><i class="fas fa-child"></i> Đồ trẻ em</a></li>
+                    <li><a href="#"><i class="fas fa-blog"></i> Blog</a></li>
+                    <li><a asp-controller="Home" asp-action="Contact"><i class="fas fa-envelope"></i> Liên hệ</a></li>
+                </ul>
+            </div>
+        </div>
+    </header>
     <!-- Main Content -->
     <main>
-        <div class="container my-5">
+        <div class="container my-3">
             <partial name="_NotificationPartial" />
             @RenderBody()
         </div>
@@ -186,16 +199,25 @@
                 </div>
             </div>
             <div class="text-center mt-4 border-top pt-3">
-                <p>Copyright © 2025 Phenikaa Inc. All rights reserved. | Designed by <a href="#" class="text-warning">Themeum</a></p>
+                <p>Copyright © 2025 Phenikaa Inc. All rights reserved. | Designed by <a href="#"
+                        class="text-warning">Themeum</a></p>
             </div>
         </div>
     </footer>
+
+    <!-- Scroll to Top Button -->
+    <a id="scrollUp" style="display: none;">
+        <i class="fas fa-arrow-up"></i>
+    </a>
 
     <!-- Scripts -->
     <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.all.min.js"></script>
+    <script src="https://code.jquery.com/ui/1.14.0/jquery-ui.min.js"></script>
     <script src="~/js/main.js"></script>
+    <script src="~/js/custom-optimized.js"></script>
     @await RenderSectionAsync("Scripts", required: false)
 </body>
+
 </html>

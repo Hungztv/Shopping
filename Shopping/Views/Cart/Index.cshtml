@@ -16,59 +16,76 @@
         </nav>
 
         <!-- Cart Table -->
-        <div class="table-responsive cart_info mb-4">
-            <table class="table table-hover table-condensed align-middle">
-                <thead class="table-dark">
-                    <tr>
-                        <th>Sản phẩm</th>
-                        <th>Tên sản phẩm</th>
-                        <th>Giá</th>
-                        <th>Số lượng</th>
-                        <th>Tổng</th>
-                        <th></th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @if (Model.CartItems.Count > 0)
-                    {
-                        foreach (var item in Model.CartItems)
-                        {
+        <div class="card shadow-sm border-0 mb-4">
+            <div class="card-header bg-gradient text-white"
+                style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);">
+                <h4 class="mb-0"><i class="fas fa-shopping-cart me-2"></i>Giỏ hàng của bạn</h4>
+            </div>
+            <div class="card-body p-0">
+                <div class="table-responsive">
+                    <table class="table table-hover align-middle mb-0">
+                        <thead class="table-light">
                             <tr>
-                                <td class="cart_product">
-                                    <a href=""><img src="~/media/products/@item.Image" alt="@item.ProductName" class="img-fluid" style="max-width: 70px; max-height: 100px;"></a>
+                                <th style="width: 100px;">Hình ảnh</th>
+                                <th>Tên sản phẩm</th>
+                                <th style="width: 150px;">Giá</th>
+                                <th style="width: 180px;">Số lượng</th>
+                                <th style="width: 150px;">Tổng</th>
+                                <th style="width: 80px;"></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @if (Model.CartItems.Count > 0)
+                            {
+                                foreach (var item in Model.CartItems)
+                                {
+                                    <tr>
+                                        <td class="text-center">
+                                            <img src="~/media/products/@item.Image" alt="@item.ProductName"
+                                                class="img-thumbnail" style="width: 80px; height: 80px; object-fit: contain;">
+                                        </td>
+                                        <td>
+                                            <h6 class="mb-0"><a asp-action="Details" asp-controller="Product"
+                                                    asp-route-Id="@item.ProductId"
+                                                    class="text-dark text-decoration-none">@item.ProductName</a></h6>
+                                        </td>
+                                        <td>
+                                            <span class="text-muted">@item.Price.ToString("#,##0 VNĐ")</span>
+                                        </td>
+                                        <td>
+                                            <div class="input-group input-group-sm">
+                                                <a class="btn btn-outline-secondary" asp-action="Decrease" asp-controller="Cart"
+                                                    asp-route-id="@item.ProductId"><i class="fas fa-minus"></i></a>
+                                                <input type="text" class="form-control text-center" value="@item.Quantity"
+                                                    readonly style="max-width: 60px;">
+                                                <a class="btn btn-outline-secondary" asp-action="Increase" asp-controller="Cart"
+                                                    asp-route-id="@item.ProductId"><i class="fas fa-plus"></i></a>
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <span class="fw-bold text-warning">@Model.CartItems.Where(x => x.ProductId ==
+                                                                                        item.ProductId).Sum(x => x.Quantity * x.Price).ToString("#,##0 VNĐ")</span>
                                 </td>
-                                <td class="cart_description">
-                                    <h5><a href="" class="text-dark text-decoration-none">@item.ProductName</a></h5>
-                                </td>
-                                <td class="cart_price">
-                                    <p>@item.Price.ToString("#,##0 VNĐ")</p>
-                                </td>
-                                <td class="cart_quantity">
-                                    <div class="input-group w-50 mx-auto">
-                                        <a class="btn btn-outline-secondary btn-sm" asp-action="Decrease" asp-controller="Cart" asp-route-id="@item.ProductId">-</a>
-                                        <input type="text" class="form-control text-center" value="@item.Quantity" readonly>
-                                        <a class="btn btn-outline-secondary btn-sm" asp-action="Increase" asp-controller="Cart" asp-route-id="@item.ProductId">+</a>
-                                    </div>
-                                </td>
-                                <td class="cart_total">
-                                    <p class="cart_total_price fw-bold">@Model.CartItems.Where(x => x.ProductId == item.ProductId).Sum(x => x.Quantity * x.Price).ToString("#,##0 VNĐ")</p>
-                                </td>
-                                <td class="cart_delete">
-                                    <a class="btn btn-danger btn-sm" asp-action="Remove" asp-controller="Cart" asp-route-id="@item.ProductId"><i class="fas fa-times"></i></a>
+                                <td class="text-center">
+                                    <a class="btn btn-danger btn-sm" asp-action="Remove" asp-controller="Cart"
+                                        asp-route-id="@item.ProductId" onclick="return confirm('Xóa sản phẩm này?');"><i
+                                            class="fas fa-trash"></i></a>
                                 </td>
                             </tr>
-                        }
-                    }
-                    else
-                    {
-                        <tr>
-                            <td colspan="6" class="text-center py-4">
-                                <h4>Giỏ hàng của bạn đang trống.</h4>
-                            </td>
-                        </tr>
-                    }
-                </tbody>
-            </table>
+                                                        }
+                            }
+                            else
+                            {
+                                <tr>
+                                    <td colspan="6" class="text-center py-4">
+                                        <h4>Giỏ hàng của bạn đang trống.</h4>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
         </div>
 
         <!-- Cart Summary -->
@@ -82,7 +99,8 @@
                         <p><strong>Phí vận chuyển:</strong> @Model.ShippingPrice.ToString("#,##0 VNĐ")</p>
                         @if (Model.ShippingPrice > 0)
                         {
-                            <a style="cursor:pointer" class="btn btn-outline-danger btn-sm btn-delete-shipping">Xóa phí vận chuyển</a>
+                            <a style="cursor:pointer" class="btn btn-outline-danger btn-sm btn-delete-shipping">Xóa phí vận
+                                chuyển</a>
                         }
                         <hr />
                         <h4><strong>Tổng cộng:</strong> @(Model.GrandTotal + Model.ShippingPrice)</h4>
@@ -133,7 +151,8 @@
                     <div>
                         @if (Model.ShippingPrice > 0)
                         {
-                            <a class="btn btn-primary btn-checkout me-2" onclick="return confirm('Xác nhận đặt hàng?');" asp-action="Checkout" asp-controller="Checkout">Xác nhận đặt hàng</a>
+                            <a class="btn btn-primary btn-checkout me-2" onclick="return confirm('Xác nhận đặt hàng?');"
+                                asp-action="Checkout" asp-controller="Checkout">Xác nhận đặt hàng</a>
                         }
                         else
                         {

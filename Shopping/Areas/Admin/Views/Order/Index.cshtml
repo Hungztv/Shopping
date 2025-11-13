@@ -1,75 +1,107 @@
 ﻿@model IEnumerable<OrderModel>
 
 @{
-    ViewData["title"] = "List Order";
-
-
-
+    ViewData["Title"] = "Quản lý đơn hàng";
 }
 
-<!DOCTYPE html>
+<div class="container-fluid p-0 fade-in">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2 class="page-title">
+            <i class="fas fa-receipt"></i> Danh sách đơn hàng
+        </h2>
+    </div>
 
-<html>
-<head>
-    <meta name="viewport" content="width=device-width" />
-    <title>Index</title>
-</head>
-<body>
-    <h3>List Order</h3>
-
-
-
-    <table class="table" id="myTable">
-        <thead>
-            <tr>
-                <th>Id</th>
-                <th>Order Code</th>
-                <th>Shipping Cost</th>
-                <th>Coupon</th>
-                <th>UserName</th>
-                <th>Order Status</th>
-                <th>Created Date</th>
-                <th>Action</th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach (var item in Model)
-            {
+    <div class="table-custom">
+        <table class="table" id="myTable">
+            <thead>
                 <tr>
-                    <td>@item.Id</td>
-                    <td>@item.OrderCode</td>
-                    <td>@item.ShippingCost.ToString("#,##0 đ")</td>
-                    <td>@item.CouponCode</td>
-                    <td>@item.UserName</td>
-                    <td>
-                        @if (item.Status == 1)
-                        {
-                            <span class="text text-success">Đơn hàng mới</span>
-                        }
-                        else if (item.Status == 2)
-                        {
-                            <span class="text text-success">Đã giao hàng</span>
-                        }
-                        else if (item.Status == 0)
-                        {
-                            <span class="text text-success">Đã Xử Lí</span>
-                        }
-                        else
-                        {
-
-                            <span class="text text-danger">Đã hủy</span>
-                        }
-                    </td>
-                    <td>@item.CreateDate.ToString("dd-MM-yyyy")</td>
-                    <td>
-                        <a class="btn btn-warning btn-sm" asp-action="ViewOrder" asp-controller="Order" asp-route-ordercode="@item.OrderCode">View Order</a>
-                        <a class="btn btn-danger btn-sm" asp-action="Delete" asp-controller="Order" asp-route-ordercode="@item.OrderCode">Delete</a>
-
-                    </td>
+                    <th>ID</th>
+                    <th>Mã đơn hàng</th>
+                    <th>Khách hàng</th>
+                    <th>Phí ship</th>
+                    <th>Mã giảm giá</th>
+                    <th>Trạng thái</th>
+                    <th>Ngày tạo</th>
+                    <th>Hành động</th>
                 </tr>
-            }
-        </tbody>
-    </table>
-
-</body>
-</html>
+            </thead>
+            <tbody>
+                @foreach (var item in Model)
+                {
+                    <tr>
+                        <td><strong>#@item.Id</strong></td>
+                        <td>
+                            <strong class="text-primary">@item.OrderCode</strong>
+                        </td>
+                        <td>
+                            <i class="fas fa-user text-muted me-1"></i>
+                            @item.UserName
+                        </td>
+                        <td>
+                            <span class="badge-custom badge-info-custom">
+                                @item.ShippingCost.ToString("#,##0 đ")
+                            </span>
+                        </td>
+                        <td>
+                            @if (!string.IsNullOrEmpty(item.CouponCode))
+                            {
+                                <span class="badge-custom badge-warning-custom">
+                                    <i class="fas fa-tag"></i> @item.CouponCode
+                                </span>
+                            }
+                            else
+                            {
+                                <span class="text-muted">-</span>
+                            }
+                        </td>
+                        <td>
+                            @if (item.Status == 1)
+                            {
+                                <span class="badge-custom badge-info-custom">
+                                    <i class="fas fa-clock"></i> Đơn hàng mới
+                                </span>
+                            }
+                            else if (item.Status == 2)
+                            {
+                                <span class="badge-custom badge-success-custom">
+                                    <i class="fas fa-check-circle"></i> Đã giao hàng
+                                </span>
+                            }
+                            else if (item.Status == 0)
+                            {
+                                <span class="badge-custom badge-warning-custom">
+                                    <i class="fas fa-spinner"></i> Đang xử lý
+                                </span>
+                            }
+                            else
+                            {
+                                <span class="badge-custom badge-danger-custom">
+                                    <i class="fas fa-times-circle"></i> Đã hủy
+                                </span>
+                            }
+                        </td>
+                        <td>
+                            <i class="fas fa-calendar text-muted me-1"></i>
+                            @item.CreateDate.ToString("dd/MM/yyyy")
+                        </td>
+                        <td>
+                            <div class="d-flex gap-2">
+                                <a class="btn btn-sm btn-custom-primary" asp-action="ViewOrder" asp-controller="Order"
+                                    asp-route-ordercode="@item.OrderCode" title="Xem chi tiết">
+                                    <i class="fas fa-eye"></i>
+                                </a>
+                                <form asp-action="Delete" asp-controller="Order" asp-route-ordercode="@item.OrderCode"
+                                    method="post" style="display: inline;"
+                                    onsubmit="return confirm('Bạn có chắc chắn muốn xóa đơn hàng này?');">
+                                    <button type="submit" class="btn btn-sm btn-custom-danger" title="Xóa">
+                                        <i class="fas fa-trash"></i>
+                                    </button>
+                                </form>
+                            </div>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>

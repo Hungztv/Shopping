@@ -20,43 +20,57 @@
         <!-- Product List -->
         <div class="col-lg-9">
             <div class="features-items">
-                <h2 class="text-center mb-4 fw-bold">Sản phẩm nổi bật</h2>
-                <div class="row row-cols-1 row-cols-md-3 g-4">
+                <h2 class="text-center mb-4 fw-bold" style="color: #2c3e50;">Sản phẩm nổi bật</h2>
+                <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
                     @foreach (var item in Model)
                     {
                         <div class="col">
-                            <div class="card h-100 shadow-sm border-0">
-                                <div class="card-img-top text-center p-3">
-                                    <a asp-action="Details" asp-controller="Product" asp-route-Id="@item.Id">
-                                        <img src="~/media/products/@item.Image" alt="@item.Name" class="img-fluid" style="max-height: 200px; object-fit: contain;">
-                                    </a>
-                                </div>
-                                <div class="card-body text-center">
-                                    <h5 class="card-title">
-                                        <a asp-action="Details" asp-controller="Product" asp-route-Id="@item.Id" class="text-dark text-decoration-none">@item.Name</a>
-                                    </h5>
-                                    <p class="text-muted mb-1">Danh mục: @item.Category.Name</p>
-                                    <p class="text-muted mb-1">Thương hiệu: @item.Brand.Name</p>
-                                    <h4 class="text-warning fw-bold mb-3">@string.Format(new System.Globalization.CultureInfo("vi-VN"), "{0:N0} VNĐ", item.Price)</h4>
-
-                                    @if (item.Quantity == 0)
-                                    {
-                                        <button type="button" class="btn btn-secondary" disabled><i class="fas fa-shopping-cart"></i> Hết hàng</button>
-                                    }
-                                    else
-                                    {
-                                        <button class="btn btn-warning add-to-cart" data-product_id="@item.Id"><i class="fas fa-shopping-cart"></i> Thêm giỏ hàng</button>
-                                    }
-                                </div>
+                            <div class="card product-card h-100 shadow-sm border-0 position-relative">
+                                @if (item.Quantity == 0)
+                                {
+                                    <span class="badge bg-danger position-absolute top-0 start-0 m-2" style="z-index: 10;">Hết hàng</span>
+                                }
+                                else if (item.Quantity < 10)
+                                {
+                                    <span class="badge bg-warning text-dark position-absolute top-0 start-0 m-2" style="z-index: 10;">Còn @item.Quantity</span>
+                                }
                                 @if (User.Identity?.IsAuthenticated ?? false)
                                 {
-                                    <div class="card-footer bg-light border-top-0 text-center py-2">
-                                        <div class="btn-group" role="group">
-                                            <button class="btn btn-outline-danger btn-sm add-btn-wishlist" data-product_id="@item.Id"><i class="fas fa-heart"></i></button>
-                                            <button class="btn btn-outline-primary btn-sm add-btn-compare" data-product_id="@item.Id"><i class="fas fa-exchange-alt"></i></button>
-                                        </div>
+                                    <div class="position-absolute top-0 end-0 m-2" style="z-index: 10;">
+                                        <button class="btn btn-sm btn-light rounded-circle add-btn-wishlist" data-product_id="@item.Id" title="Thêm yêu thích">
+                                            <i class="fas fa-heart text-danger"></i>
+                                        </button>
                                     </div>
                                 }
+                                <div class="product-image-wrapper">
+                                    <a asp-action="Details" asp-controller="Product" asp-route-Id="@item.Id">
+                                        <img src="~/media/products/@item.Image" alt="@item.Name" class="card-img-top p-3" style="height: 220px; object-fit: contain;">
+                                    </a>
+                                </div>
+                                <div class="card-body text-center d-flex flex-column">
+                                    <h5 class="card-title mb-2" style="min-height: 48px;">
+                                        <a asp-action="Details" asp-controller="Product" asp-route-Id="@item.Id" class="text-dark text-decoration-none">@item.Name</a>
+                                    </h5>
+                                    <div class="mb-2">
+                                        <span class="badge bg-light text-dark me-1"><i class="fas fa-tag"></i> @item.Category.Name</span>
+                                        <span class="badge bg-light text-dark"><i class="fas fa-copyright"></i> @item.Brand.Name</span>
+                                    </div>
+                                    <h4 class="text-warning fw-bold mb-3">@string.Format(new System.Globalization.CultureInfo("vi-VN"), "{0:N0} VNĐ", item.Price)</h4>
+                                    <div class="mt-auto">
+                                        @if (item.Quantity == 0)
+                                        {
+                                            <button type="button" class="btn btn-secondary w-100" disabled><i class="fas fa-shopping-cart"></i> Hết hàng</button>
+                                        }
+                                        else
+                                        {
+                                            <button class="btn btn-warning w-100 add-to-cart" data-product_id="@item.Id"><i class="fas fa-shopping-cart"></i> Thêm giỏ hàng</button>
+                                        }
+                                        @if (User.Identity?.IsAuthenticated ?? false)
+                                        {
+                                            <button class="btn btn-outline-primary btn-sm w-100 mt-2 add-btn-compare" data-product_id="@item.Id"><i class="fas fa-exchange-alt"></i> So sánh</button>
+                                        }
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     }
@@ -95,6 +109,54 @@
 
         .page-item {
             display: inline-block !important;
+        }
+
+        .product-card {
+            transition: all 0.3s ease;
+            overflow: hidden;
+        }
+
+        .product-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 8px 24px rgba(0,0,0,0.15) !important;
+        }
+
+        .product-image-wrapper {
+            position: relative;
+            overflow: hidden;
+        }
+
+        .product-image-wrapper img {
+            transition: transform 0.3s ease;
+        }
+
+        .product-card:hover .product-image-wrapper img {
+            transform: scale(1.08);
+        }
+
+        .card-title a {
+            transition: color 0.3s ease;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+
+        .card-title a:hover {
+            color: #ffc107 !important;
+        }
+
+        .badge {
+            font-size: 0.75rem;
+            padding: 0.35em 0.65em;
+        }
+
+        .btn {
+            transition: all 0.3s ease;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
         }
     </style>
 }

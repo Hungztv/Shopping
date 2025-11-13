@@ -4,52 +4,333 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<section id="login" class="my-5">
+<section id="login" class="login-section">
     <div class="container">
-        <div class="row justify-content-center">
-            <div class="col-md-6 col-lg-4">
-                <div class="card shadow-sm border-0 p-4">
-                    <h2 class="text-center fw-bold mb-4 text-primary">Đăng nhập</h2>
-                    <div asp-validation-summary="ModelOnly" class="alert alert-danger" role="alert"></div>
-                    <form asp-action="Login" asp-controller="Account" method="post">
-                        <div class="mb-3">
-                            <label asp-for="UserName" class="form-label">Tên đăng nhập</label>
-                            <input asp-for="UserName" class="form-control" placeholder="Nhập tên đăng nhập" required />
-                            <span asp-validation-for="UserName" class="text-danger"></span>
-                        </div>
-                        <div class="mb-3">
-                            <label asp-for="Password" class="form-label">Mật khẩu</label>
-                            <div class="input-group">
-                                <input asp-for="Password" type="password" class="form-control" placeholder="Nhập mật khẩu" required id="passwordInput" />
-                                <button type="button" class="btn btn-outline-secondary" id="togglePassword">
-                                    <i class="fas fa-eye"></i>
-                                </button>
+        <div class="row min-vh-80 align-items-center justify-content-center">
+            <!-- Login Card -->
+            <div class="col-lg-10">
+                <div class="login-card shadow-lg">
+                    <div class="row g-0">
+                        <!-- Left Side - Illustration -->
+                        <div class="col-md-6 login-illustration d-none d-md-flex">
+                            <div class="illustration-content">
+                                <div class="illustration-icon">
+                                    <i class="fas fa-shopping-bag"></i>
+                                </div>
+                                <h3 class="text-white fw-bold mb-3">Chào mừng trở lại!</h3>
+                                <p class="text-white-50">Đăng nhập để tiếp tục mua sắm và trải nghiệm những sản phẩm
+                                    tuyệt vời.</p>
+                                <div class="features mt-4">
+                                    <div class="feature-item">
+                                        <i class="fas fa-check-circle"></i>
+                                        <span>Mua sắm dễ dàng</span>
+                                    </div>
+                                    <div class="feature-item">
+                                        <i class="fas fa-check-circle"></i>
+                                        <span>Giao hàng nhanh chóng</span>
+                                    </div>
+                                    <div class="feature-item">
+                                        <i class="fas fa-check-circle"></i>
+                                        <span>Hỗ trợ 24/7</span>
+                                    </div>
+                                </div>
                             </div>
-                            <span asp-validation-for="Password" class="text-danger"></span>
                         </div>
-                        <div class="mb-3 form-check">
-                            <input type="checkbox" class="form-check-input" id="rememberMe" name="RememberMe" />
-                            <label class="form-check-label" for="rememberMe">Ghi nhớ tôi</label>
+
+                        <!-- Right Side - Login Form -->
+                        <div class="col-md-6">
+                            <div class="login-form-wrapper">
+                                <div class="text-center mb-4">
+                                    <div class="login-icon mb-3">
+                                        <i class="fas fa-user-circle"></i>
+                                    </div>
+                                    <h2 class="fw-bold mb-2">Đăng nhập</h2>
+                                    <p class="text-muted">Nhập thông tin tài khoản của bạn</p>
+                                </div>
+
+                                <div asp-validation-summary="ModelOnly"
+                                    class="alert alert-danger alert-dismissible fade show" role="alert">
+                                    <i class="fas fa-exclamation-circle me-2"></i>
+                                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                                </div>
+
+                                <form asp-action="Login" asp-controller="Account" method="post" class="login-form">
+                                    <div class="form-group mb-3">
+                                        <label asp-for="UserName" class="form-label fw-semibold">
+                                            <i class="fas fa-user me-2 text-primary"></i>Tên đăng nhập
+                                        </label>
+                                        <input asp-for="UserName" class="form-control form-control-lg"
+                                            placeholder="Nhập tên đăng nhập" required />
+                                        <span asp-validation-for="UserName" class="text-danger small"></span>
+                                    </div>
+
+                                    <div class="form-group mb-3">
+                                        <label asp-for="Password" class="form-label fw-semibold">
+                                            <i class="fas fa-lock me-2 text-primary"></i>Mật khẩu
+                                        </label>
+                                        <div class="input-group input-group-lg">
+                                            <input asp-for="Password" type="password" class="form-control"
+                                                placeholder="Nhập mật khẩu" required id="passwordInput" />
+                                            <button type="button" class="btn btn-outline-secondary" id="togglePassword">
+                                                <i class="fas fa-eye"></i>
+                                            </button>
+                                        </div>
+                                        <span asp-validation-for="Password" class="text-danger small"></span>
+                                    </div>
+
+                                    <div class="d-flex justify-content-between align-items-center mb-4">
+                                        <div class="form-check">
+                                            <input type="checkbox" class="form-check-input" id="rememberMe"
+                                                name="RememberMe" />
+                                            <label class="form-check-label" for="rememberMe">Ghi nhớ tôi</label>
+                                        </div>
+                                        <a asp-action="ForgetPass" asp-controller="Account"
+                                            class="text-primary text-decoration-none">
+                                            <i class="fas fa-key me-1"></i>Quên mật khẩu?
+                                        </a>
+                                    </div>
+
+                                    <button type="submit" class="btn btn-primary btn-lg w-100 mb-3 btn-login"
+                                        id="loginButton">
+                                        <span id="loginText"><i class="fas fa-sign-in-alt me-2"></i>Đăng nhập</span>
+                                        <span class="spinner-border spinner-border-sm d-none" id="loginSpinner"
+                                            role="status"></span>
+                                    </button>
+
+                                    <div class="divider my-4">
+                                        <span>hoặc</span>
+                                    </div>
+
+                                    <a asp-action="LoginByGoogle" asp-controller="Account"
+                                        class="btn btn-outline-danger btn-lg w-100 mb-3">
+                                        <i class="fab fa-google me-2"></i>Đăng nhập bằng Google
+                                    </a>
+
+                                    <div class="text-center mt-4">
+                                        <p class="text-muted mb-0">
+                                            Chưa có tài khoản?
+                                            <a asp-action="Create" asp-controller="Account"
+                                                class="text-primary fw-semibold text-decoration-none">
+                                                Đăng ký ngay
+                                            </a>
+                                        </p>
+                                    </div>
+                                </form>
+                            </div>
                         </div>
-                        <button type="submit" class="btn btn-primary w-100 mt-3" id="loginButton">
-                            <span id="loginText">Đăng nhập</span>
-                            <span class="spinner-border spinner-border-sm d-none" id="loginSpinner" role="status" aria-hidden="true"></span>
-                        </button>
-                        <p class="text-center mt-3">
-                            <a asp-action="ForgetPass" asp-controller="Account" class="text-muted">Quên mật khẩu?</a> |
-                            <a asp-action="Create" asp-controller="Account" class="text-primary">Đăng ký</a>
-                        </p>
-                        <div class="text-center mt-3">
-                            <a asp-action="LoginByGoogle" asp-controller="Account" class="btn btn-outline-danger w-100">
-                                <i class="fab fa-google me-2"></i> Đăng nhập bằng Google
-                            </a>
-                        </div>
-                    </form>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
 </section>
+
+<style>
+    .login-section {
+        padding: 3rem 0;
+        min-height: 80vh;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        position: relative;
+    }
+
+    .login-section::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background-image:
+            radial-gradient(circle at 20% 50%, rgba(255, 255, 255, 0.1) 0%, transparent 50%),
+            radial-gradient(circle at 80% 80%, rgba(255, 255, 255, 0.1) 0%, transparent 50%);
+    }
+
+    .login-card {
+        background: white;
+        border-radius: 20px;
+        overflow: hidden;
+        animation: slideUp 0.6s ease;
+        position: relative;
+    }
+
+    @@keyframes slideUp {
+        from {
+            opacity: 0;
+            transform: translateY(30px);
+        }
+
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    .login-illustration {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        padding: 3rem;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .login-illustration::before {
+        content: '';
+        position: absolute;
+        width: 300px;
+        height: 300px;
+        background: rgba(255, 255, 255, 0.1);
+        border-radius: 50%;
+        top: -100px;
+        left: -100px;
+    }
+
+    .login-illustration::after {
+        content: '';
+        position: absolute;
+        width: 200px;
+        height: 200px;
+        background: rgba(255, 255, 255, 0.1);
+        border-radius: 50%;
+        bottom: -50px;
+        right: -50px;
+    }
+
+    .illustration-content {
+        position: relative;
+        z-index: 1;
+    }
+
+    .illustration-icon {
+        width: 120px;
+        height: 120px;
+        background: rgba(255, 255, 255, 0.2);
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin: 0 auto 2rem;
+        backdrop-filter: blur(10px);
+    }
+
+    .illustration-icon i {
+        font-size: 4rem;
+        color: white;
+    }
+
+    .feature-item {
+        display: flex;
+        align-items: center;
+        color: white;
+        margin-bottom: 1rem;
+        font-size: 0.95rem;
+    }
+
+    .feature-item i {
+        margin-right: 0.75rem;
+        color: #ffc107;
+        font-size: 1.2rem;
+    }
+
+    .login-form-wrapper {
+        padding: 3rem 2.5rem;
+    }
+
+    .login-icon {
+        width: 80px;
+        height: 80px;
+        margin: 0 auto;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .login-icon i {
+        font-size: 2.5rem;
+        color: white;
+    }
+
+    .login-form .form-control {
+        border: 2px solid #e0e0e0;
+        border-radius: 10px;
+        padding: 0.75rem 1rem;
+        transition: all 0.3s ease;
+    }
+
+    .login-form .form-control:focus {
+        border-color: #667eea;
+        box-shadow: 0 0 0 0.2rem rgba(102, 126, 234, 0.15);
+    }
+
+    .login-form .input-group-lg .btn {
+        border-radius: 0 10px 10px 0;
+        border: 2px solid #e0e0e0;
+        border-left: none;
+    }
+
+    .btn-login {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        border: none;
+        border-radius: 10px;
+        padding: 0.875rem;
+        font-weight: 600;
+        transition: all 0.3s ease;
+        box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+    }
+
+    .btn-login:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
+    }
+
+    .divider {
+        position: relative;
+        text-align: center;
+    }
+
+    .divider::before {
+        content: '';
+        position: absolute;
+        top: 50%;
+        left: 0;
+        right: 0;
+        height: 1px;
+        background: #e0e0e0;
+    }
+
+    .divider span {
+        background: white;
+        padding: 0 1rem;
+        color: #999;
+        position: relative;
+        font-size: 0.9rem;
+    }
+
+    .btn-outline-danger {
+        border: 2px solid #dc3545;
+        border-radius: 10px;
+        font-weight: 600;
+        transition: all 0.3s ease;
+    }
+
+    .btn-outline-danger:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 15px rgba(220, 53, 69, 0.3);
+    }
+
+    @@media (max-width: 767px) {
+        .login-form-wrapper {
+            padding: 2rem 1.5rem;
+        }
+
+        .login-section {
+            padding: 1.5rem 0;
+        }
+    }
+</style>
 
 @section Scripts {
     <partial name="_ValidationScriptsPartial" />
@@ -73,6 +354,15 @@
                 $("#loginText").addClass("d-none");
                 $("#loginSpinner").removeClass("d-none");
                 $("#loginButton").prop("disabled", true);
+            });
+
+            // Add floating label effect
+            $('.form-control').on('focus', function () {
+                $(this).parent().addClass('focused');
+            }).on('blur', function () {
+                if (!$(this).val()) {
+                    $(this).parent().removeClass('focused');
+                }
             });
         });
     </script>

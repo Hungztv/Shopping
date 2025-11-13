@@ -43,33 +43,45 @@
 
                     <!-- Product Information -->
                     <div class="col-md-7 mb-4">
-                        <div class="card shadow-sm border-0">
-                            <div class="card-body">
-                                <h2 class="fw-bold mb-3">@Model.ProductDetails.Name</h2>
-                                <div class="d-flex align-items-center mb-3">
-                                    <h3 class="text-warning fw-bold me-3">@string.Format(new System.Globalization.CultureInfo("vi-VN"), "{0:N0} VNĐ", Model.ProductDetails.Price)</h3>
-                                    <div class="input-group w-auto">
-                                        <span class="input-group-text">Số lượng:</span>
-                                        <input type="number" id="quantity" class="form-control" value="1" min="1" style="width: 60px;">
+                        <div class="card shadow border-0">
+                            <div class="card-body p-4">
+                                <h2 class="fw-bold mb-3" style="color: #2c3e50;">@Model.ProductDetails.Name</h2>
+                                
+                                <div class="mb-4">
+                                    <h3 class="text-warning fw-bold d-inline-block me-3">@string.Format(new System.Globalization.CultureInfo("vi-VN"), "{0:N0} VNĐ", Model.ProductDetails.Price)</h3>
+                                    @if (Model.ProductDetails.Quantity > 0)
+                                    {
+                                        <span class="badge bg-success"><i class="fas fa-check-circle"></i> Còn hàng</span>
+                                    }
+                                    else
+                                    {
+                                        <span class="badge bg-danger"><i class="fas fa-times-circle"></i> Hết hàng</span>
+                                    }
+                                </div>
+
+                                <div class="product-info mb-4">
+                                    <p class="mb-2"><i class="fas fa-tag text-primary me-2"></i><strong>Danh mục:</strong> <span class="badge bg-light text-dark">@Model.ProductDetails.Category.Name</span></p>
+                                    <p class="mb-2"><i class="fas fa-copyright text-primary me-2"></i><strong>Thương hiệu:</strong> <span class="badge bg-light text-dark">@Model.ProductDetails.Brand.Name</span></p>
+                                    <p class="mb-2"><i class="fas fa-box text-primary me-2"></i><strong>Trong kho:</strong> <span class="badge bg-info text-dark">@Model.ProductDetails.Quantity sản phẩm</span></p>
+                                    <p class="mb-2"><i class="fas fa-certificate text-primary me-2"></i><strong>Tình trạng:</strong> <span class="badge bg-success">Mới 100%</span></p>
+                                </div>
+
+                                <div class="quantity-selector mb-4">
+                                    <label class="fw-bold mb-2">Số lượng:</label>
+                                    <div class="input-group w-50">
+                                        <button class="btn btn-outline-secondary" type="button" onclick="decreaseQuantity()"><i class="fas fa-minus"></i></button>
+                                        <input type="number" id="quantity" class="form-control text-center" value="1" min="1" max="@Model.ProductDetails.Quantity" readonly>
+                                        <button class="btn btn-outline-secondary" type="button" onclick="increaseQuantity()"><i class="fas fa-plus"></i></button>
                                     </div>
                                 </div>
-                                <button type="button" class="btn btn-warning mb-3 add-to-cart" 
-                                data-product_id="@Model.ProductDetails.Id" 
-                                @(Model.ProductDetails.Quantity == 0 ? "disabled" : "")>
-                                    <i class="fas fa-shopping-cart"></i> Thêm vào giỏ hàng
-                                </button>
-                                @if (Model.ProductDetails.Quantity > 0)
-                                {
-                                    <p><strong>Tình trạng:</strong> Còn hàng</p>
-                                }
-                                else
-                                {
-                                    <p><strong style="color: red;">Tình trạng:</strong> Hết hàng</p>
-                                }
-                                <p><strong>Điều kiện:</strong> Mới</p>
-                                <p><strong>Thương hiệu:</strong> @Model.ProductDetails.Brand.Name</p>
-                                <p><strong>Danh mục:</strong> @Model.ProductDetails.Category.Name</p>
-                                <p><strong>Số lượng trong kho:</strong> @Model.ProductDetails.Quantity</p>
+
+                                <div class="d-grid gap-2">
+                                    <button type="button" class="btn btn-warning btn-lg add-to-cart" 
+                                    data-product_id="@Model.ProductDetails.Id" 
+                                    @(Model.ProductDetails.Quantity == 0 ? "disabled" : "")>
+                                        <i class="fas fa-shopping-cart me-2"></i> Thêm vào giỏ hàng
+                                    </button>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -198,20 +210,35 @@
     }
   
     <script>
+        function increaseQuantity() {
+            var qty = parseInt($('#quantity').val());
+            var max = parseInt($('#quantity').attr('max'));
+            if (qty < max) {
+                $('#quantity').val(qty + 1);
+            }
+        }
+
+        function decreaseQuantity() {
+            var qty = parseInt($('#quantity').val());
+            if (qty > 1) {
+                $('#quantity').val(qty - 1);
+            }
+        }
+
         $(document).ready(function () {
             $('.add-to-cart').click(function () {
                 var productId = $(this).data("product_id");
-                var quantity = $('#quantity').val() || 1; // Lấy số lượng từ input, mặc định là 1 nếu không có
+                var quantity = $('#quantity').val() || 1;
 
                 $.ajax({
                     type: "POST",
                     url: "@Url.Action("Add", "Cart")",
-                    data: { Id: productId, Quantity: quantity }, // Gửi cả ID sản phẩm và số lượng
+                    data: { Id: productId, Quantity: quantity },
                     success: function (result) {
                         if (result) {
                             Swal.fire({
                                 icon: 'success',
-                                title: 'Thành công',
+                                title: 'Thành công!',
                                 text: 'Đã thêm sản phẩm vào giỏ hàng!',
                                 timer: 1500,
                                 showConfirmButton: false
@@ -221,7 +248,7 @@
                     error: function () {
                         Swal.fire({
                             icon: 'error',
-                            title: 'Lỗi',
+                            title: 'Lỗi!',
                             text: 'Có lỗi xảy ra khi thêm vào giỏ hàng.'
                         });
                     }
