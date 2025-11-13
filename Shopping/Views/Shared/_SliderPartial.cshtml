@@ -2,58 +2,310 @@
     int index = 0;
 }
 
-<section id="slider" class="mb-5">
-    <div class="container">
-        <div class="row">
-            <div class="col-12">
-                <div id="slider-carousel" class="carousel slide" data-bs-ride="carousel">
-                    <!-- Indicators -->
-                    <ol class="carousel-indicators">
-                        @for (int i = 0; i < ViewBag.Sliders.Count; i++)
-                        {
-                            <li data-bs-target="#slider-carousel" data-bs-slide-to="@i" class="@(i == 0 ? "active" : "")"></li>
-                        }
-                    </ol>
+<section id="slider" class="hero-slider mb-4">
+    <div class="container-fluid px-0">
+        <div id="slider-carousel" class="carousel slide carousel-fade" data-bs-ride="carousel" data-bs-interval="5000">
+            <!-- Indicators -->
+            <div class="carousel-indicators">
+                @for (int i = 0; i < ViewBag.Sliders.Count; i++)
+                {
+                    <button type="button" data-bs-target="#slider-carousel" data-bs-slide-to="@i" class="@(i == 0 ? "active" : "")" aria-label="Slide @(i + 1)"></button>
+                }
+            </div>
 
-                    <!-- Slides -->
-                    <div class="carousel-inner">
-                        @foreach (var slider in ViewBag.Sliders)
+            <!-- Slides -->
+            <div class="carousel-inner">
+                @foreach (var slider in ViewBag.Sliders)
+                {
+                    <div class="carousel-item @(index == 0 ? "active" : "")">
+                        <div class="slider-image-wrapper">
+                            <img src="~/media/sliders/@slider.Image" class="d-block w-100" alt="@slider.Name">
+                            <div class="slider-overlay"></div>
+                        </div>
+                        @if (!string.IsNullOrEmpty(slider.Name) || !string.IsNullOrEmpty(slider.Description))
                         {
-                            <div class="carousel-item @(index == 0 ? "active" : "")">
-                                <img src="~/media/sliders/@slider.Image" class="d-block w-100" alt="Slider @index">
+                            <div class="carousel-caption slider-caption">
+                                <div class="caption-content animate-caption">
+                                    @if (!string.IsNullOrEmpty(slider.Name))
+                                    {
+                                        <h2 class="display-4 fw-bold text-white mb-3">@slider.Name</h2>
+                                    }
+                                    @if (!string.IsNullOrEmpty(slider.Description))
+                                    {
+                                        <p class="lead text-white mb-4">@slider.Description</p>
+                                    }
+                                    <div class="slider-actions">
+                                        <a href="#" class="btn btn-warning btn-lg px-5 me-2">
+                                            <i class="fas fa-shopping-bag me-2"></i>Mua ngay
+                                        </a>
+                                        <a href="#" class="btn btn-outline-light btn-lg px-5">
+                                            <i class="fas fa-info-circle me-2"></i>Tìm hiểu thêm
+                                        </a>
+                                    </div>
+                                </div>
                             </div>
-                            index++;
                         }
                     </div>
-
-                    <!-- Controls -->
-                    <a class="carousel-control-prev" href="#slider-carousel" role="button" data-bs-slide="prev">
-                        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-                        <span class="visually-hidden">Previous</span>
-                    </a>
-                    <a class="carousel-control-next" href="#slider-carousel" role="button" data-bs-slide="next">
-                        <span class="carousel-control-next-icon" aria-hidden="true"></span>
-                        <span class="visually-hidden">Next</span>
-                    </a>
-                </div>
+                    index++;
+                }
             </div>
+
+            <!-- Controls -->
+            <button class="carousel-control-prev" type="button" data-bs-target="#slider-carousel" data-bs-slide="prev">
+                <span class="control-icon">
+                    <i class="fas fa-chevron-left"></i>
+                </span>
+                <span class="visually-hidden">Previous</span>
+            </button>
+            <button class="carousel-control-next" type="button" data-bs-target="#slider-carousel" data-bs-slide="next">
+                <span class="control-icon">
+                    <i class="fas fa-chevron-right"></i>
+                </span>
+                <span class="visually-hidden">Next</span>
+            </button>
         </div>
     </div>
 </section>
 
 <style>
-    /* Thêm CSS để tùy chỉnh slider */
+    .hero-slider {
+        margin-top: -1rem;
+        position: relative;
+    }
+
+    #slider-carousel {
+        border-radius: 0;
+        overflow: hidden;
+        box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+    }
+
     .carousel-inner {
-        height: 500px; /* Chiều cao cố định cho slider */
+        height: 500px;
     }
 
     .carousel-item {
-        height: 100%; /* Chiều cao bằng container cha */
+        height: 100%;
+        transition: transform 0.6s ease-in-out;
     }
 
-    .carousel-item img {
+    .slider-image-wrapper {
+        position: relative;
+        height: 100%;
+        width: 100%;
+    }
+
+    .slider-image-wrapper img {
         width: 100%;
         height: 100%;
-      
+        object-fit: cover;
+        object-position: center;
+    }
+
+    .slider-overlay {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(to right, rgba(0,0,0,0.6) 0%, rgba(0,0,0,0.3) 50%, rgba(0,0,0,0.1) 100%);
+    }
+
+    .slider-caption {
+        left: 8%;
+        right: auto;
+        bottom: 50%;
+        transform: translateY(50%);
+        text-align: left;
+        max-width: 600px;
+    }
+
+    .caption-content {
+        animation: slideInLeft 0.8s ease-out;
+    }
+
+    @@keyframes slideInLeft {
+        from {
+            opacity: 0;
+            transform: translateX(-50px);
+        }
+        to {
+            opacity: 1;
+            transform: translateX(0);
+        }
+    }
+
+    .carousel-item.active .animate-caption {
+        animation: slideInLeft 0.8s ease-out;
+    }
+
+    .slider-caption h2 {
+        text-shadow: 2px 2px 8px rgba(0,0,0,0.5);
+        margin-bottom: 1rem;
+        font-weight: 700;
+    }
+
+    .slider-caption p {
+        text-shadow: 1px 1px 4px rgba(0,0,0,0.5);
+        font-size: 1.2rem;
+    }
+
+    .slider-actions {
+        margin-top: 2rem;
+    }
+
+    .slider-actions .btn {
+        font-weight: 600;
+        border-radius: 50px;
+        padding: 0.75rem 2rem;
+        transition: all 0.3s ease;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+    }
+
+    .slider-actions .btn:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 6px 20px rgba(0,0,0,0.3);
+    }
+
+    .slider-actions .btn-warning {
+        background: #ffc107;
+        border: none;
+    }
+
+    .slider-actions .btn-warning:hover {
+        background: #e0a800;
+    }
+
+    .slider-actions .btn-outline-light {
+        border: 2px solid white;
+    }
+
+    .slider-actions .btn-outline-light:hover {
+        background: white;
+        color: #333;
+    }
+
+    /* Carousel Indicators */
+    .carousel-indicators {
+        bottom: 30px;
+        margin-bottom: 0;
+    }
+
+    .carousel-indicators button {
+        width: 12px;
+        height: 12px;
+        border-radius: 50%;
+        border: 2px solid white;
+        background-color: transparent;
+        opacity: 0.6;
+        transition: all 0.3s ease;
+    }
+
+    .carousel-indicators button.active {
+        width: 40px;
+        border-radius: 6px;
+        opacity: 1;
+        background-color: #ffc107;
+    }
+
+    /* Carousel Controls */
+    .carousel-control-prev,
+    .carousel-control-next {
+        width: 60px;
+        height: 60px;
+        top: 50%;
+        transform: translateY(-50%);
+        opacity: 0;
+        transition: all 0.3s ease;
+    }
+
+    #slider-carousel:hover .carousel-control-prev,
+    #slider-carousel:hover .carousel-control-next {
+        opacity: 1;
+    }
+
+    .carousel-control-prev {
+        left: 20px;
+    }
+
+    .carousel-control-next {
+        right: 20px;
+    }
+
+    .control-icon {
+        width: 50px;
+        height: 50px;
+        background: rgba(255,255,255,0.2);
+        backdrop-filter: blur(10px);
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: all 0.3s ease;
+    }
+
+    .control-icon:hover {
+        background: rgba(255,193,7,0.9);
+        transform: scale(1.1);
+    }
+
+    .control-icon i {
+        font-size: 1.2rem;
+        color: white;
+    }
+
+    /* Fade effect */
+    .carousel-fade .carousel-item {
+        opacity: 0;
+        transition-property: opacity;
+        transform: none;
+    }
+
+    .carousel-fade .carousel-item.active {
+        opacity: 1;
+    }
+
+    /* Responsive */
+    @@media (max-width: 768px) {
+        .carousel-inner {
+            height: 350px;
+        }
+
+        .slider-caption {
+            left: 5%;
+            right: 5%;
+            max-width: 90%;
+        }
+
+        .slider-caption h2 {
+            font-size: 1.8rem;
+        }
+
+        .slider-caption p {
+            font-size: 1rem;
+        }
+
+        .slider-actions {
+            margin-top: 1rem;
+        }
+
+        .slider-actions .btn {
+            padding: 0.5rem 1.5rem;
+            font-size: 0.9rem;
+        }
+
+        .slider-actions .btn:last-child {
+            margin-top: 0.5rem;
+        }
+
+        .carousel-control-prev,
+        .carousel-control-next {
+            width: 40px;
+            height: 40px;
+        }
+
+        .control-icon {
+            width: 35px;
+            height: 35px;
+        }
     }
 </style>

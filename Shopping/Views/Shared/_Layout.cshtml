@@ -56,7 +56,7 @@
                     <!-- Logo -->
                     <div class="col-lg-2 col-md-3 col-6">
                         <a asp-controller="Home" asp-action="Index" class="logo">
-                            <img src="~/images/home/logo.png" alt="Logo" style="max-height: 40px;">
+                            <img src="~/images/logo.png" alt="Logo" style="max-height: 40px;">
                         </a>
                     </div>
 
@@ -66,7 +66,8 @@
                             <ul class="nav-menu">
                                 <li><a asp-controller="Home" asp-action="Index">Trang chủ</a></li>
                                 <li class="dropdown">
-                                    <a href="#" class="dropdown-toggle" data-bs-toggle="dropdown">Cửa hàng <i class="fas fa-chevron-down"></i></a>
+                                    <a href="#" class="dropdown-toggle" data-bs-toggle="dropdown">Cửa hàng <i
+                                            class="fas fa-chevron-down"></i></a>
                                     <ul class="dropdown-menu">
                                         <li><a class="dropdown-item" href="#">Đồ nam</a></li>
                                         <li><a class="dropdown-item" href="#">Đồ nữ</a></li>
@@ -85,7 +86,8 @@
                             <!-- Search -->
                             <form asp-controller="Product" asp-action="Search" method="post" class="search-form">
                                 <div class="input-group">
-                                    <input type="text" class="form-control" placeholder="Tìm sản phẩm..." name="searchTerm">
+                                    <input type="text" class="form-control" placeholder="Tìm sản phẩm..."
+                                        name="searchTerm">
                                     <button class="btn btn-warning" type="submit"><i class="fas fa-search"></i></button>
                                 </div>
                             </form>
@@ -103,15 +105,29 @@
                                             <i class="fas fa-user"></i>
                                         </button>
                                         <ul class="dropdown-menu dropdown-menu-end">
-                                            <li><h6 class="dropdown-header">@User.Identity.Name</h6></li>
-                                            <li><hr class="dropdown-divider"></li>
-                                            <li><a class="dropdown-item" asp-action="History" asp-controller="Account"><i class="fas fa-history"></i> Lịch sử đơn hàng</a></li>
-                                            <li><a class="dropdown-item" asp-action="UpdateAccount" asp-controller="Account"><i class="fas fa-user-edit"></i> Cập nhật thông tin</a></li>
-                                            <li><a class="dropdown-item" asp-action="Wishlist" asp-controller="Home"><i class="fas fa-heart"></i> Yêu thích</a></li>
-                                            <li><a class="dropdown-item" asp-action="Compare" asp-controller="Home"><i class="fas fa-exchange-alt"></i> So sánh</a></li>
-                                            <li><hr class="dropdown-divider"></li>
-                                            <li><a class="dropdown-item" asp-controller="Dashboard" asp-action="Index" asp-area="Admin"><i class="fas fa-lock"></i> Admin</a></li>
-                                            <li><a class="dropdown-item text-danger" asp-action="Logout" asp-controller="Account"><i class="fas fa-sign-out-alt"></i> Đăng xuất</a></li>
+                                            <li>
+                                                <h6 class="dropdown-header">@User.Identity.Name</h6>
+                                            </li>
+                                            <li>
+                                                <hr class="dropdown-divider">
+                                            </li>
+                                            <li><a class="dropdown-item" asp-action="History" asp-controller="Account"><i
+                                                        class="fas fa-history"></i> Lịch sử đơn hàng</a></li>
+                                            <li><a class="dropdown-item" asp-action="UpdateAccount"
+                                                    asp-controller="Account"><i class="fas fa-user-edit"></i> Cập nhật thông
+                                                    tin</a></li>
+                                            <li><a class="dropdown-item" asp-action="Wishlist" asp-controller="Home"><i
+                                                        class="fas fa-heart"></i> Yêu thích</a></li>
+                                            <li><a class="dropdown-item" asp-action="Compare" asp-controller="Home"><i
+                                                        class="fas fa-exchange-alt"></i> So sánh</a></li>
+                                            <li>
+                                                <hr class="dropdown-divider">
+                                            </li>
+                                            <li><a class="dropdown-item" asp-controller="Dashboard" asp-action="Index"
+                                                    asp-area="Admin"><i class="fas fa-lock"></i> Admin</a></li>
+                                            <li><a class="dropdown-item text-danger" asp-action="Logout"
+                                                    asp-controller="Account"><i class="fas fa-sign-out-alt"></i> Đăng
+                                                    xuất</a></li>
                                         </ul>
                                     </div>
                                 }
@@ -123,7 +139,8 @@
                                 }
 
                                 <!-- Mobile Menu Toggle -->
-                                <button class="btn-icon d-lg-none" type="button" data-bs-toggle="offcanvas" data-bs-target="#mobileMenu">
+                                <button class="btn-icon d-lg-none" type="button" data-bs-toggle="offcanvas"
+                                    data-bs-target="#mobileMenu">
                                     <i class="fas fa-bars"></i>
                                 </button>
                             </div>

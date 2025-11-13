@@ -19,6 +19,17 @@ namespace Shopping.Services.Momo
         }
         public async Task<MomoCreatePaymentResponseModel> CreatePaymentAsync(OrderInfo model)
         {
+            // Validate input
+            if (model == null)
+            {
+                throw new ArgumentNullException(nameof(model), "OrderInfo cannot be null");
+            }
+
+            if (model.Amount <= 0)
+            {
+                throw new ArgumentException("Amount must be greater than 0", nameof(model.Amount));
+            }
+
             model.OrderId = DateTime.UtcNow.Ticks.ToString();
             model.OrderInformation = "Khách hàng: " + model.FullName + ". Nội dung: " + model.OrderInformation;
             var rawData =
@@ -53,9 +64,23 @@ namespace Shopping.Services.Momo
             request.AddParameter("application/json", JsonConvert.SerializeObject(requestData), ParameterType.RequestBody);
             var response = await client.ExecuteAsync(request);
 
-            return JsonConvert.DeserializeObject<MomoCreatePaymentResponseModel>(response.Content);
+            // Log response for debugging
+            Console.WriteLine($"Momo Response: {response.Content}");
+            Console.WriteLine($"Status Code: {response.StatusCode}");
 
+            if (!response.IsSuccessful)
+            {
+                throw new Exception($"Momo API call failed: {response.ErrorMessage}");
+            }
 
+            var result = JsonConvert.DeserializeObject<MomoCreatePaymentResponseModel>(response.Content);
+
+            if (result == null)
+            {
+                throw new Exception("Failed to deserialize Momo response");
+            }
+
+            return result;
         }
         public MomoExecuteResponseModel PaymentExecuteAsync(IQueryCollection collection)
         {

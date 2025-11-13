@@ -160,10 +160,9 @@
                             <small class="text-danger">Vui lòng tính phí vận chuyển trước.</small>
                         }
                         <form method="POST" asp-action="CreatePaymentMomo" asp-controller="Payment" class="d-inline">
-                            <input type="hidden" name="Amount" value="@(Model.GrandTotal + Model.ShippingPrice)" />
-                            <input type="hidden" name="OrderId" value="@Guid.NewGuid().ToString()" />
-                            <input type="hidden" name="OrderInfo" value="Thanh toán qua Momo tại HungStore" />
-                            <input type="hidden" name="FullName" value="Khách hàng" />
+                            <input type="hidden" name="Amount" value="@((int)(Model.GrandTotal + Model.ShippingPrice))" />
+                            <input type="hidden" name="OrderInformation" value="Thanh toán qua Momo tại HungStore" />
+                            <input type="hidden" name="FullName" value="@(User.Identity.IsAuthenticated ? User.Identity.Name : "Khách hàng")" />
                             <button class="btn btn-danger" type="submit">Thanh toán MoMo</button>
                         </form>
                         <form method="POST" asp-action="CreatePaymentUrlVnpay" asp-controller="Payment" class="d-inline">
