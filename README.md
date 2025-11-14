@@ -289,7 +289,7 @@ Dự án này được phân phối dưới giấy phép MIT. Xem file `LICENSE`
 **Hungztv**
 
 - GitHub: [@Hungztv](https://github.com/Hungztv)
-- Email: your-email@example.com
+- Email: duongmanhhung1210@gmail.com
 
 ## 🙏 Acknowledgments
 
@@ -303,7 +303,7 @@ Dự án này được phân phối dưới giấy phép MIT. Xem file `LICENSE`
 
 Nếu có bất kỳ câu hỏi nào, vui lòng liên hệ qua:
 
-- 📧 Email: your-email@example.com
+- 📧 Email: duongmanhhung1210@gmail.com
 - 🐛 Issues: [GitHub Issues](https://github.com/Hungztv/Shopping/issues)
 
 ---
