@@ -5,12 +5,18 @@ using Microsoft.EntityFrameworkCore;
 using Shopping.Models;
 using Shopping.Models.Momo;
 using Shopping.Models.Repository;
+using Shopping.Services;
 using Shopping.Services.Momo;
 using Shopping_Tutorial.Areas.Admin.Repository;
 
 var builder = WebApplication.CreateBuilder(args);
 builder.Services.Configure<MomoOptionModel>(builder.Configuration.GetSection("MomoAPI"));
 builder.Services.AddScoped<IMomoService, MomoService>();
+
+// Register GeminiService
+builder.Services.AddHttpClient<GeminiService>();
+builder.Services.AddScoped<GeminiService>();
+
 builder.Services.AddControllersWithViews();
 // Kết nối đến cơ sở dữ liệu
 builder.Services.AddDbContext<DataContext>(options =>
