@@ -82,6 +82,9 @@
 
     // Format message with line breaks and lists
     function formatMessage(text) {
+        if (!text || typeof text !== 'string') {
+            return '';
+        }
         return text
             .replace(/\n/g, '<br>')
             .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')

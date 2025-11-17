@@ -8,11 +8,11 @@ namespace Shopping.Controllers
     [ApiController]
     public class ChatbotController : ControllerBase
     {
-        private readonly GeminiService _geminiService;
+        private readonly GroqService _groqService;
 
-        public ChatbotController(GeminiService geminiService)
+        public ChatbotController(GroqService groqService)
         {
-            _geminiService = geminiService;
+            _groqService = groqService;
         }
 
         [HttpPost("message")]
@@ -25,8 +25,8 @@ namespace Shopping.Controllers
 
             try
             {
-                var response = await _geminiService.GetChatResponseAsync(request.Message);
-                return Ok(new { message = response });
+                var response = await _groqService.GetChatResponseAsync(request.Message);
+                return Ok(new { response = response });
             }
             catch (Exception ex)
             {
@@ -44,7 +44,7 @@ namespace Shopping.Controllers
 
             try
             {
-                var products = await _geminiService.SearchProductsAsync(query);
+                var products = await _groqService.SearchProductsAsync(query);
                 return Ok(products);
             }
             catch (Exception ex)

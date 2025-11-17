@@ -75,7 +75,7 @@ Trả lời ngắn gọn, gợi ý 2-3 sản phẩm phù hợp với giá.";
                 Console.WriteLine($"Calling Gemini API with key: {_apiKey?.Substring(0, 10)}...");
 
                 var response = await _httpClient.PostAsync(
-                    $"https://generativelanguage.googleapis.com/v1/models/gemini-1.5-flash:generateContent?key={_apiKey}",
+                    $"https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent?key={_apiKey}",
                     content
                 );
 
@@ -95,14 +95,54 @@ Trả lời ngắn gọn, gợi ý 2-3 sản phẩm phù hợp với giá.";
                 else
                 {
                     Console.WriteLine($"Gemini API Error: {response.StatusCode} - {responseContent}");
-                    return $"Xin lỗi, có lỗi kết nối API (Status: {response.StatusCode}). Vui lòng kiểm tra API key hoặc thử lại sau!";
+
+                    // Mock response khi API lỗi
+                    var mockResponse = GenerateMockResponse(userMessage, products.Cast<dynamic>().ToList());
+                    return mockResponse;
                 }
             }
             catch (Exception ex)
             {
                 Console.WriteLine($"Error in GetChatResponseAsync: {ex.Message}");
                 Console.WriteLine($"Stack trace: {ex.StackTrace}");
-                return $"Xin lỗi, có lỗi xảy ra: {ex.Message}. Vui lòng thử lại sau!";
+                return $"Xin chào! Tôi có thể giúp bạn tìm kiếm sản phẩm. Hiện tại hệ thống AI đang bảo trì, vui lòng liên hệ hotline để được tư vấn chi tiết hơn! 📞";
+            }
+        }
+
+        private string GenerateMockResponse(string userMessage, List<dynamic> products)
+        {
+            var lowerMessage = userMessage.ToLower();
+
+            // Tìm sản phẩm phù hợp
+            var matchedProducts = products.Where(p =>
+                lowerMessage.Contains(p.Name.ToString().ToLower()) ||
+                lowerMessage.Contains(p.CategoryName.ToString().ToLower()) ||
+                lowerMessage.Contains(p.BrandName.ToString().ToLower())
+            ).Take(3).ToList();
+
+            if (matchedProducts.Any())
+            {
+                var response = $"Dựa trên yêu cầu của bạn, tôi gợi ý các sản phẩm sau:\n\n";
+                foreach (var product in matchedProducts)
+                {
+                    response += $"🔹 **{product.Name}** - {product.BrandName}\n";
+                    response += $"   💰 Giá: {product.Price:N0} VNĐ\n\n";
+                }
+                response += "Bạn có muốn xem thêm thông tin về sản phẩm nào không? 😊";
+                return response;
+            }
+            else
+            {
+                // Gợi ý sản phẩm phổ biến
+                var popularProducts = products.Take(3).ToList();
+                var response = "Chúng tôi có nhiều sản phẩm chất lượng:\n\n";
+                foreach (var product in popularProducts)
+                {
+                    response += $"🔹 **{product.Name}**\n";
+                    response += $"   💰 {product.Price:N0} VNĐ\n\n";
+                }
+                response += "Bạn đang tìm loại sản phẩm nào? Hãy cho tôi biết để tư vấn chính xác hơn! 🛍️";
+                return response;
             }
         }
 

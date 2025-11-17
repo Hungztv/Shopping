@@ -10,7 +10,8 @@
 
 $(document).ready(function(){
 	$(function () {
-		$.scrollUp({
+		// scrollUp plugin commented out - using CSS scroll button instead
+		/*$.scrollUp({
 	        scrollName: 'scrollUp', // Element ID
 	        scrollDistance: 300, // Distance from top/bottom before showing element (px)
 	        scrollFrom: 'top', // 'top' or 'bottom'
@@ -25,6 +26,6 @@ $(document).ready(function(){
 	        scrollImg: false, // Set true to use image
 	        activeOverlay: false, // Set CSS color to display scrollUp active point, e.g '#00FFFF'
 	        zIndex: 2147483647 // Z-Index for the overlay
-		});
+		});*/
 	});
 });

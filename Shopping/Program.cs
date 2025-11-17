@@ -13,9 +13,11 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.Configure<MomoOptionModel>(builder.Configuration.GetSection("MomoAPI"));
 builder.Services.AddScoped<IMomoService, MomoService>();
 
-// Register GeminiService
+// Register AI services
 builder.Services.AddHttpClient<GeminiService>();
 builder.Services.AddScoped<GeminiService>();
+builder.Services.AddHttpClient<GroqService>();
+builder.Services.AddScoped<GroqService>();
 
 builder.Services.AddControllersWithViews();
 // Kết nối đến cơ sở dữ liệu
