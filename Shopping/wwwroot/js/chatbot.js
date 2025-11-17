@@ -58,7 +58,7 @@
         }
     }
 
-    // Add message to chat
+   
     function addMessage(text, sender) {
         const messageDiv = document.createElement('div');
         messageDiv.className = `message ${sender}`;
@@ -80,7 +80,7 @@
         chatbotMessages.scrollTop = chatbotMessages.scrollHeight;
     }
 
-    // Format message with line breaks and lists
+    
     function formatMessage(text) {
         if (!text || typeof text !== 'string') {
             return '';
@@ -91,7 +91,7 @@
             .replace(/\*(.*?)\*/g, '<em>$1</em>');
     }
 
-    // Show typing indicator
+   
     function showTypingIndicator() {
         const typingDiv = document.createElement('div');
         typingDiv.className = 'message typing';

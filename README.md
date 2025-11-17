@@ -95,37 +95,73 @@ git clone https://github.com/Hungztv/Shopping.git
 cd Shopping
 ```
 
-2. **Restore dependencies**
+2. **Cấu hình Environment Variables**
+
+Copy file `.env.example` thành `.env`:
 
 ```bash
+cp .env.example .env
+```
+
+Mở file `.env` và điền các API keys thực tế:
+
+```env
+# Groq AI API Key (Lấy miễn phí tại: https://console.groq.com/keys)
+GROQ_API_KEY=your_groq_api_key_here
+GROQ_MODEL=llama-3.3-70b-versatile
+
+# Google OAuth (Lấy từ: https://console.cloud.google.com/apis/credentials)
+GOOGLE_CLIENT_ID=your_google_client_id_here
+GOOGLE_CLIENT_SECRET=your_google_client_secret_here
+
+# Momo Payment Gateway (Lấy từ: https://developers.momo.vn/)
+MOMO_PARTNER_CODE=MOMO
+MOMO_ACCESS_KEY=your_momo_access_key_here
+MOMO_SECRET_KEY=your_momo_secret_key_here
+
+# Database Connection
+DB_SERVER=YOUR_SERVER_NAME\\INSTANCE_NAME
+DB_NAME=ShoppingCart
+DB_INTEGRATED_SECURITY=True
+DB_ENCRYPT=True
+DB_TRUST_SERVER_CERTIFICATE=True
+```
+
+3. **Lấy API Keys Miễn Phí**
+
+#### Groq AI (Bắt buộc - cho AI Chatbot)
+
+- Truy cập: [https://console.groq.com/keys](https://console.groq.com/keys)
+- Đăng ký tài khoản miễn phí
+- Tạo API key mới
+- Copy key vào file `.env`
+- **Free tier**: 14,400 requests/ngày
+
+#### Google OAuth (Tùy chọn - đăng nhập Google)
+
+- Vào [Google Cloud Console](https://console.cloud.google.com/apis/credentials)
+- Tạo OAuth 2.0 Client ID
+- Thêm redirect URI: `https://localhost:5032/signin-google`
+- Copy Client ID và Secret vào `.env`
+
+#### Momo Payment (Tùy chọn - thanh toán)
+
+- Đăng ký tại [Momo Developers](https://developers.momo.vn/)
+- Lấy test credentials
+- Copy vào `.env`
+
+4. **Restore dependencies**
+
+```bash
+cd Shopping
 dotnet restore
 ```
 
-3. **Cập nhật database connection string**
-
-Mở `appsettings.json` và cập nhật connection string:
-
-```json
-{
-  "ConnectionStrings": {
-    "DefaultConnection": "Server=YOUR_SERVER;Database=ShoppingCart;Trusted_Connection=True;TrustServerCertificate=True;"
-  }
-}
-```
-
-4. **Chạy migrations**
+5. **Chạy migrations**
 
 ```bash
 dotnet ef database update
 ```
-
-5. **Seed dữ liệu mẫu (Optional)**
-
-Chạy các file SQL trong thư mục `Shopping/`:
-
-- `SeedData.sql` - 36 sản phẩm ban đầu
-- `UpdateProductImages.sql` - Cập nhật hình ảnh
-- `SeedData100Products.sql` - Thêm 105 sản phẩm
 
 6. **Chạy ứng dụng**
 
@@ -134,6 +170,39 @@ dotnet run
 ```
 
 Truy cập: `https://localhost:5032`
+
+## 🤖 Sử Dụng AI Chatbot
+
+Chatbot có thể giúp bạn:
+
+- Tìm sản phẩm theo tiêu chí (VD: "laptop dưới 20 triệu")
+- So sánh sản phẩm
+- Gợi ý dựa trên ngân sách
+- Trả lời câu hỏi về sản phẩm
+
+Ví dụ câu hỏi:
+
+- "laptop gaming tốt nhất"
+- "smartphone dưới 15 triệu"
+- "PC văn phòng giá rẻ"
+
+## 🔒 Bảo Mật
+
+⚠️ **QUAN TRỌNG**:
+
+- **KHÔNG BAO GIỜ** commit file `.env` lên git
+- Giữ API keys bí mật
+- Thay đổi keys định kỳ nếu bị lộ
+- Dùng keys khác nhau cho dev/production
+- File `.env` đã được thêm vào `.gitignore`
+
+## 🆓 Giới Hạn Free Tier
+
+**Groq API**:
+
+- 14,400 requests/ngày (miễn phí)
+- ~1 request/6 giây
+- Hoàn hảo cho development & dự án nhỏ
 
 ## ⚙️ Cấu Hình
 

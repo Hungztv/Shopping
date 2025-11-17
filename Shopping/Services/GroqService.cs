@@ -10,7 +10,7 @@ namespace Shopping.Services
 {
     public class GroqService
     {
-        private readonly string _apiKey;
+        private readonly string _groqApiKey;
         private readonly string _model;
         private readonly HttpClient _httpClient;
         private readonly DataContext _context;
@@ -19,7 +19,7 @@ namespace Shopping.Services
         public GroqService(IConfiguration configuration, HttpClient httpClient, DataContext context)
         {
             _configuration = configuration;
-            _apiKey = configuration["Groq:ApiKey"] ?? Environment.GetEnvironmentVariable("GROQ_API_KEY") ?? string.Empty;
+            _groqApiKey = configuration["Groq:ApiKey"] ?? Environment.GetEnvironmentVariable("GROQ_API_KEY") ?? string.Empty;
             _model = configuration["Groq:Model"] ?? "llama-3.3-70b-versatile";
             _httpClient = httpClient;
             _context = context;
@@ -29,7 +29,20 @@ namespace Shopping.Services
         {
             try
             {
-                var lower = userMessage.ToLowerInvariant();
+                var lower = userMessage.ToLowerInvariant().Trim();
+
+                // Detect greeting messages
+                var greetings = new[] { "xin chào", "chào", "hello", "hi", "hey", "chào bạn", "chào shop" };
+                if (greetings.Any(g => lower == g || lower == g + "!" || lower.StartsWith(g + " ")))
+                {
+                    return @"Xin chào! 👋 Tôi là trợ lý mua sắm AI của Shopping. Tôi có thể giúp bạn:
+
+• Tìm laptop, điện thoại, PC theo nhu cầu và ngân sách
+• So sánh sản phẩm và tư vấn lựa chọn phù hợp
+• Giải đáp thông tin về giá, tính năng, thương hiệu
+
+Bạn đang tìm sản phẩm gì? (VD: 'laptop dưới 20 triệu', 'iPhone giá tốt', 'PC văn phòng')";
+                }
 
                 // 1) Parse intent and budget
                 var (intentLaptop, intentSmartphone, maxBudget) = ParseIntentAndBudget(lower);
@@ -75,17 +88,17 @@ namespace Shopping.Services
                     .Take(50)
                     .ToList();
 
-                // 3) Apply client-side budget filtering because Price is stored as string
+                // 3) Apply client-side budget filtering
                 if (maxBudget > 0)
                 {
                     matched = matched
-                        .Where(p => TryParseVnd(p.Price, out var priceVnd) && priceVnd <= maxBudget)
+                        .Where(p => p.Price <= maxBudget)
                         .ToList();
                 }
 
                 // Order by numeric price descending for better ranking
                 matched = matched
-                    .OrderByDescending(p => TryParseVnd(p.Price, out var priceVnd) ? priceVnd : 0)
+                    .OrderByDescending(p => p.Price)
                     .Take(10)
                     .ToList();
 
@@ -103,22 +116,35 @@ namespace Shopping.Services
 
                 var productsContext = string.Join("\n", matched.Select(p =>
                 {
-                    var priceText = TryParseVnd(p.Price, out var v) ? v.ToString("N0") + " VNĐ" : p.Price;
+                    var priceText = p.Price.ToString("N0") + " VNĐ";
                     return $"- {p.Name} ({p.CategoryName}/{p.BrandName}) — {priceText}";
                 }));
 
-                var systemPrompt = $@"Bạn là trợ lý mua sắm AI cho website Shopping.
-Chỉ tư vấn dựa trên danh sách sản phẩm dưới đây. Nếu người dùng hỏi thứ không có trong danh sách, hãy nói không có dữ liệu và gợi ý danh mục liên quan.
-Trả lời ngắn gọn, gợi ý 2-3 lựa chọn kèm giá (VNĐ) và điểm mạnh.
-{(maxBudget > 0 ? $"Ngân sách tối đa: {maxBudget:N0} VNĐ\n" : string.Empty)}
+                var systemPrompt = $@"Bạn là trợ lý mua sắm AI thân thiện và chuyên nghiệp cho website Shopping.
 
-Sản phẩm khả dụng:
-{productsContext}";
+NGUYÊN TẮC TRẢ LỜI:
+- Trả lời tự nhiên, thân thiện như nhân viên tư vấn thực tế
+- Tập trung vào nhu cầu khách hàng, không chỉ liệt kê sản phẩm
+- Gợi ý 2-3 lựa chọn PHÙ HỢP NHẤT với câu hỏi
+- Giải thích ngắn gọn tại sao gợi ý (điểm mạnh, phù hợp nhu cầu)
+- Nếu không có sản phẩm phù hợp, tư vấn lựa chọn gần nhất hoặc hỏi thêm thông tin
+{(maxBudget > 0 ? $"- Ngân sách khách hàng: {maxBudget:N0} VNĐ\n" : string.Empty)}
+
+SẢN PHẨM KHẢ DỤNG:
+{productsContext}
+
+CÁCH TRẢ LỜI TỐT:
+✅ ""Với ngân sách 20 triệu, mình gợi ý 2 lựa chọn:
+• MacBook Air M2 (27,990,000 VNĐ) - Hiệu năng mạnh, bền bỉ cho công việc
+• Dell Inspiron 15 (18,990,000 VNĐ) - Giá tốt, màn hình lớn phù hợp văn phòng
+Bạn ưu tiên hiệu năng hay giá cả?""
+
+❌ ""Danh sách sản phẩm: 1. MacBook... 2. Dell... 3. HP...""";
 
                 var groqUrl = "https://api.groq.com/openai/v1/chat/completions";
 
                 using var request = new HttpRequestMessage(HttpMethod.Post, groqUrl);
-                request.Headers.Add("Authorization", $"Bearer {_apiKey}");
+                request.Headers.Add("Authorization", $"Bearer {_groqApiKey}");
                 request.Headers.Add("Accept", "application/json");
 
                 var payload = new
@@ -129,9 +155,9 @@ Sản phẩm khả dụng:
                         new { role = "system", content = systemPrompt },
                         new { role = "user", content = userMessage }
                     },
-                    temperature = 0.7,
-                    top_p = 0.9,
-                    max_tokens = 300
+                    temperature = 0.8,
+                    top_p = 0.95,
+                    max_tokens = 400
                 };
 
                 var json = JsonSerializer.Serialize(payload);
@@ -141,26 +167,89 @@ Sản phẩm khả dụng:
                 var response = await _httpClient.SendAsync(request);
                 var responseContent = await response.Content.ReadAsStringAsync();
                 Console.WriteLine($"Groq Status: {response.StatusCode}");
-                Console.WriteLine($"Groq Body: {responseContent.Substring(0, Math.Min(500, responseContent.Length))}");
 
                 if (response.IsSuccessStatusCode)
                 {
                     var parsed = JsonSerializer.Deserialize<GroqChatCompletionResponse>(responseContent);
                     var content = parsed?.choices?.FirstOrDefault()?.message?.content;
-                    if (!string.IsNullOrWhiteSpace(content)) return content!;
-                    return "Xin lỗi, mình chưa có đủ thông tin để trả lời câu hỏi này.";
+                    if (!string.IsNullOrWhiteSpace(content))
+                    {
+                        return content!;
+                    }
                 }
-                else
-                {
-                    // Fallback: mock câu trả lời dựa trên danh sách sản phẩm
-                    return GenerateMockResponse(userMessage, matched.Cast<dynamic>().ToList());
-                }
+
+                // Groq failed, use fallback
+                Console.WriteLine($"Groq failed ({response.StatusCode}), using mock response...");
+                return GenerateMockResponse(userMessage, matched.Cast<dynamic>().ToList());
             }
             catch (Exception ex)
             {
                 Console.WriteLine($"GroqService error: {ex.Message}");
                 return "Xin lỗi, hệ thống AI đang bận. Bạn có thể thử lại sau hoặc mô tả rõ nhu cầu (ngân sách, thương hiệu, kích cỡ...).";
             }
+        }
+
+        private List<dynamic> GetMatchedProducts(string lower, bool intentLaptop, bool intentSmartphone, decimal maxBudget)
+        {
+            IQueryable<ProductModel> baseQuery = _context.Products
+                .Include(p => p.Category)
+                .Include(p => p.Brand);
+
+            if (intentLaptop)
+            {
+                baseQuery = baseQuery.Where(p =>
+                    p.Category.Name.ToLower().Contains("laptop") ||
+                    p.Name.ToLower().Contains("laptop") ||
+                    p.Name.ToLower().Contains("notebook") ||
+                    p.Name.ToLower().Contains("macbook") ||
+                    p.Category.Name.ToLower().Contains("máy tính xách tay"));
+            }
+            else if (intentSmartphone)
+            {
+                baseQuery = baseQuery.Where(p =>
+                    p.Category.Name.ToLower().Contains("smartphone") ||
+                    p.Category.Name.ToLower().Contains("điện thoại") ||
+                    p.Name.ToLower().Contains("phone") ||
+                    p.Name.ToLower().Contains("iphone") ||
+                    p.Name.ToLower().Contains("galaxy") ||
+                    p.Name.ToLower().Contains("xiaomi") ||
+                    p.Name.ToLower().Contains("oppo") ||
+                    p.Name.ToLower().Contains("vivo") ||
+                    p.Name.ToLower().Contains("realme"));
+            }
+            else
+            {
+                baseQuery = baseQuery.Where(p =>
+                    p.Name.ToLower().Contains(lower) ||
+                    p.Description.ToLower().Contains(lower) ||
+                    p.Category.Name.ToLower().Contains(lower) ||
+                    p.Brand.Name.ToLower().Contains(lower));
+            }
+
+            var matched = baseQuery
+                .Select(p => new { p.Name, p.Price, CategoryName = p.Category.Name, BrandName = p.Brand.Name })
+                .Take(50)
+                .ToList();
+
+            if (maxBudget > 0)
+            {
+                matched = matched.Where(p => p.Price <= maxBudget).ToList();
+            }
+
+            matched = matched.OrderByDescending(p => p.Price).Take(10).ToList();
+
+            if (matched.Count == 0)
+            {
+                matched = _context.Products
+                    .Include(p => p.Category)
+                    .Include(p => p.Brand)
+                    .OrderByDescending(p => p.Id)
+                    .Select(p => new { p.Name, p.Price, CategoryName = p.Category.Name, BrandName = p.Brand.Name })
+                    .Take(10)
+                    .ToList();
+            }
+
+            return matched.Cast<dynamic>().ToList();
         }
 
         private (bool intentLaptop, bool intentSmartphone, decimal maxBudget) ParseIntentAndBudget(string lower)
@@ -229,6 +318,17 @@ Sản phẩm khả dụng:
         private string GenerateMockResponse(string userMessage, List<dynamic> products)
         {
             var lower = userMessage.ToLowerInvariant();
+
+            // Check for greetings
+            var greetings = new[] { "xin chào", "chào", "hello", "hi", "hey" };
+            if (greetings.Any(g => lower.Contains(g)))
+            {
+                return @"Xin chào! 👋 Tôi là trợ lý mua sắm AI. Tôi có thể giúp bạn:
+• Tìm laptop, điện thoại, PC theo nhu cầu
+• Tư vấn sản phẩm phù hợp ngân sách
+Bạn đang tìm gì? (VD: 'laptop gaming', 'iPhone giá tốt')";
+            }
+
             var matched = products.Where(p =>
                     lower.Contains(p.Name.ToString().ToLower()) ||
                     lower.Contains(p.CategoryName.ToString().ToLower()) ||
@@ -239,24 +339,24 @@ Sản phẩm khả dụng:
             if (matched.Any())
             {
                 var sb = new StringBuilder();
-                sb.AppendLine("Gợi ý phù hợp với yêu cầu của bạn:\n");
+                sb.AppendLine("Dạ, mình gợi ý cho bạn:\n");
                 foreach (var p in matched)
                 {
                     sb.AppendLine($"• {p.Name} ({p.BrandName}) — {p.Price:N0} VNĐ");
                 }
-                sb.AppendLine("\nBạn muốn so sánh chi tiết hay xem hình ảnh không?");
+                sb.AppendLine("\nBạn quan tâm sản phẩm nào? Mình có thể tư vấn thêm về tính năng!");
                 return sb.ToString();
             }
             else
             {
                 var top = products.Take(3).ToList();
                 var sb = new StringBuilder();
-                sb.AppendLine("Một vài lựa chọn tiêu biểu:\n");
+                sb.AppendLine("Mình thấy các sản phẩm này có thể phù hợp:\n");
                 foreach (var p in top)
                 {
                     sb.AppendLine($"• {p.Name} — {p.Price:N0} VNĐ");
                 }
-                sb.AppendLine("\nBạn có ngân sách / thương hiệu ưa thích không?");
+                sb.AppendLine("\nBạn có thể cho mình biết thêm về nhu cầu không? (ngân sách, mục đích sử dụng...)");
                 return sb.ToString();
             }
         }

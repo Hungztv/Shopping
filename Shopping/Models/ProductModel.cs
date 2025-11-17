@@ -15,16 +15,16 @@ namespace Shopping.Models
         public string Slug { get; set; }
         [Required, MinLength(4, ErrorMessage = "Yêu Cầu Nhập Mô tả Sản phẩm ")]
         public string Description { get; set; }
-        public string Price { get; set; }
-        [Required, MinLength(4, ErrorMessage = "Yêu Cầu Nhập Giá Sản phẩm ")]
-        public string CapitalPrice { get; set; }
+        public decimal Price { get; set; }
+        [Required]
+        public decimal CapitalPrice { get; set; }
         public int BrandId { get; set; }
         public int Quantity { get; set; }
         public int SoldOut { get; set; }
         public int CategoryId { get; set; }
         public CategoryModel Category { get; set; }
         public BrandModel Brand { get; set; }
-        public String Image { get; set; } 
+        public String Image { get; set; }
         public RatingModel Ratings { get; set; }
         [NotMapped]
         [FileExtension]

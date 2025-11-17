@@ -8,8 +8,58 @@ using Shopping.Models.Repository;
 using Shopping.Services;
 using Shopping.Services.Momo;
 using Shopping_Tutorial.Areas.Admin.Repository;
+using DotNetEnv;
+
+// Load environment variables from .env file in project root
+var envPath = Path.Combine(Directory.GetCurrentDirectory(), ".env");
+if (File.Exists(envPath))
+{
+    Env.Load(envPath);
+    Console.WriteLine($"✅ Loaded .env from: {envPath}");
+}
+else
+{
+    // Try parent directory
+    envPath = Path.Combine(Directory.GetCurrentDirectory(), "..", ".env");
+    if (File.Exists(envPath))
+    {
+        Env.Load(envPath);
+        Console.WriteLine($"✅ Loaded .env from: {envPath}");
+    }
+    else
+    {
+        Console.WriteLine("⚠️ Warning: .env file not found. Using appsettings.json values.");
+    }
+}
 
 var builder = WebApplication.CreateBuilder(args);
+
+// Override configuration with environment variables
+builder.Configuration["Groq:ApiKey"] = Environment.GetEnvironmentVariable("GROQ_API_KEY") ?? builder.Configuration["Groq:ApiKey"];
+builder.Configuration["Groq:Model"] = Environment.GetEnvironmentVariable("GROQ_MODEL") ?? builder.Configuration["Groq:Model"];
+builder.Configuration["GoogleKeys:ClientId"] = Environment.GetEnvironmentVariable("GOOGLE_CLIENT_ID") ?? builder.Configuration["GoogleKeys:ClientId"];
+builder.Configuration["GoogleKeys:ClientSecret"] = Environment.GetEnvironmentVariable("GOOGLE_CLIENT_SECRET") ?? builder.Configuration["GoogleKeys:ClientSecret"];
+builder.Configuration["MomoAPI:PartnerCode"] = Environment.GetEnvironmentVariable("MOMO_PARTNER_CODE") ?? builder.Configuration["MomoAPI:PartnerCode"];
+builder.Configuration["MomoAPI:AccessKey"] = Environment.GetEnvironmentVariable("MOMO_ACCESS_KEY") ?? builder.Configuration["MomoAPI:AccessKey"];
+builder.Configuration["MomoAPI:SecretKey"] = Environment.GetEnvironmentVariable("MOMO_SECRET_KEY") ?? builder.Configuration["MomoAPI:SecretKey"];
+builder.Configuration["MomoAPI:MomoApiUrl"] = Environment.GetEnvironmentVariable("MOMO_API_URL") ?? builder.Configuration["MomoAPI:MomoApiUrl"];
+builder.Configuration["MomoAPI:ReturnUrl"] = Environment.GetEnvironmentVariable("MOMO_RETURN_URL") ?? builder.Configuration["MomoAPI:ReturnUrl"];
+builder.Configuration["MomoAPI:NotifyUrl"] = Environment.GetEnvironmentVariable("MOMO_NOTIFY_URL") ?? builder.Configuration["MomoAPI:NotifyUrl"];
+builder.Configuration["MomoAPI:RequestType"] = Environment.GetEnvironmentVariable("MOMO_REQUEST_TYPE") ?? builder.Configuration["MomoAPI:RequestType"];
+
+// Build connection string from environment variables
+var dbServer = Environment.GetEnvironmentVariable("DB_SERVER");
+var dbName = Environment.GetEnvironmentVariable("DB_NAME");
+var dbIntegratedSecurity = Environment.GetEnvironmentVariable("DB_INTEGRATED_SECURITY");
+var dbEncrypt = Environment.GetEnvironmentVariable("DB_ENCRYPT");
+var dbTrustServerCertificate = Environment.GetEnvironmentVariable("DB_TRUST_SERVER_CERTIFICATE");
+
+if (!string.IsNullOrEmpty(dbServer) && !string.IsNullOrEmpty(dbName))
+{
+    builder.Configuration["ConnectionStrings:DbConnectedDb"] =
+        $"Data Source={dbServer};Initial Catalog={dbName};Integrated Security={dbIntegratedSecurity};Encrypt={dbEncrypt};Trust Server Certificate={dbTrustServerCertificate}";
+}
+
 builder.Services.Configure<MomoOptionModel>(builder.Configuration.GetSection("MomoAPI"));
 builder.Services.AddScoped<IMomoService, MomoService>();
 

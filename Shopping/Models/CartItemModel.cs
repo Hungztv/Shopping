@@ -23,33 +23,7 @@
             }
             ProductId = product.Id;
             ProductName = product.Name;
-
-            // Remove formatting from price string (e.g., "19.990.000 VNĐ" -> 19990000)
-            string priceString = product.Price;
-            if (!string.IsNullOrEmpty(priceString))
-            {
-                // Remove dots, commas, currency symbols and spaces
-                priceString = priceString.Replace("VNĐ", "")
-                                       .Replace("VND", "")
-                                       .Replace(".", "")
-                                       .Replace(",", "")
-                                       .Replace(" ", "")
-                                       .Trim();
-
-                if (decimal.TryParse(priceString, out decimal parsedPrice))
-                {
-                    Price = parsedPrice;
-                }
-                else
-                {
-                    Price = 0;
-                }
-            }
-            else
-            {
-                Price = 0;
-            }
-
+            Price = product.Price;
             Quantity = 1;
             Image = product.Image;
         }
