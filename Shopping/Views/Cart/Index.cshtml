@@ -98,13 +98,17 @@
                         <h5 class="fw-bold">Thông tin thanh toán</h5>
                         <p><strong>Tổng tiền hàng:</strong> @Model.GrandTotal.ToString("#,##0 VNĐ")</p>
                         <p><strong>Phí vận chuyển:</strong> @Model.ShippingPrice.ToString("#,##0 VNĐ")</p>
+                        @if (Model.DiscountAmount > 0)
+                        {
+                            <p class="text-success"><strong>Giảm giá (@Model.CouponCode):</strong> -@Model.DiscountAmount.ToString("#,##0 VNĐ")</p>
+                        }
                         @if (Model.ShippingPrice > 0)
                         {
                             <a style="cursor:pointer" class="btn btn-outline-danger btn-sm btn-delete-shipping">Xóa phí vận
                                 chuyển</a>
                         }
                         <hr />
-                        <h4><strong>Tổng cộng:</strong> @(Model.GrandTotal + Model.ShippingPrice)</h4>
+                        <h4><strong>Tổng cộng:</strong> @((Model.GrandTotal - Model.DiscountAmount + Model.ShippingPrice).ToString("#,##0 VNĐ"))</h4>
                     </div>
                 </div>
                 <div class="col-lg-6">
@@ -116,7 +120,7 @@
                         </div>
                         @if (!string.IsNullOrEmpty(Model.CouponCode))
                         {
-                            <p class="text-success">Mã đã áp dụng: @Model.CouponCode</p>
+                            <p class="text-success mb-0">Mã đã áp dụng: <strong>@Model.CouponCode</strong></p>
                         }
                     </div>
                     <div class="card shadow-sm p-3">

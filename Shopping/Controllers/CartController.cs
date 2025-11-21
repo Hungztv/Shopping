@@ -27,13 +27,33 @@ namespace Shopping.Controllers
                 var shippingPriceJson = shippingPriceCookie;
                 shippingPrice = JsonConvert.DeserializeObject<decimal>(shippingPriceJson);
             }
-            //Nhận Coupon code từ cookie
+            // Nhận Coupon code từ cookie
             var coupon_code = Request.Cookies["CouponTitle"];
+            decimal discountAmount = 0m;
+            if (!string.IsNullOrWhiteSpace(coupon_code))
+            {
+                var subtotal = cartItem.Sum(x => x.Quantity * x.Price);
+                var coupon = _datacontext.Coupons.FirstOrDefault(c => c.Name == coupon_code && c.Status == 1 && c.DateStart <= DateTime.Now && c.DateExpired >= DateTime.Now);
+                if (coupon != null)
+                {
+                    if (coupon.IsPercent)
+                    {
+                        discountAmount = Math.Round(subtotal * (coupon.DiscountValue / 100m), 2);
+                    }
+                    else
+                    {
+                        discountAmount = coupon.DiscountValue;
+                    }
+                    if (discountAmount > subtotal) discountAmount = subtotal;
+                }
+            }
             CartItemViewModel cartVM = new()
             {
                 CartItems = cartItem,
                 GrandTotal = cartItem.Sum(x => x.Quantity * x.Price),
-                ShippingPrice = shippingPrice
+                ShippingPrice = shippingPrice,
+                CouponCode = coupon_code,
+                DiscountAmount = discountAmount
             };
             return View(cartVM);
         }
@@ -41,6 +61,41 @@ namespace Shopping.Controllers
         public ActionResult Checkout()
         {
             return View("~/View/Checkout/Index.cshtml");
+        }
+        [HttpPost]
+        [Route("Cart/GetCoupon")]
+        public async Task<IActionResult> GetCoupon(string coupon_value)
+        {
+            if (string.IsNullOrWhiteSpace(coupon_value))
+            {
+                return Json(new { success = false, message = "Vui lòng nhập mã" });
+            }
+            var coupon = await _datacontext.Coupons.FirstOrDefaultAsync(c => c.Name == coupon_value && c.Status == 1 && c.DateStart <= DateTime.Now && c.DateExpired >= DateTime.Now && c.Quantity > 0);
+            if (coupon == null)
+            {
+                return Json(new { success = false, message = "Mã không hợp lệ hoặc hết hạn" });
+            }
+            List<CartItemModel> cartItem = HttpContext.Session.GetJson<List<CartItemModel>>("Cart") ?? new List<CartItemModel>();
+            decimal subtotal = cartItem.Sum(x => x.Quantity * x.Price);
+            decimal discount = 0m;
+            if (coupon.IsPercent)
+            {
+                discount = Math.Round(subtotal * (coupon.DiscountValue / 100m), 2);
+            }
+            else
+            {
+                discount = coupon.DiscountValue;
+            }
+            if (discount > subtotal) discount = subtotal;
+            // Set cookie
+            var cookieOptions = new CookieOptions
+            {
+                HttpOnly = true,
+                Expires = DateTimeOffset.UtcNow.AddMinutes(30),
+                Secure = true
+            };
+            Response.Cookies.Append("CouponTitle", coupon.Name, cookieOptions);
+            return Json(new { success = true, message = $"Áp dụng mã thành công - Giảm {(coupon.IsPercent ? coupon.DiscountValue + "%" : coupon.DiscountValue.ToString("#,##0") + " VNĐ")}", discount });
         }
         public async Task<IActionResult> Add(int Id)
         {
@@ -60,7 +115,7 @@ namespace Shopping.Controllers
             }
             else
             {
-                cartItem.Quantity ++;
+                cartItem.Quantity++;
             }
             TempData["success"] = "add product quantity successfully!";
             HttpContext.Session.SetJson("Cart", cart);
@@ -193,7 +248,7 @@ namespace Shopping.Controllers
             }
             catch (Exception ex)
             {
-            
+
                 Console.WriteLine($"Error adding shipping price cookie: {ex.Message}");
             }
             return Json(new { shippingPrice });

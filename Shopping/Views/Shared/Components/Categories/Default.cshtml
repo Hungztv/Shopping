@@ -7,9 +7,10 @@
         <li class="category-item">
             <a asp-action="Index" asp-controller="Category" asp-route-Slug="@item.Slug" class="category-link">
                 <div class="category-icon">
-                    <i class="fas fa-folder"></i>
+                    <i class="fas fa-folder-open"></i>
                 </div>
                 <span class="category-name">@item.Name</span>
+                <span class="category-chevron"><i class="fas fa-angle-right"></i></span>
             </a>
         </li>
     }

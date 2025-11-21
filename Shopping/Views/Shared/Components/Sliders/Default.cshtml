@@ -6,21 +6,22 @@
         <div class="carousel-indicators">
             @for (int i = 0; i < Model.Count(); i++)
             {
-                <button type="button" data-bs-target="#homeCarousel" data-bs-slide-to="@i" class="@(i == 0 ? "active" : "")" aria-current="@(i == 0 ? "true" : "false")" aria-label="Slide @(i + 1)"></button>
+                <button type="button" data-bs-target="#homeCarousel" data-bs-slide-to="@i" class="@(i == 0 ? "active" : "")"
+                    aria-current="@(i == 0 ? "true" : "false")" aria-label="Slide @(i + 1)"></button>
             }
         </div>
         <div class="carousel-inner rounded shadow-sm overflow-hidden">
-            @{ var index = 0; }
+            @{
+                var index = 0;
+            }
             @foreach (var item in Model)
             {
                 var isActive = index == 0 ? "active" : string.Empty;
                 <div class="carousel-item @isActive">
-                    <img src="@Url.Content("~/media/sliders/" + item.Image)" class="d-block w-100" alt="@item.Name" style="height: 420px; object-fit: cover;" />
+                    <img src="@Url.Content("~/media/sliders/" + item.Image)" class="d-block w-100" alt="@item.Name"
+                        style="height: 420px; object-fit: cover;" />
                     <div class="carousel-caption d-none d-md-block text-start">
-                        <div class="bg-dark bg-opacity-50 p-3 rounded-3">
-                            <h5 class="fw-bold">@item.Name</h5>
-                            <div class="small">@Html.Raw(item.Description)</div>
-                        </div>
+
                     </div>
                 </div>
                 index++;

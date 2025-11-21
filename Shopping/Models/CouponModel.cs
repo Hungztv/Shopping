@@ -10,14 +10,17 @@ namespace Shopping.Models
         [Required(ErrorMessage = "Name is required")]
         public string Name { get; set; }
 
-        [Required(ErrorMessage = "Code is required")]
+        [Required(ErrorMessage = "Description is required")]
         public string Description { get; set; }
         public DateTime DateStart { get; set; }
         public DateTime DateExpired { get; set; }
-       
-      
-        [Required(ErrorMessage = "Discount is required")]
+        [Required(ErrorMessage = "Quantity is required")]
         public int Quantity { get; set; }
         public int Status { get; set; }
+        // New fields for discount logic
+        // DiscountValue: if IsPercent = true => percentage (0-100), else fixed amount in VND
+        [Range(0, 100000000, ErrorMessage = "Giá trị giảm không hợp lệ")]
+        public decimal DiscountValue { get; set; }
+        public bool IsPercent { get; set; }
     }
 }

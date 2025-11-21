@@ -6,6 +6,9 @@
         public string OrderCode { get; set; }
         public decimal ShippingCost { get; set; }
         public string CouponCode { get; set; }
+        public decimal Subtotal { get; set; }
+        public decimal DiscountAmount { get; set; }
+        public decimal Total { get; set; }
         public string UserName { get; set; }
         public DateTime CreateDate { get; set; }
         public int Status { get; set; }

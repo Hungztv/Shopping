@@ -40,14 +40,39 @@ namespace Shopping.Controllers
                 }
                 //Nhận Coupon code từ cookie
                 var coupon_code = Request.Cookies["CouponTitle"];
-                orderItem.CouponCode = coupon_code;
+                // Cart subtotal
+                List<CartItemModel> cartItem = HttpContext.Session.GetJson<List<CartItemModel>>("Cart") ?? new List<CartItemModel>();
+                decimal subtotal = cartItem.Sum(i => i.Price * i.Quantity);
+
+                decimal discount = 0m;
+                if (!string.IsNullOrWhiteSpace(coupon_code))
+                {
+                    var coupon = await _context.Coupons.FirstOrDefaultAsync(c => c.Name == coupon_code && c.Status == 1 && c.DateStart <= DateTime.Now && c.DateExpired >= DateTime.Now);
+                    if (coupon != null && coupon.Quantity > 0)
+                    {
+                        if (coupon.IsPercent)
+                        {
+                            discount = Math.Round(subtotal * (coupon.DiscountValue / 100m), 2);
+                        }
+                        else
+                        {
+                            discount = coupon.DiscountValue;
+                        }
+                        if (discount > subtotal) discount = subtotal;
+                        coupon.Quantity -= 1; // consume one usage
+                        _context.Update(coupon);
+                        orderItem.CouponCode = coupon.Name;
+                    }
+                }
                 orderItem.ShippingCost = shippingPrice;
+                orderItem.Subtotal = subtotal;
+                orderItem.DiscountAmount = discount;
+                orderItem.Total = subtotal - discount + shippingPrice;
                 orderItem.UserName = userEmail.Value;
                 orderItem.CreateDate = DateTime.Now;
                 orderItem.Status = 1;
                 _context.Add(orderItem);
                 await _context.SaveChangesAsync();
-                List<CartItemModel> cartItem = HttpContext.Session.GetJson<List<CartItemModel>>("Cart") ?? new List<CartItemModel>();
                 foreach (var cart in cartItem)
                 {
                     var orderDetail = new OrderDetail();
@@ -75,10 +100,10 @@ namespace Shopping.Controllers
 
 
                 TempData["success"] = "Order Thành Công!";
-                return RedirectToAction("History","Account");
+                return RedirectToAction("History", "Account");
 
             }
-                return View();
+            return View();
         }
     }
 }

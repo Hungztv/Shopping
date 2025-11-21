@@ -49,10 +49,42 @@
                                 <li class="dropdown">
                                     <a href="#" class="dropdown-toggle" data-bs-toggle="dropdown">Cửa hàng <i
                                             class="fas fa-chevron-down"></i></a>
-                                    <ul class="dropdown-menu">
-                                        <li><a class="dropdown-item" href="#">Đồ nam</a></li>
-                                        <li><a class="dropdown-item" href="#">Đồ nữ</a></li>
-                                        <li><a class="dropdown-item" href="#">Đồ trẻ em</a></li>
+                                    <ul class="dropdown-menu shadow-sm border-0 p-2" style="min-width:240px;">
+                                        <li><a class="dropdown-item" asp-controller="Product" asp-action="Index"><i
+                                                    class="fas fa-boxes"></i> Tất cả sản phẩm</a></li>
+                                        <li><a class="dropdown-item" asp-controller="Category" asp-action="Index"><i
+                                                    class="fas fa-th-list"></i> Danh mục</a></li>
+                                        <li><a class="dropdown-item" asp-controller="Brand" asp-action="Index"><i
+                                                    class="fas fa-certificate"></i> Thương hiệu</a></li>
+                                        <li>
+                                            <hr class="dropdown-divider" />
+                                        </li>
+                                        <li><a class="dropdown-item" asp-controller="Cart" asp-action="Index"><i
+                                                    class="fas fa-shopping-cart"></i> Giỏ hàng</a></li>
+                                        <li><a class="dropdown-item" asp-controller="Checkout" asp-action="Index"><i
+                                                    class="fas fa-credit-card"></i> Thanh toán</a></li>
+                                        <li>
+                                            <hr class="dropdown-divider" />
+                                        </li>
+                                        @if (User.Identity?.IsAuthenticated ?? false)
+                                        {
+                                            <li><a class="dropdown-item" asp-controller="Home" asp-action="Wishlist"><i
+                                                        class="fas fa-heart"></i> Yêu thích</a></li>
+                                            <li><a class="dropdown-item" asp-controller="Home" asp-action="Compare"><i
+                                                        class="fas fa-exchange-alt"></i> So sánh</a></li>
+                                        }
+                                        else
+                                        {
+                                            <li><a class="dropdown-item" asp-controller="Account" asp-action="Login"><i
+                                                        class="fas fa-user-lock"></i> Đăng nhập để sử dụng thêm</a></li>
+                                        }
+                                        <li>
+                                            <hr class="dropdown-divider" />
+                                        </li>
+                                        <li><a class="dropdown-item" asp-controller="Home" asp-action="Contact"><i
+                                                    class="fas fa-envelope"></i> Liên hệ</a></li>
+                                        <li><a class="dropdown-item" asp-controller="Coupon" asp-action="Index"><i
+                                                    class="fas fa-ticket-alt"></i> Mã giảm giá</a></li>
                                     </ul>
                                 </li>
                                 <li><a href="#">Blog</a></li>

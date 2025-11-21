@@ -1,4 +1,10 @@
 ﻿<style>
+    :root {
+        --sidebar-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        --sidebar-accent: #667eea;
+        --sidebar-accent-soft-shadow: rgba(102, 126, 234, 0.3);
+    }
+
     .modern-sidebar {
         background: white;
         border-radius: 20px;
@@ -36,7 +42,7 @@
     }
 
     .sidebar-section.brand-section::before {
-        background: linear-gradient(180deg, #f093fb 0%, #f5576c 100%);
+        background: var(--sidebar-gradient);
     }
 
     .sidebar-section:last-child {
@@ -61,28 +67,22 @@
         display: flex;
         align-items: center;
         justify-content: center;
-        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        background: var(--sidebar-gradient);
         color: white;
         border-radius: 10px;
         font-size: 1rem;
-        box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+        box-shadow: 0 4px 12px var(--sidebar-accent-soft-shadow);
     }
 
     .sidebar-title.brand-title i {
-        background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
-        box-shadow: 0 4px 12px rgba(240, 147, 251, 0.3);
+        background: var(--sidebar-gradient);
+        box-shadow: 0 4px 12px var(--sidebar-accent-soft-shadow);
     }
 
-    .sidebar-title span {
-        flex: 1;
-        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-        -webkit-background-clip: text;
-        -webkit-text-fill-color: transparent;
-        background-clip: text;
-    }
-
+    .sidebar-title span,
     .sidebar-title.brand-title span {
-        background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+        flex: 1;
+        background: var(--sidebar-gradient);
         -webkit-background-clip: text;
         -webkit-text-fill-color: transparent;
         background-clip: text;
@@ -112,12 +112,8 @@
 
     .category-list::-webkit-scrollbar-thumb,
     .brand-list::-webkit-scrollbar-thumb {
-        background: linear-gradient(180deg, #667eea 0%, #764ba2 100%);
+        background: var(--sidebar-gradient);
         border-radius: 10px;
-    }
-
-    .brand-list::-webkit-scrollbar-thumb {
-        background: linear-gradient(180deg, #f093fb 0%, #f5576c 100%);
     }
 
     .category-item,
@@ -151,20 +147,16 @@
         top: 0;
         width: 0;
         height: 100%;
-        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        background: var(--sidebar-gradient);
         transition: width 0.4s ease;
         z-index: 0;
-    }
-
-    .brand-link::before {
-        background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
     }
 
     .category-link:hover,
     .brand-link:hover {
         color: white;
         transform: translateX(8px);
-        box-shadow: 0 6px 20px rgba(102, 126, 234, 0.35);
+        box-shadow: 0 6px 20px var(--sidebar-accent-soft-shadow);
         border-color: transparent;
     }
 
@@ -173,25 +165,14 @@
         width: 100%;
     }
 
-    .brand-link:hover {
-        box-shadow: 0 6px 20px rgba(240, 147, 251, 0.35);
-    }
-
     .category-link.active,
     .brand-link.active {
         color: white;
         border-color: transparent;
-        box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+        box-shadow: 0 4px 15px var(--sidebar-accent-soft-shadow);
     }
 
-    .category-link.active::before {
-        width: 100%;
-    }
-
-    .brand-link.active {
-        box-shadow: 0 4px 15px rgba(240, 147, 251, 0.4);
-    }
-
+    .category-link.active::before,
     .brand-link.active::before {
         width: 100%;
     }
@@ -208,14 +189,10 @@
         border-radius: 10px;
         font-size: 1.05rem;
         transition: all 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
-        color: #667eea;
+        color: var(--sidebar-accent);
         box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
         position: relative;
         z-index: 1;
-    }
-
-    .brand-icon {
-        color: #f093fb;
     }
 
     .category-link:hover .category-icon,
@@ -236,38 +213,23 @@
         letter-spacing: 0.2px;
     }
 
-    .category-link span:last-child,
-    .brand-link span:last-child {
-        background: rgba(102, 126, 234, 0.15);
-        color: #667eea;
-        padding: 5px 12px;
-        border-radius: 20px;
-        font-size: 0.8rem;
-        font-weight: 700;
-        min-width: 35px;
-        text-align: center;
+    /* Chevron indicator */
+    .category-chevron, .brand-chevron {
+        margin-left: auto;
+        color: #adb5bd;
+        font-size: 0.85rem;
+        transition: transform 0.3s ease, color 0.3s ease;
         position: relative;
         z-index: 1;
-        transition: all 0.3s ease;
+        display: flex;
+        align-items: center;
     }
-
-    .brand-link span:last-child {
-        background: rgba(240, 147, 251, 0.15);
-        color: #f093fb;
-    }
-
-    .category-link:hover span:last-child,
-    .brand-link:hover span:last-child,
-    .category-link.active span:last-child,
-    .brand-link.active span:last-child {
-        background: rgba(255, 255, 255, 0.95);
-        color: #667eea;
-        transform: scale(1.05);
-    }
-
-    .brand-link:hover span:last-child,
-    .brand-link.active span:last-child {
-        color: #f093fb;
+    .category-link:hover .category-chevron,
+    .brand-link:hover .brand-chevron,
+    .category-link.active .category-chevron,
+    .brand-link.active .brand-chevron {
+        transform: translateX(4px);
+        color: #ffffff;
     }
 
     /* Empty State */
@@ -307,15 +269,10 @@
 
     .sidebar-search input:focus {
         outline: none;
-        border-color: #667eea;
+        border-color: var(--sidebar-accent);
         background: white;
         box-shadow: 0 0 0 4px rgba(102, 126, 234, 0.1);
         transform: translateY(-1px);
-    }
-
-    .brand-section .sidebar-search input:focus {
-        border-color: #f093fb;
-        box-shadow: 0 0 0 4px rgba(240, 147, 251, 0.1);
     }
 
     .sidebar-search i {
@@ -329,11 +286,7 @@
     }
 
     .sidebar-search input:focus+i {
-        color: #667eea;
-    }
-
-    .brand-section .sidebar-search input:focus+i {
-        color: #f093fb;
+        color: var(--sidebar-accent);
     }
 
     /* Mobile Responsive */
