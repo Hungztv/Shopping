@@ -1,76 +1,129 @@
 ﻿@model IEnumerable<ShippingModel>
 @{
-    ViewData["Title"] = "Tạo vận chuyển";
+    ViewData["Title"] = "Quản lý vận chuyển";
 }
 
-<div class="container mt-5">
-    <h3 class="mb-4 text-center text-primary">Tạo vận chuyển</h3>
+<div class="container-fluid px-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1 class="h3 mb-0 text-gray-800">
+            <i class="fas fa-shipping-fast text-primary"></i> Quản lý vận chuyển
+        </h1>
+    </div>
 
-    <div class="row justify-content-center">
-        <div class="col-md-9">
-            <div class="card p-4 shadow-sm">
-                <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
-
-                <div class="row mb-3">
-                    <div class="col-md-4">
-                        <label class="form-label fw-bold">Tỉnh/Thành phố</label>
-                        <select class="form-select rounded" id="tinh" name="tinh" title="Chọn Tỉnh Thành">
-                            <option value="0">Chọn Tỉnh/Thành phố</option>
-                        </select>
-                    </div>
-                    <div class="col-md-4">
-                        <label class="form-label fw-bold">Quận/Huyện</label>
-                        <select class="form-select rounded" id="quan" name="quan" title="Chọn Quận Huyện">
-                            <option value="0">Chọn Quận/Huyện</option>
-                        </select>
-                    </div>
-                    <div class="col-md-4">
-                        <label class="form-label fw-bold">Phường/Xã</label>
-                        <select class="form-select rounded" id="phuong" name="phuong" title="Chọn Phường Xã">
-                            <option value="0">Chọn Phường/Xã</option>
-                        </select>
-                    </div>
+    <div class="row">
+        <div class="col-xl-12">
+            <!-- Form thêm vận chuyển -->
+            <div class="card shadow mb-4">
+                <div class="card-header py-3 bg-gradient-primary">
+                    <h6 class="m-0 font-weight-bold text-white">
+                        <i class="fas fa-plus-circle"></i> Thêm vận chuyển mới
+                    </h6>
                 </div>
+                <div class="card-body">
+                    <div asp-validation-summary="ModelOnly" class="alert alert-danger" role="alert"></div>
 
-                <div class="form-group mb-3">
-                    <label class="form-label fw-bold">Giá vận chuyển</label>
-                    <input id="price-shipping" type="number" placeholder="Ví dụ: 20000" min="1" class="form-control rounded" />
-                </div>
+                    <div class="row g-3">
+                        <div class="col-md-4">
+                            <label class="form-label fw-semibold">
+                                <i class="fas fa-map-marker-alt text-primary"></i> Tỉnh/Thành phố
+                            </label>
+                            <select class="form-select" id="tinh" name="tinh">
+                                <option value="0">Chọn Tỉnh/Thành phố</option>
+                            </select>
+                        </div>
+                        <div class="col-md-4">
+                            <label class="form-label fw-semibold">
+                                <i class="fas fa-map-marked-alt text-info"></i> Quận/Huyện
+                            </label>
+                            <select class="form-select" id="quan" name="quan">
+                                <option value="0">Chọn Quận/Huyện</option>
+                            </select>
+                        </div>
+                        <div class="col-md-4">
+                            <label class="form-label fw-semibold">
+                                <i class="fas fa-map-pin text-success"></i> Phường/Xã
+                            </label>
+                            <select class="form-select" id="phuong" name="phuong">
+                                <option value="0">Chọn Phường/Xã</option>
+                            </select>
+                        </div>
+                    </div>
 
-                <div class="form-group text-center">
-                    <button type="button" class="btn btn-primary btn-lg px-5 btn-add-shipping">Thêm vận chuyển</button>
+                    <div class="row g-3 mt-2">
+                        <div class="col-md-6">
+                            <label class="form-label fw-semibold">
+                                <i class="fas fa-dollar-sign text-warning"></i> Giá vận chuyển (VNĐ)
+                            </label>
+                            <input id="price-shipping" type="number" placeholder="Ví dụ: 20000" min="1"
+                                class="form-control" />
+                        </div>
+                        <div class="col-md-6 d-flex align-items-end">
+                            <button type="button" class="btn btn-primary w-100 btn-add-shipping">
+                                <i class="fas fa-plus"></i> Thêm vận chuyển
+                            </button>
+                        </div>
+                    </div>
                 </div>
             </div>
 
-            <!-- Shipping List -->
-            <h2 class="mt-5 mb-3">Danh sách vận chuyển</h2>
-            <div class="card shadow-sm">
+            <!-- Danh sách vận chuyển -->
+            <div class="card shadow">
+                <div class="card-header py-3 bg-gradient-info">
+                    <h6 class="m-0 font-weight-bold text-white">
+                        <i class="fas fa-list"></i> Danh sách vận chuyển
+                    </h6>
+                </div>
                 <div class="card-body p-0">
-                    <table class="table table-striped table-hover mb-0" id="myTable">
-                        <thead class="table-dark">
-                            <tr>
-                                <th>Tỉnh/Thành phố</th>
-                                <th>Quận/Huyện</th>
-                                <th>Phường/Xã</th>
-                                <th>Giá</th>
-                                <th>Hành động</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            @foreach (var shipping in ViewBag.Shippings)
-                            {
+                    <div class="table-responsive">
+                        <table class="table table-hover mb-0" id="shippingTable">
+                            <thead class="table-light">
                                 <tr>
-                                    <td>@shipping.City</td>
-                                    <td>@shipping.District</td>
-                                    <td>@shipping.Ward</td>
-                                    <td>@shipping.Price.ToString("#,##0 VNĐ")</td>
-                                    <td>
-                                        <a href="@Url.Action("Delete", "Shipping", new { id = shipping.Id })" class="btn btn-danger btn-sm">Xóa</a>
-                                    </td>
+                                    <th class="text-center">
+                                        <i class="fas fa-hashtag"></i> STT
+                                    </th>
+                                    <th><i class="fas fa-map-marker-alt"></i> Tỉnh/Thành phố</th>
+                                    <th><i class="fas fa-map-marked-alt"></i> Quận/Huyện</th>
+                                    <th><i class="fas fa-map-pin"></i> Phường/Xã</th>
+                                    <th class="text-end"><i class="fas fa-dollar-sign"></i> Giá</th>
+                                    <th class="text-center"><i class="fas fa-cog"></i> Hành động</th>
                                 </tr>
-                            }
-                        </tbody>
-                    </table>
+                            </thead>
+                            <tbody>
+                                @{
+                                    int stt = 1;
+                                }
+                                @foreach (var shipping in ViewBag.Shippings)
+                                {
+                                    <tr>
+                                        <td class="text-center">@stt</td>
+                                        <td>@shipping.City</td>
+                                        <td>@shipping.District</td>
+                                        <td>@shipping.Ward</td>
+                                        <td class="text-end fw-semibold text-success">
+                                            @shipping.Price.ToString("#,##0 VNĐ")
+                                        </td>
+                                        <td class="text-center">
+                                            <a href="@Url.Action("Delete", "Shipping", new { id = shipping.Id })"
+                                                class="btn btn-danger btn-sm"
+                                                onclick="return confirm('Bạn có chắc muốn xóa vận chuyển này?')">
+                                                <i class="fas fa-trash"></i> Xóa
+                                            </a>
+                                        </td>
+                                    </tr>
+                                    stt++;
+                                }
+                                @if (ViewBag.Shippings.Count == 0)
+                                {
+                                    <tr>
+                                        <td colspan="6" class="text-center text-muted py-4">
+                                            <i class="fas fa-inbox fa-3x mb-3 d-block opacity-25"></i>
+                                            Chưa có dữ liệu vận chuyển
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
             </div>
         </div>
