@@ -10,8 +10,6 @@
                     <i class="fas fa-folder"></i>
                 </div>
                 <span class="category-name">@item.Name</span>
-                <span>@(ViewBag.CategoryProductCount != null &&
-                                ViewBag.CategoryProductCount.ContainsKey(item.Id) ? ViewBag.CategoryProductCount[item.Id] : 0)</span>
             </a>
         </li>
     }
