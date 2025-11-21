@@ -38,17 +38,17 @@ namespace Shopping_Tutorial.Areas.Admin.Controllers
         [Route("SubmitFilterDate")]
         public IActionResult SubmitFilterDate(string filterdate)
         {
-            var dateselect = DateTime.Parse(filterdate).ToString("yyyy-MM-dd");
+            var dateselect = DateTime.Parse(filterdate).Date;
             var chartData = _dataContext.Orders
-           .Where(o => o.CreateDate.ToString("yyyy-MM-dd") == dateselect) // Optional: Filter by date
+           .Where(o => o.CreateDate.Date == dateselect)
           .Join(_dataContext.OrderDetails,
               o => o.OrderCode,
               od => od.OrderCode,
               (o, od) => new StatisticalModel
               {
                   date = o.CreateDate,
-                  revenue = od.Quantity * od.Price, // Calculate revenue based on order details
-                  orders = 1 // Assuming each order detail represents one order
+                  revenue = od.Quantity * od.Price,
+                  orders = 1
               })
           .GroupBy(s => s.date)
           .Select(group => new StatisticalModel

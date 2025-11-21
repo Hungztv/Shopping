@@ -236,8 +236,8 @@
         letter-spacing: 0.2px;
     }
 
-    .category-count,
-    .brand-count {
+    .category-link span:last-child,
+    .brand-link span:last-child {
         background: rgba(102, 126, 234, 0.15);
         color: #667eea;
         padding: 5px 12px;
@@ -251,22 +251,22 @@
         transition: all 0.3s ease;
     }
 
-    .brand-count {
+    .brand-link span:last-child {
         background: rgba(240, 147, 251, 0.15);
         color: #f093fb;
     }
 
-    .category-link:hover .category-count,
-    .brand-link:hover .brand-count,
-    .category-link.active .category-count,
-    .brand-link.active .brand-count {
+    .category-link:hover span:last-child,
+    .brand-link:hover span:last-child,
+    .category-link.active span:last-child,
+    .brand-link.active span:last-child {
         background: rgba(255, 255, 255, 0.95);
         color: #667eea;
         transform: scale(1.05);
     }
 
-    .brand-link:hover .brand-count,
-    .brand-link.active .brand-count {
+    .brand-link:hover span:last-child,
+    .brand-link.active span:last-child {
         color: #f093fb;
     }
 

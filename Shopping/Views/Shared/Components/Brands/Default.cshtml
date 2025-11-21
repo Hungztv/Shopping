@@ -10,7 +10,7 @@
                     <i class="fas fa-award"></i>
                 </div>
                 <span class="brand-name">@item.Name</span>
-                <span class="brand-count">@(ViewBag.BrandProductCount != null && ViewBag.BrandProductCount.ContainsKey(item.Id)
+                <span>@(ViewBag.BrandProductCount != null && ViewBag.BrandProductCount.ContainsKey(item.Id)
                                 ? ViewBag.BrandProductCount[item.Id] : 0)</span>
             </a>
         </li>
