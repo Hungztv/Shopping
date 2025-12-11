@@ -1,6 +1,8 @@
 using Microsoft.AspNetCore.Mvc;
 using Shopping.Services;
 using System.Threading.Tasks;
+using Shopping.Models.Repository;
+using System.Text.RegularExpressions;
 
 namespace Shopping.Controllers
 {
@@ -9,10 +11,12 @@ namespace Shopping.Controllers
     public class ChatbotController : ControllerBase
     {
         private readonly GroqService _groqService;
+        private readonly DataContext _context;
 
-        public ChatbotController(GroqService groqService)
+        public ChatbotController(GroqService groqService, DataContext context)
         {
             _groqService = groqService;
+            _context = context;
         }
 
         [HttpPost("message")]
@@ -26,7 +30,9 @@ namespace Shopping.Controllers
             try
             {
                 var response = await _groqService.GetChatResponseAsync(request.Message);
-                return Ok(new { response = response });
+                var baseUrl = $"{Request.Scheme}://{Request.Host}";
+                response = Regex.Replace(response, @"/Product/Details/(\d+)", m => $"{baseUrl}/Product/Details/{m.Groups[1].Value}");
+                return Ok(new { response });
             }
             catch (Exception ex)
             {
@@ -45,6 +51,45 @@ namespace Shopping.Controllers
             try
             {
                 var products = await _groqService.SearchProductsAsync(query);
+                return Ok(products);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new { error = "Có lỗi xảy ra: " + ex.Message });
+            }
+        }
+
+        // Batch fetch product summaries for chatbot rendering
+        [HttpGet("products")]
+        public IActionResult GetProducts([FromQuery] string ids)
+        {
+            if (string.IsNullOrWhiteSpace(ids))
+            {
+                return BadRequest(new { error = "Thiếu danh sách ids" });
+            }
+            try
+            {
+                var idList = ids.Split(',', StringSplitOptions.RemoveEmptyEntries)
+                                 .Select(s => int.TryParse(s, out var v) ? v : -1)
+                                 .Where(v => v > 0)
+                                 .Distinct()
+                                 .ToList();
+                if (!idList.Any())
+                {
+                    return BadRequest(new { error = "Danh sách ids không hợp lệ" });
+                }
+                var baseUrl = $"{Request.Scheme}://{Request.Host}";
+                var products = _context.Products
+                    .Where(p => idList.Contains(p.Id))
+                    .Select(p => new
+                    {
+                        p.Id,
+                        p.Name,
+                        p.Price,
+                        p.Image,
+                        Link = $"{baseUrl}/Product/Details/{p.Id}"
+                    })
+                    .ToList();
                 return Ok(products);
             }
             catch (Exception ex)

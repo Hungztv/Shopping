@@ -84,7 +84,7 @@ Bạn đang tìm sản phẩm gì? (VD: 'laptop dưới 20 triệu', 'iPhone gi�
                 }
 
                 var matched = baseQuery
-                    .Select(p => new { p.Name, p.Price, CategoryName = p.Category.Name, BrandName = p.Brand.Name })
+                    .Select(p => new { p.Id, p.Name, p.Price, CategoryName = p.Category.Name, BrandName = p.Brand.Name })
                     .Take(50)
                     .ToList();
 
@@ -108,8 +108,8 @@ Bạn đang tìm sản phẩm gì? (VD: 'laptop dưới 20 triệu', 'iPhone gi�
                     matched = _context.Products
                         .Include(p => p.Category)
                         .Include(p => p.Brand)
-                    .OrderByDescending(p => p.Id)
-                        .Select(p => new { p.Name, p.Price, CategoryName = p.Category.Name, BrandName = p.Brand.Name })
+                        .OrderByDescending(p => p.Id)
+                        .Select(p => new { p.Id, p.Name, p.Price, CategoryName = p.Category.Name, BrandName = p.Brand.Name })
                         .Take(10)
                         .ToList();
                 }
@@ -139,7 +139,9 @@ CÁCH TRẢ LỜI TỐT:
 • Dell Inspiron 15 (18,990,000 VNĐ) - Giá tốt, màn hình lớn phù hợp văn phòng
 Bạn ưu tiên hiệu năng hay giá cả?""
 
-❌ ""Danh sách sản phẩm: 1. MacBook... 2. Dell... 3. HP...""";
+❌ ""Danh sách sản phẩm: 1. MacBook... 2. Dell... 3. HP...""
+
+";
 
                 var groqUrl = "https://api.groq.com/openai/v1/chat/completions";
 
@@ -174,6 +176,7 @@ Bạn ưu tiên hiệu năng hay giá cả?""
                     var content = parsed?.choices?.FirstOrDefault()?.message?.content;
                     if (!string.IsNullOrWhiteSpace(content))
                     {
+                        // Remove forced link list injection
                         return content!;
                     }
                 }
@@ -227,7 +230,7 @@ Bạn ưu tiên hiệu năng hay giá cả?""
             }
 
             var matched = baseQuery
-                .Select(p => new { p.Name, p.Price, CategoryName = p.Category.Name, BrandName = p.Brand.Name })
+                .Select(p => new { p.Id, p.Name, p.Price, CategoryName = p.Category.Name, BrandName = p.Brand.Name })
                 .Take(50)
                 .ToList();
 
@@ -244,7 +247,7 @@ Bạn ưu tiên hiệu năng hay giá cả?""
                     .Include(p => p.Category)
                     .Include(p => p.Brand)
                     .OrderByDescending(p => p.Id)
-                    .Select(p => new { p.Name, p.Price, CategoryName = p.Category.Name, BrandName = p.Brand.Name })
+                    .Select(p => new { p.Id, p.Name, p.Price, CategoryName = p.Category.Name, BrandName = p.Brand.Name })
                     .Take(10)
                     .ToList();
             }
@@ -342,7 +345,7 @@ Bạn đang tìm gì? (VD: 'laptop gaming', 'iPhone giá tốt')";
                 sb.AppendLine("Dạ, mình gợi ý cho bạn:\n");
                 foreach (var p in matched)
                 {
-                    sb.AppendLine($"• {p.Name} ({p.BrandName}) — {p.Price:N0} VNĐ");
+                    sb.AppendLine($"• {p.Name} ({p.BrandName}) — {p.Price:N0} VNĐ — /Product/Details/{p.Id}");
                 }
                 sb.AppendLine("\nBạn quan tâm sản phẩm nào? Mình có thể tư vấn thêm về tính năng!");
                 return sb.ToString();
@@ -354,7 +357,7 @@ Bạn đang tìm gì? (VD: 'laptop gaming', 'iPhone giá tốt')";
                 sb.AppendLine("Mình thấy các sản phẩm này có thể phù hợp:\n");
                 foreach (var p in top)
                 {
-                    sb.AppendLine($"• {p.Name} — {p.Price:N0} VNĐ");
+                    sb.AppendLine($"• {p.Name} — {p.Price:N0} VNĐ — /Product/Details/{p.Id}");
                 }
                 sb.AppendLine("\nBạn có thể cho mình biết thêm về nhu cầu không? (ngân sách, mục đích sử dụng...)");
                 return sb.ToString();
