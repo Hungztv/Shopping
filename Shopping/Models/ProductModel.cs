@@ -25,7 +25,7 @@ namespace Shopping.Models
         public CategoryModel Category { get; set; }
         public BrandModel Brand { get; set; }
         public String Image { get; set; }
-        public RatingModel Ratings { get; set; }
+        public ICollection<RatingModel> Ratings { get; set; } = new List<RatingModel>();
         [NotMapped]
         [FileExtension]
         public IFormFile? ImageUpload { get; set; }

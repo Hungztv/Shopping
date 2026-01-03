@@ -15,9 +15,7 @@
     <link href="https://code.jquery.com/ui/1.14.0/themes/base/jquery-ui.css" rel="stylesheet">
 
     <!-- Custom CSS -->
-    <link href="~/css/main.css" rel="stylesheet">
-    <link href="~/css/responsive.css" rel="stylesheet">
-    <link href="~/css/custom-optimized.css" rel="stylesheet">
+    <link href="~/css/site.css" rel="stylesheet">
 
     <!-- Favicon -->
     <link rel="shortcut icon" href="images/ico/favicon.ico">
@@ -56,35 +54,6 @@
                                                     class="fas fa-th-list"></i> Danh mục</a></li>
                                         <li><a class="dropdown-item" asp-controller="Brand" asp-action="Index"><i
                                                     class="fas fa-certificate"></i> Thương hiệu</a></li>
-                                        <li>
-                                            <hr class="dropdown-divider" />
-                                        </li>
-                                        <li><a class="dropdown-item" asp-controller="Cart" asp-action="Index"><i
-                                                    class="fas fa-shopping-cart"></i> Giỏ hàng</a></li>
-                                        <li><a class="dropdown-item" asp-controller="Checkout" asp-action="Index"><i
-                                                    class="fas fa-credit-card"></i> Thanh toán</a></li>
-                                        <li>
-                                            <hr class="dropdown-divider" />
-                                        </li>
-                                        @if (User.Identity?.IsAuthenticated ?? false)
-                                        {
-                                            <li><a class="dropdown-item" asp-controller="Home" asp-action="Wishlist"><i
-                                                        class="fas fa-heart"></i> Yêu thích</a></li>
-                                            <li><a class="dropdown-item" asp-controller="Home" asp-action="Compare"><i
-                                                        class="fas fa-exchange-alt"></i> So sánh</a></li>
-                                        }
-                                        else
-                                        {
-                                            <li><a class="dropdown-item" asp-controller="Account" asp-action="Login"><i
-                                                        class="fas fa-user-lock"></i> Đăng nhập để sử dụng thêm</a></li>
-                                        }
-                                        <li>
-                                            <hr class="dropdown-divider" />
-                                        </li>
-                                        <li><a class="dropdown-item" asp-controller="Home" asp-action="Contact"><i
-                                                    class="fas fa-envelope"></i> Liên hệ</a></li>
-                                        <li><a class="dropdown-item" asp-controller="Coupon" asp-action="Index"><i
-                                                    class="fas fa-ticket-alt"></i> Mã giảm giá</a></li>
                                     </ul>
                                 </li>
                                 <li><a href="#">Blog</a></li>
@@ -196,19 +165,19 @@
                 <div class="col-md-3">
                     <h5>Service</h5>
                     <ul class="list-unstyled">
-                        <li><a href="#" class="text-white">Online Help</a></li>
-                        <li><a href="#" class="text-white">Contact Us</a></li>
-                        <li><a href="#" class="text-white">Order Status</a></li>
+                        <li><a asp-controller="Home" asp-action="Contact" class="text-white">Online Help</a></li>
+                        <li><a asp-controller="Home" asp-action="Contact" class="text-white">Contact Us</a></li>
+                        <li><a asp-controller="Account" asp-action="History" class="text-white">Order Status</a></li>
                         <li><a href="#" class="text-white">FAQs</a></li>
                     </ul>
                 </div>
                 <div class="col-md-3">
                     <h5>Quick Shop</h5>
                     <ul class="list-unstyled">
-                        <li><a href="#" class="text-white">T-Shirts</a></li>
-                        <li><a href="#" class="text-white">Men</a></li>
-                        <li><a href="#" class="text-white">Women</a></li>
-                        <li><a href="#" class="text-white">Shoes</a></li>
+                        <li><a asp-controller="Product" asp-action="Index" class="text-white">T-Shirts</a></li>
+                        <li><a asp-controller="Product" asp-action="Index" class="text-white">Men</a></li>
+                        <li><a asp-controller="Product" asp-action="Index" class="text-white">Women</a></li>
+                        <li><a asp-controller="Product" asp-action="Index" class="text-white">Shoes</a></li>
                     </ul>
                 </div>
                 <div class="col-md-3">

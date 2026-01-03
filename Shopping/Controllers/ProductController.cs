@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using Shopping.Models;
 using Shopping.Models.Repository;
 using Shopping.Models.ViewModels;
+using X.PagedList;
 
 namespace Shopping.Controllers
 {
@@ -13,17 +14,39 @@ namespace Shopping.Controllers
         {
             _datacontext = context;
         }
-        public IActionResult Index()
+        public async Task<IActionResult> Index(int? page)
         {
-            return View();
+            var pageNumber = page ?? 1;
+            var pageSize = 6; // Or any other page size you prefer
+            var productsQuery = _datacontext.Products
+                                             .Include(p => p.Category)
+                                             .Include(p => p.Brand)
+                                             .OrderByDescending(p => p.Id);
+            var totalCount = await productsQuery.CountAsync();
+            var items = await productsQuery.Skip((pageNumber - 1) * pageSize).Take(pageSize).ToListAsync();
+            var products = new X.PagedList.StaticPagedList<ProductModel>(items, pageNumber, pageSize, totalCount);
+            return View(products);
         }
-        public async Task<IActionResult> Search(string searchTerm)
-        {
-            var products = await _datacontext.Products
-            .Where(p => p.Name.Contains(searchTerm) || p.Description.Contains(searchTerm))
-            .ToListAsync();
 
+        public async Task<IActionResult> Search(string searchTerm, int? page)
+        {
             ViewBag.Keyword = searchTerm;
+            var pageNumber = page ?? 1;
+            var pageSize = 6;
+
+            if (string.IsNullOrEmpty(searchTerm))
+            {
+                // If search term is empty, return to the main product index
+                return RedirectToAction("Index");
+            }
+
+            var productsQuery = _datacontext.Products
+                .Include(p => p.Category)
+                .Include(p => p.Brand)
+                .Where(p => p.Name.Contains(searchTerm) || p.Description.Contains(searchTerm));
+            var totalCount = await productsQuery.CountAsync();
+            var items = await productsQuery.Skip((pageNumber - 1) * pageSize).Take(pageSize).ToListAsync();
+            var products = new X.PagedList.StaticPagedList<ProductModel>(items, pageNumber, pageSize, totalCount);
 
             return View(products);
         }
@@ -36,7 +59,7 @@ namespace Shopping.Controllers
             var viewModel = new ProductDetailsViewModel
             {
                 ProductDetails = productsById,
-               
+
             };
             return View(viewModel);
         }
@@ -81,4 +104,4 @@ namespace Shopping.Controllers
             return Redirect(Request.Headers["Referer"]);
         }
     }
-    }
+}

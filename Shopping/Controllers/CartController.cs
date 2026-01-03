@@ -58,6 +58,49 @@ namespace Shopping.Controllers
             return View(cartVM);
         }
 
+        [HttpPost]
+        public async Task<IActionResult> UpdateQuantity(int productId, int quantity)
+        {
+            ProductModel product = await _datacontext.Products.FindAsync(productId);
+            if (product == null)
+            {
+                return NotFound(new { success = false, message = "Sản phẩm không tồn tại." });
+            }
+
+            if (quantity > product.Quantity)
+            {
+                return BadRequest(new { success = false, message = $"Số lượng tồn kho không đủ. Chỉ còn {product.Quantity} sản phẩm." });
+            }
+
+            List<CartItemModel> cart = HttpContext.Session.GetJson<List<CartItemModel>>("Cart") ?? new List<CartItemModel>();
+            CartItemModel cartItem = cart.FirstOrDefault(c => c.ProductId == productId);
+
+            if (cartItem != null)
+            {
+                if (quantity > 0)
+                {
+                    cartItem.Quantity = quantity;
+                }
+                else
+                {
+                    cart.Remove(cartItem);
+                }
+            }
+            
+            HttpContext.Session.SetJson("Cart", cart);
+
+            decimal grandTotal = cart.Sum(c => c.Quantity * c.Price);
+            decimal itemTotal = cartItem != null ? cartItem.Quantity * cartItem.Price : 0;
+
+            return Json(new { 
+                success = true, 
+                quantity = cartItem?.Quantity ?? 0, 
+                itemTotal = itemTotal.ToString("N0"),
+                grandTotal = grandTotal.ToString("N0") 
+            });
+        }
+
+
         public ActionResult Checkout()
         {
             return View("~/View/Checkout/Index.cshtml");

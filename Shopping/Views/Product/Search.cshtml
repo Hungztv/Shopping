@@ -1,127 +1,115 @@
-﻿@model IEnumerable<ProductModel>
+﻿@model X.PagedList.IPagedList<ProductModel>
+@using X.PagedList.Mvc.Core
+
 @{
-    ViewData["Title"] = @ViewBag.Keyword;
+    ViewData["Title"] = "Kết quả tìm kiếm cho: " + ViewBag.Keyword;
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
-
-<style>
-    /* Overlay Effect */
-    .overlay {
-        position: absolute;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        background: linear-gradient(135deg, rgba(102, 126, 234, 0.95), rgba(118, 75, 162, 0.95));
-        opacity: 0;
-        transition: all 0.4s ease;
-        border-radius: 0.375rem;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        z-index: 10;
-    }
-
-    .card:hover .overlay {
-        opacity: 1;
-    }
-
-    .overlay-content {
-        transform: translateY(20px);
-        transition: transform 0.4s ease;
-    }
-
-    .card:hover .overlay-content {
-        transform: translateY(0);
-    }
-
-    .overlay .btn-warning {
-        background: #ffc107;
-        border: none;
-        padding: 10px 25px;
-        font-weight: 600;
-        transition: all 0.3s ease;
-    }
-
-    .overlay .btn-warning:hover {
-        background: #ffca2c;
-        transform: scale(1.05);
-    }
-</style>
 
 <!-- Main Content -->
 <div class="container my-5">
     <div class="row">
         <!-- Sidebar -->
         <div class="col-lg-3">
-            @Html.Partial("_SidebarPartial")
+            <partial name="_SidebarPartial" />
         </div>
 
         <!-- Product List -->
         <div class="col-lg-9">
-            <div class="features-items">
-                <h2 class="text-center mb-4 fw-bold">Kết quả tìm kiếm: @ViewBag.Keyword</h2>
+            <div class="features_items">
+                <h2 class="title text-center">Kết quả tìm kiếm cho: "@ViewBag.Keyword"</h2>
+
                 @if (Model != null && Model.Any())
                 {
-                    <div class="row row-cols-1 row-cols-md-3 g-4">
+                    <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
                         @foreach (var item in Model)
                         {
                             <div class="col">
-                                <div class="card h-100 shadow-sm border-0 position-relative">
-                                    <div class="card-img-top text-center p-3">
+                                <div class="card product-card h-100 shadow-sm border-0 position-relative">
+                                    @if (item.Quantity == 0)
+                                    {
+                                        <span class="badge bg-danger position-absolute top-0 start-0 m-2" style="z-index: 10;">Hết
+                                            hàng</span>
+                                    }
+                                    else if (item.Quantity < 10)
+                                    {
+                                        <span class="badge bg-warning text-dark position-absolute top-0 start-0 m-2"
+                                            style="z-index: 10;">Còn @item.Quantity</span>
+                                    }
+                                    @if (User.Identity?.IsAuthenticated ?? false)
+                                    {
+                                        <div class="position-absolute top-0 end-0 m-2" style="z-index: 10;">
+                                            <button class="btn btn-sm btn-light rounded-circle add-btn-wishlist"
+                                                data-product_id="@item.Id" title="Thêm yêu thích">
+                                                <i class="fas fa-heart text-danger"></i>
+                                            </button>
+                                        </div>
+                                    }
+                                    <div class="product-image-wrapper">
                                         <a asp-action="Details" asp-controller="Product" asp-route-Id="@item.Id">
                                             <img src="@(item.Image.StartsWith("http") ? item.Image : Url.Content("~/media/products/" + item.Image))"
-                                                alt="@item.Name" class="img-fluid"
-                                                style="max-height: 200px; object-fit: contain;">
+                                                alt="@item.Name" class="card-img-top p-3"
+                                                style="height: 220px; object-fit: contain;">
                                         </a>
                                     </div>
-                                    <div class="card-body text-center">
-                                        <h5 class="card-title">
+                                    <div class="card-body text-center d-flex flex-column">
+                                        <h5 class="card-title mb-2" style="min-height: 48px;">
                                             <a asp-action="Details" asp-controller="Product" asp-route-Id="@item.Id"
-                                                class="text-dark text-decoration-none">@item.Name</a>
+                                                class="text-dark text-decoration-none product-title-link">@item.Name</a>
                                         </h5>
-                                        <p class="text-muted mb-1">Danh mục: @item.Category.Name</p>
-                                        <p class="text-muted mb-1">Thương hiệu: @item.Brand.Name</p>
+                                        <div class="mb-2">
+                                            <span class="badge bg-light text-dark me-1"><i class="fas fa-tag"></i>
+                                                @item.Category.Name</span>
+                                            <span class="badge bg-light text-dark"><i class="fas fa-copyright"></i>
+                                                @item.Brand.Name</span>
+                                        </div>
                                         <h4 class="text-warning fw-bold mb-3">@string.Format(new
                                                                                 System.Globalization.CultureInfo("vi-VN"), "{0:N0} VNĐ", item.Price)</h4>
-                                <button class="btn btn-warning add-to-cart" data-product_id="@item.Id">
-                                    <i class="fas fa-shopping-cart"></i> Thêm giỏ hàng
-                                </button>
-                            </div>
-                            <div class="card-footer bg-light border-top-0 text-center">
-                                <div class="btn-group" role="group">
-                                    <a href="#" class="btn btn-outline-danger btn-sm add-btn-wishlist"
-                                        data-product_id="@item.Id">
-                                        <i class="fas fa-heart"></i> Wishlist
-                                    </a>
-                                    <a href="#" class="btn btn-outline-primary btn-sm add-btn-compare"
-                                        data-product_id="@item.Id">
-                                        <i class="fas fa-exchange-alt"></i> Compare
-                                    </a>
+                                <div class="mt-auto">
+                                    @if (item.Quantity == 0)
+                                            {
+                                                <button type="button" class="btn btn-secondary w-100" disabled><i
+                                                        class="fas fa-shopping-cart"></i> Hết hàng</button>
+                                            }
+                                            else
+                                            {
+                                                <button class="btn btn-warning w-100 add-to-cart" data-product_id="@item.Id"><i
+                                                        class="fas fa-shopping-cart"></i> Thêm giỏ hàng</button>
+                                            }
+                                            @if (User.Identity?.IsAuthenticated ?? false)
+                                            {
+                                                <button class="btn btn-outline-primary btn-sm w-100 mt-2 add-btn-compare"
+                                                    data-product_id="@item.Id"><i class="fas fa-exchange-alt"></i> So sánh</button>
+                                            }
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
-                            <!-- Overlay -->
-                            <div class="overlay">
-                                <div class="overlay-content text-center">
-                                    <h4 class="text-warning fw-bold">@string.Format(new
-                                                                                System.Globalization.CultureInfo("vi-VN"), "{0:N0} VNĐ", item.Price)</h4>
-                                    <p class="text-white">@item.Name</p>
-                                    <p class="text-white">Danh mục: @item.Category.Name</p>
-                                    <p class="text-white">Thương hiệu: @item.Brand.Name</p>
-                                    <button class="btn btn-warning add-to-cart" data-product_id="@item.Id">
-                                        <i class="fas fa-shopping-cart"></i> Thêm giỏ hàng
-                                    </button>
-                                </div>
-                            </div>
-                        </div>
+                        }
                     </div>
-                                        }
-                    </div>
-                }
-                else
+
+                    <!-- Pagination -->
+                    <div class="d-flex justify-content-center mt-4">
+                        @Html.PagedListPager(Model, page => Url.Action("Search", new { term = ViewBag.Keyword, page = page
+                    }), new PagedListRenderOptions
+                    {
+                        ContainerDivClasses = new[] { "navigation" },
+                        LiElementClasses = new[] { "page-item" },
+                        PageClasses = new[] { "page-link" },
+                        DisplayLinkToFirstPage = PagedListDisplayMode.Always,
+                        DisplayLinkToLastPage = PagedListDisplayMode.Always,
+                        DisplayLinkToPreviousPage = PagedListDisplayMode.Always,
+                        DisplayLinkToNextPage = PagedListDisplayMode.Always,
+                    })
+                </div>
+                                }
+                                else
                 {
-                    <p class="text-center text-muted">Không tìm thấy sản phẩm nào phù hợp với từ khóa "@ViewBag.Keyword".
-                    </p>
+                    <div class="text-center py-5">
+                        <i class="fas fa-search fa-3x text-muted mb-3"></i>
+                        <h4 class="text-muted">Không tìm thấy sản phẩm nào</h4>
+                        <p class="text-muted">Không tìm thấy sản phẩm nào phù hợp với từ khóa "@ViewBag.Keyword".</p>
+                    </div>
                 }
             </div>
         </div>
@@ -143,7 +131,7 @@
                             Swal.fire({
                                 icon: 'success',
                                 title: 'Thành công',
-                                text: 'Thêm giỏ hàng thành công!',
+                                text: 'Đã thêm sản phẩm vào giỏ hàng!',
                                 timer: 1500,
                                 showConfirmButton: false
                             });
@@ -171,7 +159,7 @@
                             Swal.fire({
                                 icon: 'success',
                                 title: 'Thành công',
-                                text: 'Thêm vào danh sách yêu thích thành công!',
+                                text: 'Đã thêm vào danh sách yêu thích!',
                                 timer: 1500,
                                 showConfirmButton: false
                             });
@@ -192,7 +180,7 @@
                             Swal.fire({
                                 icon: 'success',
                                 title: 'Thành công',
-                                text: 'Thêm vào danh sách so sánh thành công!',
+                                text: 'Đã thêm vào danh sách so sánh!',
                                 timer: 1500,
                                 showConfirmButton: false
                             });

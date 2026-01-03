@@ -1,153 +1,108 @@
-﻿@model IEnumerable<ProductModel>
+﻿@model X.PagedList.IPagedList<ProductModel>
+@using X.PagedList.Mvc.Core
+
 @{
-    ViewData["Title"] = "Web bán hàng ASP.NET8";
+    ViewData["Title"] = "Danh sách Sản phẩm";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
-
-<!-- Slider Section -->
-<section id="slider" class="mb-5">
-    <div class="container">
-        <div class="row">
-            <div class="col-12">
-                <div id="slider-carousel" class="carousel slide" data-bs-ride="carousel">
-                    <!-- Indicators -->
-                    <ol class="carousel-indicators">
-                        <li data-bs-target="#slider-carousel" data-bs-slide-to="0" class="active"></li>
-                        <li data-bs-target="#slider-carousel" data-bs-slide-to="1"></li>
-                        <li data-bs-target="#slider-carousel" data-bs-slide-to="2"></li>
-                    </ol>
-
-                    <!-- Slides -->
-                    <div class="carousel-inner">
-                        <div class="carousel-item active">
-                            <div class="row align-items-center">
-                                <div class="col-md-6 text-center text-md-start">
-                                    <h1 class="display-4 fw-bold"><span class="text-warning">E</span>-SHOPPER</h1>
-                                    <h2 class="fw-semibold">Free E-Commerce Template</h2>
-                                    <p class="text-muted mb-4">Lorem ipsum dolor sit amet, consectetur adipisicing elit,
-                                        sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
-                                    <a href="#" class="btn btn-warning btn-lg">Get it now</a>
-                                </div>
-                                <div class="col-md-6 text-center">
-                                    <img src="images/home/girl1.jpg" class="img-fluid" alt="Girl 1"
-                                        style="max-height: 400px; object-fit: contain;">
-                                    <img src="images/home/pricing.png" class="pricing position-absolute" alt="Pricing"
-                                        style="bottom: 20px; right: 20px; max-width: 150px;">
-                                </div>
-                            </div>
-                        </div>
-                        <div class="carousel-item">
-                            <div class="row align-items-center">
-                                <div class="col-md-6 text-center text-md-start">
-                                    <h1 class="display-4 fw-bold"><span class="text-warning">E</span>-SHOPPER</h1>
-                                    <h2 class="fw-semibold">100% Responsive Design</h2>
-                                    <p class="text-muted mb-4">Lorem ipsum dolor sit amet, consectetur adipisicing elit,
-                                        sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
-                                    <a href="#" class="btn btn-warning btn-lg">Get it now</a>
-                                </div>
-                                <div class="col-md-6 text-center">
-                                    <img src="images/home/girl2.jpg" class="img-fluid" alt="Girl 2"
-                                        style="max-height: 400px; object-fit: contain;">
-                                    <img src="images/home/pricing.png" class="pricing position-absolute" alt="Pricing"
-                                        style="bottom: 20px; right: 20px; max-width: 150px;">
-                                </div>
-                            </div>
-                        </div>
-                        <div class="carousel-item">
-                            <div class="row align-items-center">
-                                <div class="col-md-6 text-center text-md-start">
-                                    <h1 class="display-4 fw-bold"><span class="text-warning">E</span>-SHOPPER</h1>
-                                    <h2 class="fw-semibold">Free Ecommerce Template</h2>
-                                    <p class="text-muted mb-4">Lorem ipsum dolor sit amet, consectetur adipisicing elit,
-                                        sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
-                                    <a href="#" class="btn btn-warning btn-lg">Get it now</a>
-                                </div>
-                                <div class="col-md-6 text-center">
-                                    <img src="images/home/girl3.jpg" class="img-fluid" alt="Girl 3"
-                                        style="max-height: 400px; object-fit: contain;">
-                                    <img src="images/home/pricing.png" class="pricing position-absolute" alt="Pricing"
-                                        style="bottom: 20px; right: 20px; max-width: 150px;">
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Controls -->
-                    <a class="carousel-control-prev" href="#slider-carousel" role="button" data-bs-slide="prev">
-                        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-                        <span class="visually-hidden">Previous</span>
-                    </a>
-                    <a class="carousel-control-next" href="#slider-carousel" role="button" data-bs-slide="next">
-                        <span class="carousel-control-next-icon" aria-hidden="true"></span>
-                        <span class="visually-hidden">Next</span>
-                    </a>
-                </div>
-            </div>
-        </div>
-    </div>
-</section>
 
 <!-- Main Content -->
 <div class="container my-5">
     <div class="row">
         <!-- Sidebar -->
         <div class="col-lg-3">
-            @Html.Partial("_SidebarPartial")
+            <partial name="_SidebarPartial" />
         </div>
 
         <!-- Product List -->
         <div class="col-lg-9">
-            <div class="features-items">
-                <h2 class="text-center mb-4 fw-bold">Sản phẩm nổi bật</h2>
-                @if (Model != null)
+            <div class="features_items">
+                <h2 class="title text-center">Tất cả sản phẩm</h2>
+
+                @if (Model != null && Model.Any())
                 {
-                    <div class="row row-cols-1 row-cols-md-3 g-4">
+                    <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
                         @foreach (var item in Model)
                         {
                             <div class="col">
-                                <div class="card h-100 shadow-sm border-0 position-relative">
-                                    <div class="card-img-top text-center p-3">
+                                <div class="card product-card h-100 shadow-sm border-0 position-relative">
+                                    @if (item.Quantity == 0)
+                                    {
+                                        <span class="badge bg-danger position-absolute top-0 start-0 m-2" style="z-index: 10;">Hết
+                                            hàng</span>
+                                    }
+                                    else if (item.Quantity < 10)
+                                    {
+                                        <span class="badge bg-warning text-dark position-absolute top-0 start-0 m-2"
+                                            style="z-index: 10;">Còn @item.Quantity</span>
+                                    }
+                                    @if (User.Identity?.IsAuthenticated ?? false)
+                                    {
+                                        <div class="position-absolute top-0 end-0 m-2" style="z-index: 10;">
+                                            <button class="btn btn-sm btn-light rounded-circle add-btn-wishlist"
+                                                data-product_id="@item.Id" title="Thêm yêu thích">
+                                                <i class="fas fa-heart text-danger"></i>
+                                            </button>
+                                        </div>
+                                    }
+                                    <div class="product-image-wrapper">
                                         <a asp-action="Details" asp-controller="Product" asp-route-Id="@item.Id">
                                             <img src="@(item.Image.StartsWith("http") ? item.Image : Url.Content("~/media/products/" + item.Image))"
-                                                alt="@item.Name" class="img-fluid"
-                                                style="max-height: 200px; object-fit: contain;">
+                                                alt="@item.Name" class="card-img-top p-3"
+                                                style="height: 220px; object-fit: contain;">
                                         </a>
                                     </div>
-                                    <div class="card-body text-center">
-                                        <h5 class="card-title">
+                                    <div class="card-body text-center d-flex flex-column">
+                                        <h5 class="card-title mb-2" style="min-height: 48px;">
                                             <a asp-action="Details" asp-controller="Product" asp-route-Id="@item.Id"
-                                                class="text-dark text-decoration-none">@item.Name</a>
+                                                class="text-dark text-decoration-none product-title-link">@item.Name</a>
                                         </h5>
-                                        <p class="text-muted mb-1">Danh mục: @item.Category.Name</p>
-                                        <p class="text-muted mb-1">Thương hiệu: @item.Brand.Name</p>
-                                        <h4 class="text-warning fw-bold mb-3">@item.Price</h4>
-                                        <a href="#" class="btn btn-warning add-to-cart"><i class="fas fa-shopping-cart"></i> Add
-                                            to cart</a>
-                                    </div>
-                                    <div class="card-footer bg-light border-top-0 text-center">
-                                        <div class="btn-group" role="group">
-                                            <a href="#" class="btn btn-outline-danger btn-sm"><i class="fas fa-heart"></i>
-                                                Wishlist</a>
-                                            <a href="#" class="btn btn-outline-primary btn-sm"><i
-                                                    class="fas fa-exchange-alt"></i> Compare</a>
+                                        <div class="mb-2">
+                                            <span class="badge bg-light text-dark me-1"><i class="fas fa-tag"></i>
+                                                @item.Category.Name</span>
+                                            <span class="badge bg-light text-dark"><i class="fas fa-copyright"></i>
+                                                @item.Brand.Name</span>
                                         </div>
-                                    </div>
-                                    <!-- Overlay -->
-                                    <div class="overlay">
-                                        <div class="overlay-content text-center">
-                                            <h4 class="text-warning fw-bold">@item.Price</h4>
-                                            <p class="text-white">@item.Name</p>
-                                            <p class="text-white">Danh mục: @item.Category.Name</p>
-                                            <p class="text-white">Thương hiệu: @item.Brand.Name</p>
-                                            <a href="#" class="btn btn-warning add-to-cart"><i class="fas fa-shopping-cart"></i>
-                                                Add to cart</a>
+                                        <h4 class="text-warning fw-bold mb-3">@string.Format(new
+                                                                                System.Globalization.CultureInfo("vi-VN"), "{0:N0} VNĐ", item.Price)</h4>
+                                <div class="mt-auto">
+                                    @if (item.Quantity == 0)
+                                            {
+                                                <button type="button" class="btn btn-secondary w-100" disabled><i
+                                                        class="fas fa-shopping-cart"></i> Hết hàng</button>
+                                            }
+                                            else
+                                            {
+                                                <button class="btn btn-warning w-100 add-to-cart" data-product_id="@item.Id"><i
+                                                        class="fas fa-shopping-cart"></i> Thêm giỏ hàng</button>
+                                            }
+                                            @if (User.Identity?.IsAuthenticated ?? false)
+                                            {
+                                                <button class="btn btn-outline-primary btn-sm w-100 mt-2 add-btn-compare"
+                                                    data-product_id="@item.Id"><i class="fas fa-exchange-alt"></i> So sánh</button>
+                                            }
                                         </div>
                                     </div>
                                 </div>
                             </div>
                         }
                     </div>
-                }
+
+                    <!-- Pagination -->
+                    <div class="d-flex justify-content-center mt-4">
+                        @Html.PagedListPager(Model, page => Url.Action("Index", new { page = page }), new
+                        PagedListRenderOptions
+                                        {
+                            ContainerDivClasses = new[] { "navigation" },
+                                        LiElementClasses = new[] { "page-item" },
+                                        PageClasses = new[] { "page-link" },
+                                        DisplayLinkToFirstPage = PagedListDisplayMode.Always,
+                                        DisplayLinkToLastPage = PagedListDisplayMode.Always,
+                                        DisplayLinkToPreviousPage = PagedListDisplayMode.Always,
+                                        DisplayLinkToNextPage = PagedListDisplayMode.Always,
+                                        })
+                </div>
+                                }
                 else
                 {
                     <p class="text-center text-muted">Không có sản phẩm nào để hiển thị.</p>
@@ -156,3 +111,80 @@
         </div>
     </div>
 </div>
+
+@section Scripts {
+    <script>
+        $(document).ready(function () {
+            // Re-bind scripts for AJAX functionality if needed, similar to Home/Index.cshtml
+            // Add to Cart
+            $('.add-to-cart').click(function () {
+                var id = $(this).data("product_id");
+                $.ajax({
+                    type: "POST",
+                    url: "@Url.Action("Add", "Cart")",
+                    data: { Id: id },
+                    success: function (result) {
+                        if (result) {
+                            Swal.fire({
+                                icon: 'success',
+                                title: 'Thành công',
+                                text: 'Đã thêm sản phẩm vào giỏ hàng!',
+                                timer: 1500,
+                                showConfirmButton: false
+                            });
+                        }
+                    },
+                    error: function () {
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Lỗi',
+                            text: 'Có lỗi xảy ra khi thêm vào giỏ hàng.'
+                        });
+                    }
+                });
+            });
+
+            // Add to Wishlist
+            $('.add-btn-wishlist').click(function () {
+                var id = $(this).data("product_id");
+                $.ajax({
+                    type: "POST",
+                    url: "@Url.Action("AddWishlist", "Home")",
+                    data: { Id: id },
+                    success: function (result) {
+                        if (result) {
+                            Swal.fire({
+                                icon: 'success',
+                                title: 'Thành công',
+                                text: 'Đã thêm vào danh sách yêu thích!',
+                                timer: 1500,
+                                showConfirmButton: false
+                            });
+                        }
+                    }
+                });
+            });
+
+            // Add to Compare
+            $('.add-btn-compare').click(function () {
+                var id = $(this).data("product_id");
+                $.ajax({
+                    type: "POST",
+                    url: "@Url.Action("AddCompare", "Home")",
+                    data: { Id: id },
+                    success: function (result) {
+                        if (result) {
+                            Swal.fire({
+                                icon: 'success',
+                                title: 'Thành công',
+                                text: 'Đã thêm vào danh sách so sánh!',
+                                timer: 1500,
+                                showConfirmButton: false
+                            });
+                        }
+                    }
+                });
+            });
+        });
+    </script>
+}

@@ -7,7 +7,7 @@ namespace Shopping.Models
     {
         [Key]
         public int Id { get; set; }
-       
+
         public int ProductId { get; set; }
         [Required, MinLength(4, ErrorMessage = "Yêu Cầu Nhập Đánh giá Sản phẩm ")]
         public string Comment { get; set; }
@@ -15,7 +15,7 @@ namespace Shopping.Models
         public string Name { get; set; }
         [Required, MinLength(4, ErrorMessage = "Yêu Cầu Nhập Email Sản phẩm ")]
         public string Email { get; set; }
-        public String Star { get; set; }
+        public int Star { get; set; }
         [ForeignKey("ProductId")]
         public ProductModel Product { get; set; }
 
